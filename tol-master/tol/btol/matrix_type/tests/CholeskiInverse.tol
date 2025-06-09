@@ -24,7 +24,8 @@ Real {
    ));
 
   Matrix A_ = CholeskiInverse(A);
-  Real ok = If(U==(Matrix A*A_),1,0);
+  Real diff = MatMax(Abs(A*A_ - U));
+  Real ok = If(diff < 1e-9,1,0);
   // Show Results
   WriteLn(If(ok,"OK","ERROR"));
   ok
