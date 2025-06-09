@@ -23,3 +23,33 @@ When code is modified, run the following checks and include their results in the
 
 These commands should be executed from the repository root.
 
+## Code Safety Guidelines
+
+When modifying C/C++ code in this repository:
+
+1. **Always check memory allocation results**:
+   ```cpp
+   char *ptr = (char *) malloc(size);
+   if (ptr == NULL) {
+       // Handle allocation failure gracefully
+       return;
+   }
+   ```
+
+2. **Use defensive programming practices**:
+   - Validate all pointer parameters before use
+   - Check return values from system calls
+   - Handle edge cases (empty strings, zero-length allocations, etc.)
+   - Free allocated memory when no longer needed
+
+3. **Follow secure coding standards**:
+   - Never use unsafe string functions (strcpy, strcat) without bounds checking
+   - Prefer strncpy, strncat, or safer alternatives when available
+   - Initialize all variables before use
+   - Avoid buffer overflows by validating sizes
+
+4. **Error handling**:
+   - Fail gracefully rather than crash
+   - Log errors when appropriate logging mechanisms exist
+   - Clean up resources on error paths
+
