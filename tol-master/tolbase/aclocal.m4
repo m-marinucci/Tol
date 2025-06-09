@@ -929,9 +929,9 @@ AC_DEFUN(TEA_PATH_TCLCONFIG, [
 			${srcdir}/../tcl \
 			`ls -dr ${srcdir}/../tcl[[8-9]].[[0-9]]* 2>/dev/null` ; do
 		    if test -f "$i/unix/tclConfig.sh" ; then
-		    ac_cv_c_tclconfig=`(cd $i/unix; pwd)`
-		    break
-		fi
+			ac_cv_c_tclconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
 		done
 	    fi
 	])
@@ -1570,7 +1570,7 @@ AC_DEFUN(TEA_CONFIG_CFLAGS, [
     AC_ARG_ENABLE(64bit-vis,[  --enable-64bit-vis      enable 64bit Sparc VIS support], [do64bitVIS=$enableval], [do64bitVIS=no])
     AC_MSG_RESULT([$do64bitVIS])
 
-    if test "$do64bitVIS" = "yes"; then
+    if test "$do64bitVIS" = "yes" ; then
 	# Force 64bit on with VIS
 	do64bit=yes
     fi
