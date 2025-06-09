@@ -87,7 +87,15 @@ void borrarMensajes(void) {
 //Función utilitaria para obtener mensajes del intérprete de TOL
 void guardarMensaje(const BText &mensaje) {
     int l = mensaje.Length();
-    char *cmsg = (char *) malloc(l * (sizeof (char) + 1));
+    // Allocate space for the message plus the terminating null byte.
+    // The previous calculation used `l * (sizeof(char) + 1)` which
+    // doubles the required memory because `sizeof(char)` is 1. This
+    // not only wastes memory but also makes the intent unclear.
+    char *cmsg = (char *) malloc(l + 1);
+    if (cmsg == NULL) {
+        // Handle allocation failure - skip this message rather than crash
+        return;
+    }
     strcpy(cmsg, mensaje.String());
     mensajes.push_back(cmsg);
 }
