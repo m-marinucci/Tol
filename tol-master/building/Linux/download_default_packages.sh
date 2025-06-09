@@ -5,7 +5,7 @@
 #************************************************************
 
 MACHINE_TYPE=`uname -m`
-if [ ${MACHINE_TYPE} = 'x86_64' ]; then
+if [ "${MACHINE_TYPE}" = 'x86_64' ]; then
   tol_platform=Linux64GNU
 else
   tol_platform=Linux32GNU
