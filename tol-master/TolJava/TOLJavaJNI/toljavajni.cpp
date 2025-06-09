@@ -92,6 +92,10 @@ void guardarMensaje(const BText &mensaje) {
     // doubles the required memory because `sizeof(char)` is 1. This
     // not only wastes memory but also makes the intent unclear.
     char *cmsg = (char *) malloc(l + 1);
+    if (cmsg == NULL) {
+        // Handle allocation failure - skip this message rather than crash
+        return;
+    }
     strcpy(cmsg, mensaje.String());
     mensajes.push_back(cmsg);
 }
