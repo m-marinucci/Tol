@@ -98,7 +98,7 @@ namespace eval ::BayesText {
       #data(start)     --> indica desde donde se empieza a buscar
       #data(find,case) -->
       #data(editor)    --> el path del widget text en el q buscar
-      #data(path)      --> el path del toplevel que muestra el cuado de búsqueda
+      #data(path)      --> el path del toplevel que muestra el cuadro de búsqueda
       #data(frm,cad)   --> entry donde se inserta el texto a buscar
     }
   }
