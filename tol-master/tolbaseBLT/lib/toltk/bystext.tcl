@@ -783,7 +783,7 @@ proc ::BayesText::MenuCreate {editor} {
   bind $editor <Control-KeyRelease> \
     [list ::BayesText::OnControlKey $editor %K %k]
   
-  #Por si el text esta desabilitado (para poder seleccionar)
+  # Por si el texto está deshabilitado (para poder seleccionar)
   bind $editor <Button-1> {focus %W}
   bind $editor <Button-3> "tk_popup $m %X %Y"
   #Retornar el menu por si el que lo llama quiere añadir opciones
