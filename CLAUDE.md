@@ -147,7 +147,7 @@ NameBlock Stats = [[
 
 1. **Include Paths**: When modifying C++ code, key headers are in:
    - `tol/tol_bcommon.h` - Common definitions
-   - `tol/tol_blanguag.h` - Language interface
+   - `tol/tol_blanguage.h` - Language interface
    - Type-specific headers in respective directories
 
 2. **Adding New Functions**: 
