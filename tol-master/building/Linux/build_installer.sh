@@ -1,7 +1,7 @@
 #!/bin/bash
 #************************************************************
 # La llamada al script no recibe argumentos:
-#   ./build_instaler.sh
+#   ./build_installer.sh
 #************************************************************
 # Durante el proceso se pregunta por cada una de las etapas.
 #************************************************************
