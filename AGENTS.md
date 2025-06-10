@@ -44,7 +44,8 @@ When modifying C/C++ code in this repository:
 
 3. **Follow secure coding standards**:
    - Never use unsafe string functions (strcpy, strcat) without bounds checking
-   - Prefer strncpy, strncat, or safer alternatives when available
+   - Prefer `strncpy`, `strncat`, or safer alternatives when available
+     - **Warning:** `strncpy` may not null-terminate the destination buffer if the source string is too long. Always ensure the destination is null-terminated after using `strncpy`, or consider using `snprintf` as a safer alternative for string copying and concatenation.
    - Initialize all variables before use
    - Avoid buffer overflows by validating sizes
 
