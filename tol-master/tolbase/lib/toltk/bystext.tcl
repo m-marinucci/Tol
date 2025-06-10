@@ -94,11 +94,11 @@ namespace eval ::BayesText {
       variable data
       
       #data(find,text) --> texto a buscar
-      #data(find,dir)  --> direcciÛn de b˙squeda
+      #data(find,dir)  --> direcci√≥n de b√∫squeda
       #data(start)     --> indica desde donde se empieza a buscar
       #data(find,case) -->
       #data(editor)    --> el path del widget text en el q buscar
-      #data(path)      --> el path del toplevel que muestra el cuado de b˙squeda
+      #data(path)      --> el path del toplevel que muestra el cuadro de b√∫squeda
       #data(frm,cad)   --> entry donde se inserta el texto a buscar
     }
   }
@@ -150,7 +150,7 @@ namespace eval ::BayesText {
   } else {
     FindCreate $Instance
   }
-  # save teh last search
+  # save the last search
   set data(find,temp) $data(find,text)
 }
 
@@ -218,7 +218,7 @@ proc ::BayesText::FindNext { Instance } {
 #
 #/////////////////////////////////////////////////////////////////////////////  
   upvar \#0 ${Instance}::data data 
-  #  Coger la posiciÛn actual del cursor en el text y buscar desde ahÌ,
+  #  Coger la posici√≥n actual del cursor en el text y buscar desde ah√≠,
   set posOrig [$data(editor) index insert]
   
   set res [FindPosText $Instance]
@@ -309,7 +309,7 @@ proc ::BayesText::FindNext { Instance } {
   bind $dialog <F3>     [list ::BayesText::FindNext $Instance]
   bind $dialog <Escape> [list ::BayesText::FindDestroy $Instance $dialog]
 
-  # Hemos aÒadido un tag para la selecciÛn, hay que quitarle como el tag sel
+  # Hemos a√±adido un tag para la selecci√≥n, hay que quitarle como el tag sel
   bind $data(editor) <ButtonPress> +[list $data(editor) tag delete found]
   
   grid $f.forward  $f.backward -sticky nw
@@ -368,10 +368,10 @@ proc ::BayesText::ReplaceShow {editor {next 0}} {
       variable data
       #data(find,text)    --> texto a buscar
       #data(replace,text) --> texto a por el que remplazar
-      #data(replace,dir)  --> direcciÛn de b˙squeda
+      #data(replace,dir)  --> direcci√≥n de b√∫squeda
       #data(replace,case) -->
       #data(editor)       --> el path del widget text en el q buscar
-      #data(path)         --> el path del toplevel que muestra el cuado de b˙squeda
+      #data(path)         --> el path del toplevel que muestra el cuado de b√∫squeda
       #data(frm,cad)      --> entry donde se inserta el texto a buscar
     }
   }
@@ -502,7 +502,7 @@ proc ::BayesText::ReplaceAll { Instance } {
 #
 #/////////////////////////////////////////////////////////////////////////////   
   upvar \#0 ${Instance}::data data
-  # guardamos la posiciÛn actual
+  # guardamos la posici√≥n actual
   set posOrig [$data(editor) index insert]
   # nos posicionamos en el principio del texto
   tk::TextSetCursor $data(editor) "1.0"
@@ -786,7 +786,7 @@ proc ::BayesText::MenuCreate {editor} {
   #Por si el text esta desabilitado (para poder seleccionar)
   bind $editor <Button-1> {focus %W}
   bind $editor <Button-3> "tk_popup $m %X %Y"
-  #Retornar el menu por si el que lo llama quiere aÒadir opciones
+  #Retornar el menu por si el que lo llama quiere a√±adir opciones
   return $m
 }
 
@@ -971,7 +971,7 @@ proc ::BayesText::TolFileSyntaxCheck {path} {
   set tolCheck "Text __EditorCheck = ParseError(ReadFile(\"$path\"))"
   #puts "TolFileSyntaxCheck: tolCheck = $tolCheck"
   if {[catch {::tol::console eval $tolCheck}]} {
-    Tolcon_Trace "Falla porque TOL est· ocupado"
+    Tolcon_Trace "Falla porque TOL est√° ocupado"
   } else  {
     # comprobamos si ha dado algun error
     if {![catch { set objInfo [::tol::info variable [list Text __EditorCheck]]}]} {
