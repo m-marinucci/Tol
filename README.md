@@ -1,6 +1,6 @@
 # TOL - Time-Oriented Language
 
-TOL (Time-Oriented Language) is a powerful programming language specifically designed for time-series analysis, statistical modeling, and mathematical computations. Originally developed for advanced data analysis and econometric modeling, TOL provides a declarative, autoevaluative environment with dynamic memory management and lazy evaluation.
+TOL (Time-Oriented Language) is a powerful programming language specifically designed for time-series analysis, statistical modeling, and mathematical computations. Originally developed for advanced data analysis and econometric modeling, TOL provides a declarative environment that is autoevaluative (i.e., expressions are automatically evaluated as they are defined, similar to languages like Lisp), with dynamic memory management and lazy evaluation.
 
 ## Overview
 
