@@ -36,7 +36,7 @@ cd tol
 
 ### From This GitHub Repository
 ```bash
-git clone https://github.com/InverenceBBS/Tol.git
+git clone https://github.com/m-marinucci/Tol.git
 cd Tol
 ```
 
