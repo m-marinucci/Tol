@@ -228,7 +228,11 @@ class APIDocumentationIndexer:
                     content.append(f"{module['description']}")
                 
                 content.append(f"- **Version**: {version}")
-                
+
+                last_updated = module.get('last_updated', '')
+                if last_updated:
+                    content.append(f"- **Last Updated**: {last_updated}")
+
                 if 'tags' in module and module['tags']:
                     tags_str = ", ".join(f"`{tag}`" for tag in module['tags'])
                     content.append(f"- **Tags**: {tags_str}")
