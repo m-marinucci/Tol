@@ -69,7 +69,7 @@ doc_metadata:
 # Mathematical Operations Module (bmath)
 
 ## Module Overview
-The `bmath` module provides TOL's core mathematical operations, including arithmetic, linear algebra, probability distributions, and interfaces to numerical libraries like BLAS, LAPACK, FFTW, and GSL. It targets users needing high‑performance numerical routines and serves as the foundation for many higher-level TOL features.
+The `bmath` module provides TOL's core mathematical operations, including arithmetic, linear algebra, probability distributions, and interfaces to numerical libraries like BLAS, LAPACK, FFTW, and GSL. It targets users needing high-performance numerical routines and serves as the foundation for many higher-level TOL features.
 
 This module is essential for:
 - Heavy mathematical computations requiring optimized performance
