@@ -115,10 +115,10 @@ class APIDocumentationIndexer:
                 if isinstance(metadata['last_updated'], str):
                     datetime.strptime(metadata['last_updated'], '%Y-%m-%d')
                 elif hasattr(metadata['last_updated'], 'strftime'):
-                    # It's already a date object, convert to string
-                    metadata['last_updated'] = metadata['last_updated'].strftime('%Y-%m-%d')
+                    # It's already a date/datetime object, just check if it can be formatted
+                    metadata['last_updated'].strftime('%Y-%m-%d')
                 else:
-                    errors.append(f"Invalid date type '{type(metadata['last_updated'])}'. Expected: YYYY-MM-DD string")
+                    errors.append(f"Invalid date type '{type(metadata['last_updated'])}'. Expected: YYYY-MM-DD string or date object")
             except ValueError:
                 errors.append(f"Invalid date format '{metadata['last_updated']}'. Expected: YYYY-MM-DD")
         
