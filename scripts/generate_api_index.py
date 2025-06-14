@@ -35,7 +35,7 @@ class APIDocumentationIndexer:
     """Generates and maintains the API documentation index."""
     
     def __init__(self, docs_dir: str = "docs/api"):
-        self.docs_dir = Path(docs_dir)
+        self.docs_dir = Path(docs_dir).resolve()
         self.modules = []
         self.categories = {
             "core_computational": {
