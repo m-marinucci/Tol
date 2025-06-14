@@ -46,7 +46,7 @@ Adds `n` days to a date.
 - `Serie`: sequence of dated values
 - `TimeSet`: ordered collection of time points
 - `Date`: calendar date
-- `CTime`: calendar time with timezone information
+- `CTime`: calendar time with time zone information
 
 ## Integration Notes
 Time-series objects are consumable by statistical modules (`bstat`) and by plotting functions for visualization. Many functions expect compatible `TimeSet` frequencies.
