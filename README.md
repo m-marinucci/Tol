@@ -124,6 +124,7 @@ tolcon
 - [TOL User Manual](tol-master/doc/general/TOL%20User%20Manual.pdf)
 - [Basic TOL Manual (Spanish)](tol-master/doc/general/Manual%20basico%20de%20TOL.pdf)
 - API documentation available in `tol-master/doc/`
+- Additional module references in `docs/api_reference/`
 
 ## Contributing
 
