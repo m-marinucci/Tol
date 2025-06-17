@@ -63,6 +63,21 @@ sudo make install
 ```
 
 ### Dependencies
+To install common build dependencies (including LAPACK for linear algebra) on a fresh system, run:
+```bash
+scripts/setup_build_env.sh
+```
+
+If the official TOL package repository is unavailable, download the default
+packages (StdLib and TclCore) using the helper script. It will query the
+Internet Archive's Wayback Machine API for the latest archived packages if the
+official server cannot be reached:
+```bash
+scripts/fetch_default_packages.sh
+```
+These packages contain the standard library and Tcl/Tk integration. Building
+without them removes many of TOL's mathematical functions, time series tools,
+and GUI features.
 
 TOL requires the following external libraries:
 - **GSL** (GNU Scientific Library) - Core mathematical functions
