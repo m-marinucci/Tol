@@ -139,6 +139,7 @@ tolcon
 - [TOL User Manual](tol-master/doc/general/TOL%20User%20Manual.pdf)
 - [Basic TOL Manual (Spanish)](tol-master/doc/general/Manual%20basico%20de%20TOL.pdf)
 - API documentation available in `tol-master/doc/`
+- Additional module references in `docs/api_reference/`
 
 ## Contributing
 
@@ -162,11 +163,28 @@ See [TOL_MCP_SERVER_STRATEGIC_PLAN.md](TOL_MCP_SERVER_STRATEGIC_PLAN.md) for det
 
 TOL is distributed under the terms specified in the [LICENSE](LICENSE) file.
 
+## Documentation
+
+### API Reference
+Comprehensive API documentation is available in the [`docs/api/`](docs/api/) directory:
+- **[Complete API Index](docs/api/README.md)** - Overview of all 12 TOL modules
+- **Core Computational**: Mathematical operations, statistical analysis, time-series processing
+- **Data Handling**: Database connectivity, file I/O, system integration
+- **Visualization**: Plotting functions, GUI visualization tools
+- **Integration**: Java API, communication protocols, remote access
+- **MCP Compatible**: 8 modules support natural language interaction
+
+### Documentation Features
+- **YAML Front-matter**: Machine-readable metadata for MCP server integration
+- **User Personas**: Content tailored for novices, experts, statisticians, and integrators
+- **Code Examples**: Tested TOL code samples with real-world use cases
+- **Cross-References**: Links between related modules and external resources
+
 ## Support
 
 - **Issues:** Report bugs and request features via [GitHub Issues](https://github.com/InverenceBBS/Tol/issues)
 - **Discussions:** Join our community discussions for questions and ideas
-- **Documentation:** Comprehensive guides available in the `doc/` directory
+- **API Documentation:** Comprehensive module references in [`docs/api/`](docs/api/)
 
 ## Acknowledgments
 

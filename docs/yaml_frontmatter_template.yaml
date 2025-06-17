@@ -1,0 +1,133 @@
+# YAML Front-matter Template for TOL API Documentation
+# This template defines the standard metadata structure for all API documentation files
+
+# =============================================================================
+# REQUIRED FIELDS
+# =============================================================================
+
+module_id: "bmath"                    # Internal module identifier matching codebase
+                                     # Examples: bmath, bstat, btol_time_series, dbdrivers
+
+category: "core_computational"        # Module category - MUST be one of:
+                                     # - core_computational (bmath, bstat, btol_core, btol_time_series)
+                                     # - data_handling (dbdrivers, system_io)
+                                     # - visualization (plotter, tolbase_viz)
+                                     # - ui (tolbase)
+                                     # - integration (toljava, tolcomm)
+                                     # - utilities (stdlib)
+
+version: "1.0.0"                     # Module version (semantic versioning)
+
+last_updated: "2025-06-14"           # Last modification date (YYYY-MM-DD format)
+
+# =============================================================================
+# OPTIONAL FIELDS
+# =============================================================================
+
+dependencies:                        # List of required modules (optional)
+  - "bbasic"                        # Basic data types
+  - "gsl"                           # External library dependencies
+
+mcp_compatible: true                 # Whether module is exposed via MCP server
+                                    # true = available through natural language interface
+                                    # false = internal/advanced use only
+
+tags:                               # Keywords for search and categorization
+  - "mathematics"
+  - "linear-algebra"
+  - "numerical-computation"
+  - "performance-critical"
+
+# =============================================================================
+# EXTENDED METADATA (for advanced use cases)
+# =============================================================================
+
+api_level: "public"                 # API visibility level
+                                   # - public: End-user facing
+                                   # - internal: Developer/contributor use
+                                   # - experimental: Beta features
+
+complexity: "intermediate"          # User complexity level
+                                   # - beginner: Basic operations
+                                   # - intermediate: Requires some TOL knowledge
+                                   # - advanced: Expert-level features
+
+performance_notes:                  # Performance characteristics
+  memory_usage: "high"             # low, medium, high
+  cpu_intensive: true              # boolean
+  external_deps: ["BLAS", "LAPACK", "GSL"]
+
+user_personas:                      # Target user types
+  - "quantitative_analyst"
+  - "software_developer"
+  - "researcher"
+
+examples_tested: true               # Whether code examples have been validated
+
+# =============================================================================
+# MCP SERVER INTEGRATION
+# =============================================================================
+
+mcp_metadata:
+  natural_language_aliases:         # Alternative names for MCP recognition
+    - "math operations"
+    - "mathematical functions"
+    - "linear algebra"
+  
+  intent_categories:               # Natural language intent mapping
+    - "calculation"
+    - "matrix_operations"
+    - "statistical_computation"
+  
+  auto_generate_code: true         # Whether MCP can auto-generate code examples
+  
+  parameter_validation:            # Input validation rules for MCP
+    strict_types: true
+    range_checking: true
+
+# =============================================================================
+# DOCUMENTATION METADATA
+# =============================================================================
+
+doc_metadata:
+  author: "TOL Documentation Team"
+  reviewers:                       # List of reviewers
+    - "m-marinucci"
+  
+  source_files:                    # Related source code files
+    - "tol-master/tol/bmath/"
+    - "tol-master/tol/bmath/barith/"
+    - "tol-master/tol/bmath/blinalg/"
+  
+  related_modules:                 # Cross-references
+    - module_id: "bstat"
+      relationship: "consumer"     # this module uses bstat
+    - module_id: "btol_core"
+      relationship: "provider"     # this module provides to btol_core
+  
+  external_links:                  # Useful external resources
+    - title: "BLAS Documentation"
+      url: "http://www.netlib.org/blas/"
+    - title: "GSL Reference"
+      url: "https://www.gnu.org/software/gsl/doc/html/"
+
+# =============================================================================
+# EXAMPLE USAGE IN MARKDOWN FILE
+# =============================================================================
+
+# To use this template in a documentation file:
+# 1. Copy the relevant fields to the top of your .md file
+# 2. Wrap in triple dashes (---)
+# 3. Customize values for your specific module
+# 4. Ensure all required fields are present
+
+# Example for bmath.md:
+# ---
+# module_id: "bmath"
+# category: "core_computational"
+# version: "1.0.0"
+# last_updated: "2025-06-14"
+# dependencies: ["bbasic", "gsl"]
+# mcp_compatible: true
+# tags: ["mathematics", "linear-algebra", "numerical-computation"]
+# ---
