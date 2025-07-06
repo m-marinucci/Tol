@@ -1,0 +1,118 @@
+# Valgrind suppressions for TOL project
+# This file contains suppressions for known false positives in external libraries
+
+# Suppress known issues in system libraries
+{
+   glibc_dlopen
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:_dl_open
+}
+
+{
+   glibc_dlclose
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:_dl_close
+}
+
+# Suppress GSL library issues
+{
+   gsl_alloc
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   ...
+   obj:*/libgsl.so*
+}
+
+# Suppress FFTW library issues
+{
+   fftw_plan
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   obj:*/libfftw3.so*
+}
+
+# Suppress LAPACK/BLAS library issues
+{
+   lapack_blas
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   ...
+   obj:*/liblapack.so*
+}
+
+{
+   blas_routines
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   ...
+   obj:*/libblas.so*
+}
+
+# Suppress C++ standard library issues
+{
+   stdcpp_locale
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:_ZNSt6locale*
+}
+
+{
+   stdcpp_iostream
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:_ZNSt8ios_base*
+}
+
+# Suppress pthread library issues
+{
+   pthread_create
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:allocate_stack
+   fun:pthread_create*
+}
+
+# Suppress zlib issues
+{
+   zlib_inflate
+   Memcheck:Cond
+   fun:inflateReset2
+   obj:*/libz.so*
+}
+
+# TOL-specific suppressions
+{
+   tol_static_init
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:__static_initialization_and_destruction*
+}
+
+{
+   tol_global_objects
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*alloc
+   ...
+   fun:_GLOBAL__sub_I_*
+}

@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -O3 -DNDEBUG -shared -Wl,-soname,tolsqlite0.so -o tolsqlite0.so CMakeFiles/tolsqlite0.dir/libtolsqlite.c.o CMakeFiles/tolsqlite0.dir/sqlite/sqlite3.c.o 

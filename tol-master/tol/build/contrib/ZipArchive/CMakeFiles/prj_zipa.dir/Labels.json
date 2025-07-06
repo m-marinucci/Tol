@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/CMakeFiles/prj_zipa"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/CMakeFiles/prj_zipa.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/CMakeFiles/prj_zipa-complete.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-build.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-configure.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-download.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-install.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-mkdir.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-patch.rule"
+		},
+		{
+			"file" : "/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"prj_zipa"
+		],
+		"name" : "prj_zipa"
+	}
+}

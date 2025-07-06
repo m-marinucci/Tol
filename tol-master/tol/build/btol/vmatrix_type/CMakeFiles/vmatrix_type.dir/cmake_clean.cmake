@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/vmatrix_type.dir/mmio.c.o"
+  "CMakeFiles/vmatrix_type.dir/mmio.c.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_arith.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_arith.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_joint.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_joint.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_master.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_master.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_primary.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_primary.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_struct.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_bsr_struct.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_chol.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_chol.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_convert.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_convert.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_io.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_io.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_iterative.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_iterative.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_iterator.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_iterator.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_logic.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_logic.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_stats.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_stats.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmat_subtypes.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmat_subtypes.cpp.o.d"
+  "CMakeFiles/vmatrix_type.dir/vmatgra.cpp.o"
+  "CMakeFiles/vmatrix_type.dir/vmatgra.cpp.o.d"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C CXX)
+  include(CMakeFiles/vmatrix_type.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

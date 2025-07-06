@@ -1,0 +1,13 @@
+# Target labels
+ prj_zipa
+# Source files and their labels
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/CMakeFiles/prj_zipa
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/CMakeFiles/prj_zipa.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/CMakeFiles/prj_zipa-complete.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-build.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-configure.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-download.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-install.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-mkdir.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-patch.rule
+/mnt/persist/workspace/tol-master/tol/build/contrib/ZipArchive/prj_zipa-prefix/src/prj_zipa-stamp/prj_zipa-update.rule

@@ -1,0 +1,150 @@
+Determining if files sys/utime.h exist failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_3b0ad/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_3b0ad.dir/build.make CMakeFiles/cmTC_3b0ad.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3b0ad.dir/HAVE_SYS_UTIME_H.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_3b0ad.dir/HAVE_SYS_UTIME_H.c.o -c /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_UTIME_H.c
+/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_UTIME_H.c:2:10: fatal error: sys/utime.h: No such file or directory
+    2 | #include <sys/utime.h>
+      |          ^~~~~~~~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_3b0ad.dir/build.make:78: CMakeFiles/cmTC_3b0ad.dir/HAVE_SYS_UTIME_H.c.o] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_3b0ad/fast] Error 2
+
+
+Source:
+/* */
+#include <sys/utime.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/ndir.h exist failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_acfb9/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_acfb9.dir/build.make CMakeFiles/cmTC_acfb9.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_acfb9.dir/HAVE_SYS_NDIR_H.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_acfb9.dir/HAVE_SYS_NDIR_H.c.o -c /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_NDIR_H.c
+/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_NDIR_H.c:2:10: fatal error: sys/ndir.h: No such file or directory
+    2 | #include <sys/ndir.h>
+      |          ^~~~~~~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_acfb9.dir/build.make:78: CMakeFiles/cmTC_acfb9.dir/HAVE_SYS_NDIR_H.c.o] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_acfb9/fast] Error 2
+
+
+Source:
+/* */
+#include <sys/ndir.h>
+
+
+int main(void){return 0;}
+
+Determining if files ndir.h exist failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b2291/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b2291.dir/build.make CMakeFiles/cmTC_b2291.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b2291.dir/HAVE_NDIR_H.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_b2291.dir/HAVE_NDIR_H.c.o -c /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_NDIR_H.c
+/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_NDIR_H.c:2:10: fatal error: ndir.h: No such file or directory
+    2 | #include <ndir.h>
+      |          ^~~~~~~~
+compilation terminated.
+gmake[1]: *** [CMakeFiles/cmTC_b2291.dir/build.make:78: CMakeFiles/cmTC_b2291.dir/HAVE_NDIR_H.c.o] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_b2291/fast] Error 2
+
+
+Source:
+/* */
+#include <ndir.h>
+
+
+int main(void){return 0;}
+
+Determining if files varargs.h exist failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_e5d9f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e5d9f.dir/build.make CMakeFiles/cmTC_e5d9f.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e5d9f.dir/HAVE_VARARGS_H.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_e5d9f.dir/HAVE_VARARGS_H.c.o -c /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_VARARGS_H.c
+In file included from /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CheckIncludeFiles/HAVE_VARARGS_H.c:2:
+/usr/lib/gcc/x86_64-linux-gnu/11/include/varargs.h:4:2: error: #error "GCC no longer implements <varargs.h>."
+    4 | #error "GCC no longer implements <varargs.h>."
+      |  ^~~~~
+/usr/lib/gcc/x86_64-linux-gnu/11/include/varargs.h:5:2: error: #error "Revise your code to use <stdarg.h>."
+    5 | #error "Revise your code to use <stdarg.h>."
+      |  ^~~~~
+gmake[1]: *** [CMakeFiles/cmTC_e5d9f.dir/build.make:78: CMakeFiles/cmTC_e5d9f.dir/HAVE_VARARGS_H.c.o] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_e5d9f/fast] Error 2
+
+
+Source:
+/* */
+#include <varargs.h>
+
+
+int main(void){return 0;}
+
+Determining if the function sgemm_ exists failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b8d59/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b8d59.dir/build.make CMakeFiles/cmTC_b8d59.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b8d59.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=sgemm_ -o CMakeFiles/cmTC_b8d59.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_b8d59
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b8d59.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=sgemm_ -rdynamic CMakeFiles/cmTC_b8d59.dir/CheckFunctionExists.c.o -o cmTC_b8d59 
+/usr/bin/ld: CMakeFiles/cmTC_b8d59.dir/CheckFunctionExists.c.o: in function `main':
+CheckFunctionExists.c:(.text+0x14): undefined reference to `sgemm_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_b8d59.dir/build.make:99: cmTC_b8d59] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_b8d59/fast] Error 2
+
+
+
+Determining if the function cheev_ exists failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_d4a20/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_d4a20.dir/build.make CMakeFiles/cmTC_d4a20.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d4a20.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=cheev_ -o CMakeFiles/cmTC_d4a20.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_d4a20
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d4a20.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=cheev_ -rdynamic CMakeFiles/cmTC_d4a20.dir/CheckFunctionExists.c.o -o cmTC_d4a20  /usr/lib/x86_64-linux-gnu/libblas.so /usr/lib/x86_64-linux-gnu/libf77blas.so /usr/lib/x86_64-linux-gnu/libatlas.so -lm -ldl 
+/usr/bin/ld: CMakeFiles/cmTC_d4a20.dir/CheckFunctionExists.c.o: in function `main':
+CheckFunctionExists.c:(.text+0x14): undefined reference to `cheev_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_d4a20.dir/build.make:102: cmTC_d4a20] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_d4a20/fast] Error 2
+
+
+
+Determining if the function cheev_ exists failed with the following output:
+Change Dir: /mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_a425e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_a425e.dir/build.make CMakeFiles/cmTC_a425e.dir/build
+gmake[1]: Entering directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a425e.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=cheev_ -o CMakeFiles/cmTC_a425e.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_a425e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a425e.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=cheev_ -rdynamic CMakeFiles/cmTC_a425e.dir/CheckFunctionExists.c.o -o cmTC_a425e  /usr/lib/x86_64-linux-gnu/liblapack.so /usr/lib/x86_64-linux-gnu/libblas.so /usr/lib/x86_64-linux-gnu/libf77blas.so /usr/lib/x86_64-linux-gnu/libatlas.so -fortranlibs 
+cc: error: unrecognized command-line option '-fortranlibs'
+gmake[1]: *** [CMakeFiles/cmTC_a425e.dir/build.make:103: cmTC_a425e] Error 1
+gmake[1]: Leaving directory '/mnt/persist/workspace/tol-master/tol/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_a425e/fast] Error 2
+
+
+

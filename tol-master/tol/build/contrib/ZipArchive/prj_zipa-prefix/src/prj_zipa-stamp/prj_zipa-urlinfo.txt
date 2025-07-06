@@ -1,0 +1,3 @@
+repository='external project URL'
+module='/mnt/persist/workspace/tol-master/tol/contrib/ZipArchive/ZipArchive_Bayes.tar.gz'
+tag=''
