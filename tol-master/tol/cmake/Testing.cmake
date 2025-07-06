@@ -18,40 +18,46 @@ if(ENABLE_TESTING)
     
     # Coverage configuration
     option(COVERAGE_ENABLED "Enable code coverage analysis" OFF)
-    
-if(COVERAGE_ENABLED)
-    if(CMAKE_COMPILER_IS_GNUCXX)
-        message(STATUS "Code coverage enabled")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 
-        # Find lcov for coverage reporting
-        find_program(LCOV_PATH lcov)
-        find_program(GENHTML_PATH genhtml)
+    if(COVERAGE_ENABLED)
+        if(CMAKE_COMPILER_IS_GNUCXX)
+            message(STATUS "Code coverage enabled")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 
-        if(LCOV_PATH AND GENHTML_PATH)
-            message(STATUS "lcov found: ${LCOV_PATH}")
-            message(STATUS "genhtml found: ${GENHTML_PATH}")
+            # Find lcov for coverage reporting
+            find_program(LCOV_PATH lcov)
+            find_program(GENHTML_PATH genhtml)
+
+            if(LCOV_PATH AND GENHTML_PATH)
+                message(STATUS "lcov found: ${LCOV_PATH}")
+                message(STATUS "genhtml found: ${GENHTML_PATH}")
+
+                # Add coverage target
+                add_custom_target(coverage
+                    COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info
+                    COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' --output-file coverage.info
+                    COMMAND ${GENHTML_PATH} coverage.info --output-directory coverage_html
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                    COMMENT "Generating code coverage report"
+                )
+            endif()
+        else()
+            message(WARNING "COVERAGE_ENABLED is set, but the compiler is not GNUCXX. Code coverage will not be enabled.")
         endif()
-    else()
-        message(WARNING "COVERAGE_ENABLED is set, but the compiler is not GNUCXX. Code coverage will not be enabled.")
     endif()
-            
-            # Add coverage target
-            add_custom_target(coverage
-                COMMAND ${LCOV_PATH} --directory . --capture --output-file coverage.info
-                COMMAND ${LCOV_PATH} --remove coverage.info '/usr/*' --output-file coverage.info
-                COMMAND ${GENHTML_PATH} coverage.info --output-directory coverage_html
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                COMMENT "Generating code coverage report"
-            )
-        endif()
-    endif()
+
+
     
+    # Configure test directory (can be overridden)
+    if(NOT DEFINED TOL_TEST_DIR)
+        set(TOL_TEST_DIR "${CMAKE_SOURCE_DIR}/../tol_tests")
+    endif()
+
     # Function to add TOL tests
     function(add_tol_test TEST_NAME TEST_SCRIPT)
-        set(TEST_WORKING_DIR "${CMAKE_SOURCE_DIR}/../tol_tests")
+        set(TEST_WORKING_DIR "${TOL_TEST_DIR}")
         
         # Check if test script exists
         if(EXISTS "${TEST_WORKING_DIR}/${TEST_SCRIPT}")

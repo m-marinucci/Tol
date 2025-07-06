@@ -4,11 +4,11 @@
 
 set -e
 
-# Configuration
+# Configuration (can be overridden by environment variables)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-DOCS_DIR="${PROJECT_ROOT}/docs"
-BUILD_DIR="${PROJECT_ROOT}/tol/build"
+PROJECT_ROOT="${TOL_PROJECT_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+DOCS_DIR="${TOL_DOCS_DIR:-${PROJECT_ROOT}/docs}"
+BUILD_DIR="${TOL_BUILD_DIR:-${PROJECT_ROOT}/tol/build}"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -23,10 +23,37 @@ log_warn() {
     echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
+# Check required tools
+check_required_tools() {
+    local missing_tools=()
+
+    # Check for required tools
+    for tool in find tar; do
+        if ! command -v "$tool" &> /dev/null; then
+            missing_tools+=("$tool")
+        fi
+    done
+
+    # Check for optional but recommended tools
+    if ! command -v doxygen &> /dev/null; then
+        log_warn "doxygen not found - API documentation will be skipped"
+    fi
+
+    if [ ${#missing_tools[@]} -ne 0 ]; then
+        log_warn "Missing tools: ${missing_tools[*]}"
+        log_warn "Some functionality may be limited"
+    else
+        log_info "All required tools available"
+    fi
+}
+
 # Create documentation directory
 mkdir -p "$DOCS_DIR"
 
 log_info "Starting documentation generation for TOL project"
+
+# Check dependencies
+check_required_tools
 
 # Generate Doxygen configuration
 create_doxygen_config() {
@@ -125,7 +152,7 @@ generate_user_manual() {
     mkdir -p "$manual_dir"
     
     # Create index page
-    cat > "$manual_dir/index.html" << 'EOF'
+    cat > "$manual_dir/index.html" << EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -228,7 +255,7 @@ EOF
 create_main_index() {
     log_info "Creating main documentation index"
     
-    cat > "$DOCS_DIR/index.html" << 'EOF'
+    cat > "$DOCS_DIR/index.html" << EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>

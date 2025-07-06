@@ -42,46 +42,14 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Setup Linux Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          ${{ matrix.cc }} \
-          ${{ matrix.cxx }} \
-          libgsl-dev \
-          libfftw3-dev \
-          liblapack-dev \
-          libblas-dev \
-          zlib1g-dev \
-          valgrind \
-          lcov \
-          cppcheck
-
-    - name: Setup Compiler Environment
-      run: |
-        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
-        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
-
-    - name: Configure CMake
-      working-directory: tol
-      run: |
-        mkdir -p build
-        cd build
-        cmake .. \
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-          -DCMAKE_C_COMPILER=${{ matrix.cc }} \
-          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
-          -DCMAKE_INSTALL_PREFIX=$PWD/install \
-          -DENABLE_TESTING=ON \
-          -DCOVERAGE_ENABLED=ON
-
-    - name: Build TOL
-      working-directory: tol/build
-      run: |
-        make -j$(nproc)
-        echo "Build completed successfully with ${{ matrix.compiler }}"
+    - name: Setup TOL Build Environment
+      uses: ./.github/actions/setup-tol-build
+      with:
+        compiler: ${{ matrix.compiler }}
+        platform: linux
+        enable-testing: 'ON'
+        enable-coverage: 'ON'
+        build-type: ${{ env.BUILD_TYPE }}
 
     - name: Run Unit Tests
       working-directory: tol/build
@@ -153,29 +121,13 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v1.1
 
-    - name: Setup vcpkg Dependencies
-      run: |
-        vcpkg install gsl:x64-windows
-        vcpkg install fftw3:x64-windows
-        vcpkg install lapack:x64-windows
-        vcpkg install zlib:x64-windows
-
-    - name: Configure CMake
-      working-directory: tol
-      run: |
-        mkdir build
-        cd build
-        cmake .. `
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
-          -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
-          -DCMAKE_INSTALL_PREFIX="$PWD/install" `
-          -DENABLE_TESTING=ON
-
-    - name: Build TOL
-      working-directory: tol/build
-      run: |
-        cmake --build . --config ${{ env.BUILD_TYPE }} --parallel
-        Write-Host "Windows build completed successfully"
+    - name: Setup TOL Build Environment
+      uses: ./.github/actions/setup-tol-build
+      with:
+        compiler: msvc
+        platform: windows
+        enable-testing: 'ON'
+        build-type: ${{ env.BUILD_TYPE }}
 
     - name: Run Tests
       working-directory: tol/build

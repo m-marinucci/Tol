@@ -4,10 +4,10 @@
 
 set -e
 
-# Configuration
+# Configuration (can be overridden by environment variables)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-RELEASE_DIR="${PROJECT_ROOT}/release"
+PROJECT_ROOT="${TOL_PROJECT_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+RELEASE_DIR="${TOL_RELEASE_DIR:-${PROJECT_ROOT}/release}"
 VERSION="${1:-$(date +%Y.%m.%d)}"
 
 # Colors for output
@@ -23,11 +23,34 @@ log_step() {
     echo -e "${BLUE}[STEP]${NC} $1"
 }
 
+# Check required tools
+check_required_tools() {
+    local missing_tools=()
+
+    # Check for required tools
+    for tool in tar zip sha256sum rsync; do
+        if ! command -v "$tool" &> /dev/null; then
+            missing_tools+=("$tool")
+        fi
+    done
+
+    if [ ${#missing_tools[@]} -ne 0 ]; then
+        log_error "Missing required tools: ${missing_tools[*]}"
+        log_error "Please install the missing tools and try again"
+        exit 1
+    fi
+
+    log_info "All required tools available: tar, zip, sha256sum, rsync"
+}
+
 # Create release directory
 mkdir -p "$RELEASE_DIR"
 
 log_info "Creating TOL release v$VERSION"
 log_info "Release directory: $RELEASE_DIR"
+
+# Check dependencies first
+check_required_tools
 
 # Package Linux builds
 package_linux_builds() {

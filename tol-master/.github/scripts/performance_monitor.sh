@@ -29,11 +29,44 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Check required tools
+check_required_tools() {
+    local missing_tools=()
+
+    # Check for required tools
+    for tool in bc awk; do
+        if ! command -v "$tool" &> /dev/null; then
+            missing_tools+=("$tool")
+        fi
+    done
+
+    # Check for /usr/bin/time specifically
+    if [ ! -x "/usr/bin/time" ]; then
+        missing_tools+=("/usr/bin/time")
+    fi
+
+    if [ ${#missing_tools[@]} -ne 0 ]; then
+        log_error "Missing required tools: ${missing_tools[*]}"
+        log_error "Please install the missing tools and try again"
+        exit 1
+    fi
+
+    # Check for optional tools
+    if ! command -v jq &> /dev/null; then
+        log_warn "jq not found - baseline comparison will be limited"
+    fi
+
+    log_info "All required tools available"
+}
+
 # Check if TOL binary exists
 if [ ! -f "$TOL_BIN" ]; then
     log_error "TOL binary not found: $TOL_BIN"
     exit 1
 fi
+
+# Check dependencies
+check_required_tools
 
 log_info "Starting performance benchmarks with: $TOL_BIN"
 
@@ -76,10 +109,23 @@ run_benchmark() {
         
         # Run the command with time measurement
         local time_output
-        time_output=$(/usr/bin/time -f "%e %M" $command 2>&1 >/dev/null || echo "0 0")
-        
+        local exit_code
+        time_output=$(/usr/bin/time -f "%e %M" $command 2>&1 >/dev/null)
+        exit_code=$?
+
+        if [ $exit_code -ne 0 ]; then
+            log_warn "Command failed in iteration $i, skipping this measurement"
+            continue
+        fi
+
         local time_taken=$(echo "$time_output" | awk '{print $1}')
         local memory_used=$(echo "$time_output" | awk '{print $2}')
+
+        # Validate numeric values
+        if ! [[ "$time_taken" =~ ^[0-9]+\.?[0-9]*$ ]] || ! [[ "$memory_used" =~ ^[0-9]+$ ]]; then
+            log_warn "Invalid measurement in iteration $i, skipping"
+            continue
+        fi
         
         times+=("$time_taken")
         memories+=("$memory_used")
@@ -88,8 +134,15 @@ run_benchmark() {
         total_memory=$(echo "$total_memory + $memory_used" | bc -l)
     done
     
-    local avg_time=$(echo "scale=3; $total_time / $iterations" | bc -l)
-    local avg_memory=$(echo "scale=0; $total_memory / $iterations" | bc -l)
+    # Check for division by zero
+    local successful_iterations=${#times[@]}
+    if [ $successful_iterations -eq 0 ]; then
+        log_error "No successful iterations for benchmark: $name"
+        return 1
+    fi
+
+    local avg_time=$(echo "scale=3; $total_time / $successful_iterations" | bc -l)
+    local avg_memory=$(echo "scale=0; $total_memory / $successful_iterations" | bc -l)
     
     # Calculate standard deviation for time
     local sum_sq_diff=0
@@ -98,7 +151,7 @@ run_benchmark() {
         local sq_diff=$(echo "$diff * $diff" | bc -l)
         sum_sq_diff=$(echo "$sum_sq_diff + $sq_diff" | bc -l)
     done
-    local variance=$(echo "scale=6; $sum_sq_diff / $iterations" | bc -l)
+    local variance=$(echo "scale=6; $sum_sq_diff / $successful_iterations" | bc -l)
     local std_dev=$(echo "scale=3; sqrt($variance)" | bc -l)
     
     # Output JSON for this benchmark
@@ -107,6 +160,7 @@ run_benchmark() {
             "name": "$name",
             "description": "$description",
             "iterations": $iterations,
+            "successful_iterations": $successful_iterations,
             "results": {
                 "avg_time_seconds": $avg_time,
                 "std_dev_seconds": $std_dev,
