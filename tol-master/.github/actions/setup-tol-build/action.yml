@@ -1,0 +1,106 @@
+name: 'Setup TOL Build Environment'
+description: 'Common setup steps for TOL builds including dependencies and CMake configuration'
+
+inputs:
+  compiler:
+    description: 'Compiler to use (e.g., gcc-11, msvc)'
+    required: true
+  platform:
+    description: 'Platform (linux or windows)'
+    required: true
+  enable-testing:
+    description: 'Enable testing framework'
+    required: false
+    default: 'ON'
+  enable-coverage:
+    description: 'Enable code coverage'
+    required: false
+    default: 'OFF'
+  build-type:
+    description: 'CMake build type'
+    required: false
+    default: 'Release'
+
+outputs:
+  build-dir:
+    description: 'Build directory path'
+    value: ${{ steps.setup.outputs.build-dir }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Linux Dependencies
+      if: inputs.platform == 'linux'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          ${{ inputs.compiler }} \
+          libgsl-dev \
+          libfftw3-dev \
+          liblapack-dev \
+          libblas-dev \
+          zlib1g-dev \
+          valgrind \
+          lcov \
+          cppcheck
+
+    - name: Setup Windows Dependencies
+      if: inputs.platform == 'windows'
+      shell: pwsh
+      run: |
+        vcpkg install gsl:x64-windows
+        vcpkg install fftw3:x64-windows
+        vcpkg install lapack:x64-windows
+        vcpkg install zlib:x64-windows
+
+    - name: Setup Compiler Environment
+      if: inputs.platform == 'linux'
+      shell: bash
+      run: |
+        # Extract CC and CXX from compiler input
+        if [[ "${{ inputs.compiler }}" == gcc-* ]]; then
+          version="${{ inputs.compiler }}"
+          echo "CC=${version}" >> $GITHUB_ENV
+          echo "CXX=${version/gcc/g++}" >> $GITHUB_ENV
+        fi
+
+    - name: Configure CMake
+      id: setup
+      shell: bash
+      working-directory: tol
+      run: |
+        mkdir -p build
+        cd build
+        
+        if [[ "${{ inputs.platform }}" == "windows" ]]; then
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} \
+            -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+            -DCMAKE_INSTALL_PREFIX="$PWD/install" \
+            -DENABLE_TESTING=${{ inputs.enable-testing }} \
+            -DCOVERAGE_ENABLED=${{ inputs.enable-coverage }}
+        else
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} \
+            -DCMAKE_C_COMPILER=${{ env.CC }} \
+            -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
+            -DCMAKE_INSTALL_PREFIX=$PWD/install \
+            -DENABLE_TESTING=${{ inputs.enable-testing }} \
+            -DCOVERAGE_ENABLED=${{ inputs.enable-coverage }}
+        fi
+        
+        echo "build-dir=$PWD" >> $GITHUB_OUTPUT
+
+    - name: Build TOL
+      shell: bash
+      working-directory: tol/build
+      run: |
+        if [[ "${{ inputs.platform }}" == "windows" ]]; then
+          cmake --build . --config ${{ inputs.build-type }} --parallel
+        else
+          make -j$(nproc)
+        fi
+        echo "Build completed successfully with ${{ inputs.compiler }}"
