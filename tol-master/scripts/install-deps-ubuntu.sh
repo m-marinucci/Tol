@@ -62,7 +62,7 @@ fi
 
 # Function to check if package is installed
 is_package_installed() {
-    dpkg -l "$1" &> /dev/null
+    dpkg -s "$1" &> /dev/null
 }
 
 # Function to install packages
