@@ -60,6 +60,8 @@
 
 #if defined(_MSC_VER)
 #  include <process.h>
+#else
+#  include <unistd.h>  // For getpid() on Linux/Unix
 #endif
 
 #include <locale.h>
@@ -158,8 +160,7 @@ public:
 };
 
 
-#ifdef UNIX
-#else // WINDOWS
+#if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
 
 //--------------------------------------------------------------------
@@ -190,7 +191,7 @@ static BText& BGetWindowsDirectory()
     return(WindowsDirectory);
 }
 
-#endif // WINDOWS
+#endif // _WIN32 || WIN32
 
 static BText tol_lc_numeric_("C");
 BText& TOL_lc_numeric() { return tol_lc_numeric_; }
@@ -256,7 +257,7 @@ void BGraContensBase<BText>::InitInstances()
     
     BSystemText* nullString_ = new BSystemText("NULL", "",
 					       I2("Null string.",
-						  "Cadena vacía."));
+						  "Cadena vacï¿½a."));
     
     new BParamText
       ("TOL_LC_NUMERIC", TOL_lc_numeric(),
@@ -274,48 +275,47 @@ void BGraContensBase<BText>::InitInstances()
 	  "explained above. For Spanish: es_ES.UTF-8, or es_ES.ISO8859-1"
 	  "\n"
 	   ,
-	  "LC_NUMERIC usado para formatear la salida de valores numéricos."
-	  "LC_NUMERIC es parte de la configuración de localización "
-	  "geográfica del Sistema Operativo\n."
-	  "La \"localización\" es una cadena de caracteres que "
-	  "contiene la identificación del lugar geográfica necesaria para "
-	  "dar el formato acorde las especificaciones de cada país.\n"
-	  "Una localización tiene normalmente la siguiente forma: "
+	  "LC_NUMERIC usado para formatear la salida de valores numï¿½ricos."
+	  "LC_NUMERIC es parte de la configuraciï¿½n de localizaciï¿½n "
+	  "geogrï¿½fica del Sistema Operativo\n."
+	  "La \"localizaciï¿½n\" es una cadena de caracteres que "
+	  "contiene la identificaciï¿½n del lugar geogrï¿½fica necesaria para "
+	  "dar el formato acorde las especificaciones de cada paï¿½s.\n"
+	  "Una localizaciï¿½n tiene normalmente la siguiente forma: "
 	  "lenguage[_territorio][.code-set][@modificador], donde lenguaje "
-	  "es un código de lenguaje acorde con la norma ISO 639, "
-	  "territorio un código de la norma ISO 3166 de especificación "
-	  "de país, y el codeset es el conjunto de codificación de "
+	  "es un cï¿½digo de lenguaje acorde con la norma ISO 639, "
+	  "territorio un cï¿½digo de la norma ISO 3166 de especificaciï¿½n "
+	  "de paï¿½s, y el codeset es el conjunto de codificaciï¿½n de "
 	  "caracteres tales como el ISO-8859-1 o el UTF-8.\n"
-	  "Bajo Windows, se recomienda usar las cadenas de identificación "
+	  "Bajo Windows, se recomienda usar las cadenas de identificaciï¿½n "
 	  "de lenguaje expresadas de namenra natural: p. ej: "
 	  "\"English\", or \"Spanish\".\n"
 	  ));
 
     new BParamText("GCFFile", GCFFile(),
                    I2("GCF file to be used by Chart methods",
-                      "Archivo GCF a ser usado por los métodos Chart"));
+                      "Archivo GCF a ser usado por los mï¿½todos Chart"));
 
     BText JMN = "JacobianMethod";
     BText JMD =
 	I2("Jacobian's calculation method can be Analytical or Numerical",
-	   "El método de cálculo del Jacobiano puede ser Analítico o Numérico");
+	   "El mï¿½todo de cï¿½lculo del Jacobiano puede ser Analï¿½tico o Numï¿½rico");
     
     BParamText* JM = new BParamText(JMN, jacobianMethod_, JMD);
     
     BSystemText* TolAppDataPath_ =new BSystemText("TolAppDataPath", BSys::TolAppData(),
 		  I2("Returns the standard system directory to store application data.",
-		     "Devuelve el directorio estándar del sistema para almacenar "
-         "datos de la aplicación."));
+		     "Devuelve el directorio estï¿½ndar del sistema para almacenar "
+         "datos de la aplicaciï¿½n."));
 
-#ifdef UNIX
-#else // WINDOWS
+#if defined(_WIN32) || defined(WIN32)
 #  include <windows.h>
     
     BText& SearchPaths();
     BParamText* searchPaths = new BParamText
 	("SearchPaths", SearchPaths(),
 	 I2("TOL searching paths separated by ';'.",
-	    "Directorio de búsqueda de ficheros TOL"));
+	    "Directorio de bï¿½squeda de ficheros TOL"));
     
     BSystemText* systemDir_ = new BSystemText
 	("SystemDirectory", BGetSystemDirectory(),
@@ -332,7 +332,7 @@ void BGraContensBase<BText>::InitInstances()
 	    "Directorio de Windows. Por ejemplo, en Windows 95, "
 	    "suele ser c:\\windows; y en Windows NT, c:\\winnt"));
     
-#endif // WINDOWS
+#endif // _WIN32 || WIN32
 
     BSystemText* system_ = new BSystemText("OSName", SYSTEM,
 					   I2("Operative System Name.",
@@ -408,8 +408,8 @@ DefIntOpr(1, BTxtI2, "I2", 2, 2,
 	  "(Text eng, Text spa)",
 	  I2("Returns the first text or the second according to if the "
        "current language is English or Spanish.",
-	     "Devuelve el primer texto o el segundo según sea el idioma "
-       "en curso el inglés o el español."),
+	     "Devuelve el primer texto o el segundo segï¿½n sea el idioma "
+       "en curso el inglï¿½s o el espaï¿½ol."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -425,7 +425,7 @@ DefExtOpr(1, BTxtGetHardSoftPlattform, "GetHardSoftPlattform", 1, 1,
 	  "Real","(Real unused)",
 	  I2("Returns the identifier of the platform where TOL is running.",
 	     "Devuelve el identificador de la platforma sobre la que "
-       "está funcionando TOL."),
+       "estï¿½ funcionando TOL."),
 	  BOperClassify::Text_);
 //--------------------------------------------------------------------
 void BTxtGetHardSoftPlattform::CalcContens()
@@ -444,7 +444,7 @@ DefExtOpr(1, BTxtGetSharedLibExt, "GetSharedLibExt", 1, 1,
 	  "Real","(Real unused)",
 	  I2("Returns the identifier of the platform where TOL is running.",
 	     "Devuelve el identificador de la platforma sobre la que "
-       "está funcionando TOL."),
+       "estï¿½ funcionando TOL."),
 	  BOperClassify::Text_);
 //--------------------------------------------------------------------
 void BTxtGetSharedLibExt::CalcContens()
@@ -481,7 +481,7 @@ DeclareContensClass(BText, BTxtTemporary, BGetRngName);
 DefIntOpr(1, BGetRngName, "GetRandomName", 1, 1,
 	  "(Text empty)",
 	  I2("Returns the name of the default random generator.",
-	     "Retorna el nombre del generador aleatorio por omisión"),
+	     "Retorna el nombre del generador aleatorio por omisiï¿½n"),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -499,7 +499,7 @@ DefIntOpr(1, BPutEditor, "PutEditor", 1, 1,
 	  I2("Puts a new default editor for text format methods and returns the "
 	     "current editor.",
 	     "Cambia el editor por defecto para metodos con formato de texto "
-	     "y devuelve el que había hasta el momento."),
+	     "y devuelve el que habï¿½a hasta el momento."),
 	  BOperClassify::System_);
 
 //--------------------------------------------------------------------
@@ -520,8 +520,8 @@ DefIntOpr(1, BPutLanguage, "PutLanguage", 1, 1,
 	     "(Text idioma)"),
 	  I2("Sets the current human language of TOL messages and returns the previously one."
        "Admited languages are \"ENGLISH\" and \"SPANISH\"",
-	     "Cambia el idioma usado por TOL en los mensajes y devuelve el que había hasta el momento."
-       "Los idiomas admitidos son \"INGLES\" y \"CASTELLANO\" ó \"ESPAÑOL\" "),
+	     "Cambia el idioma usado por TOL en los mensajes y devuelve el que habï¿½a hasta el momento."
+       "Los idiomas admitidos son \"INGLES\" y \"CASTELLANO\" ï¿½ \"ESPAï¿½OL\" "),
 	  BOperClassify::System_);
 
 //--------------------------------------------------------------------
@@ -535,13 +535,13 @@ void BPutLanguage::CalcContens()
   else if(lang=="INGLES"     ) { BText::PutLanguage(BENGLISH); }
   else if(lang=="SPANISH"    ) { BText::PutLanguage(BSPANISH); }
   else if(lang=="CASTELLANO" ) { BText::PutLanguage(BSPANISH); }
-  else if(lang=="ESPAÑOL"    ) { BText::PutLanguage(BSPANISH); }
+  else if(lang=="ESPAï¿½OL"    ) { BText::PutLanguage(BSPANISH); }
   else 
   {
     Warning(I2("PutLanguage function cannot use unknown language ",
-               "La función PutLanguage no puede usar el idioma desconocido \"")+lang+"\"\n"+
+               "La funciï¿½n PutLanguage no puede usar el idioma desconocido \"")+lang+"\"\n"+
             I2("Admited languages are \"ENGLISH\" and \"SPANISH\"",
-               "Los idiomas admitidos son \"INGLES\" y \"CASTELLANO\" ó \"ESPAÑOL\" "));
+               "Los idiomas admitidos son \"INGLES\" y \"CASTELLANO\" ï¿½ \"ESPAï¿½OL\" "));
   }
 }
 
@@ -588,7 +588,7 @@ void BTxtSetSum::CalcContens()
     Error(I2("There are non Text objects in the set argument of "
              "function Text SetSum",
              "Hay objetos de tipo distinto de Text en el conjunto "
-             "argumento de la llamada a la función Text SetSum"));
+             "argumento de la llamada a la funciï¿½n Text SetSum"));
   }
 }
 
@@ -622,7 +622,7 @@ void BTxtJoinWith::CalcContens()
     Error(I2("There are non Text objects in the set argument of "
              "function Text TextJoinWith",
              "Hay objetos de tipo distinto de Text en el conjunto "
-             "argumento de la llamada a la función Text TextJoinWith"));
+             "argumento de la llamada a la funciï¿½n Text TextJoinWith"));
     contens_ = "";
   }
 }
@@ -636,7 +636,7 @@ DefExtOpr(1, BTxtConcat, "<<", 2, 2, "Text Anything",
 	     "effecting the operation.",
 	     "Concatena dos objetos de texto. "
 	     "Si el segundo objeto no es un texto, lo convierte a texto antes de "
-	     "efectuar la operación."),
+	     "efectuar la operaciï¿½n."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -657,8 +657,8 @@ DefIntOpr(1, BTxtCompact, "Compact", 1, 1,
 	  "(Text txt)",
 	  I2("Compacts a text substituting any combination of white characters "
 	     "by an only character of space.",
-	     "Compacta un texto sustituyendo cualquier combinación de caracteres "
-	     "blancos por un sólo carácter de espacio."),
+	     "Compacta un texto sustituyendo cualquier combinaciï¿½n de caracteres "
+	     "blancos por un sï¿½lo carï¿½cter de espacio."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -760,17 +760,17 @@ DefExtOpr(1, BTxtReplaceTable, "ReplaceTable", 2, 3, "Text Set Real",
 	     "Set table. Los elementos de Set table tienen que ser objetos "
 	     "Set formados por pares de Text: [[\"TextoAntiguo\","
 	     "\"TextoNuevo\"]]. Los elementos del Set table son ordenados "
-	     "alfabéticamente por \"TextoAntiguo\" antes de que se apliquen "
-	     "secuencialmente las sustituciones. El parámetro Real loops es "
+	     "alfabï¿½ticamente por \"TextoAntiguo\" antes de que se apliquen "
+	     "secuencialmente las sustituciones. El parï¿½metro Real loops es "
 	     "opcional, si no se utiliza, las sustituciones se aplican "
-	     "reiteradamente hasta que no es posible ninguna sustitución "
-	     "más. No especificar el tercer argumento puede provocar bucles "
+	     "reiteradamente hasta que no es posible ninguna sustituciï¿½n "
+	     "mï¿½s. No especificar el tercer argumento puede provocar bucles "
 	     "infinitos.\n\nEjemplos:\n\n"
-	     "1) Autómata que reconoce tres expresiones regulares\n"
+	     "1) Autï¿½mata que reconoce tres expresiones regulares\n"
 	     "AC*DF | AC*E | BF\n"
-	     "Cada número en el Set Automata es un estado. Si el resultado "
+	     "Cada nï¿½mero en el Set Automata es un estado. Si el resultado "
 	     "de una cadenada de entrada dada es una cadena de salida con "
-	     "valor \"4\" entonces el autómota reconoce la cadena de "
+	     "valor \"4\" entonces el autï¿½mota reconoce la cadena de "
 	     "entrada:\n\n"
 	     "Set Automata =\n"
 	     "[[ [[\"A\", \"12\"]], // Entry \"A\" -> from State 1 to 2\n"
@@ -789,7 +789,7 @@ DefExtOpr(1, BTxtReplaceTable, "ReplaceTable", 2, 3, "Text Set Real",
 	     "Text instr = \"ACCCDF\";\n"
 	     "Text outstr = ReplaceTable(instr,Automata);\n"
 	     "Result: outstr == \"4\"\n\n"
-	     "2) Corrección ortográfica (no utiliza el 3er. parámetro):\n\n"
+	     "2) Correcciï¿½n ortogrï¿½fica (no utiliza el 3er. parï¿½metro):\n\n"
 	     "Set ortTab = \n"
 	     "[[ [[\"nrr\", \"nr\"]], // despues de n una sola r\n"
 	     "   [[\"vr\",  \"br\"]], // la r no va con la v\n"
@@ -797,13 +797,13 @@ DefExtOpr(1, BTxtReplaceTable, "ReplaceTable", 2, 3, "Text Set Real",
 	     "   [[\"nb\",  \"mb\"]], // m antes de b\n"
 	     "   [[\"np\",  \"mp\"]]  // m antes de p\n"
 	     "]];\n"
-	     "Text muyMal = \"El envlema de Enrrique enrrrrrriquecía "
+	     "Text muyMal = \"El envlema de Enrrique enrrrrrriquecï¿½a "
 	     "anplia y vravamente\";\n"
 	     "Text ortRep = ReplaceTable(muyMal, ortTab);\n\n"
-	     "Resultado: ortRep == \"El emblema de Enrique enriquecía "
+	     "Resultado: ortRep == \"El emblema de Enrique enriquecï¿½a "
 	     "amplia y bravamente\"\n\n"
-	     "3) Conversión de base octal a binaria (utiliza el 3er. "
-	     "parámetro):\n\n"
+	     "3) Conversiï¿½n de base octal a binaria (utiliza el 3er. "
+	     "parï¿½metro):\n\n"
 	     "Set oct2bin =\n"
 	     "[[ [[\"0\", \"000\"]],\n"
 	     "   [[\"1\", \"001\"]],\n"
@@ -867,7 +867,7 @@ DeclareContensClass(BText, BTxtTemporary, BTxtChar);
 DefExtOpr(1, BTxtChar, "Char", 1, 1, "Real",
 	  "(Real n)",
 	  I2("Returns the n-th ASCII character.",
-	     "Devueve el enésimo caráter ASCII."),
+	     "Devueve el enï¿½simo carï¿½ter ASCII."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -906,7 +906,7 @@ DefExtOpr(1, BTxtSubString, "Sub", 3, 3, "Text Real Real",
 	  I2("(Text txt, Real from, Real until)",
 	     "(Text txt, Real desde, Real hasta)"),
 	  I2("Returns the substring of a text between two bounds, both included.",
-	     "Devueve la subcadena comprendida entre dos límites, ambos incluidos."),
+	     "Devueve la subcadena comprendida entre dos lï¿½mites, ambos incluidos."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -923,7 +923,7 @@ DefExtOpr(1, BTxtSub, "TextSub", 3, 3, "Text Real Real",
 	     "(Text txt, Real desde, Real hasta)"),
 	  I2("Returns the substring of a text between two bounds, both included. "
          "Negative character positions count from the end of the text.",
-	     "Devueve la subcadena comprendida entre dos límites, ambos incluidos."
+	     "Devueve la subcadena comprendida entre dos lï¿½mites, ambos incluidos."
          "Las posiciones negativas cuentan desde el final del texto."),
 	  BOperClassify::Text_);
 
@@ -944,7 +944,7 @@ DefExtOpr(1, BFirstTxtToUpper, "FirstToUpper", 1, 2, "Text Real",
 	  "(Text txt [, Real restToLower=FALSE])",
 	  I2("Changes the first character of a text to upper case and makes lower "
 	     "case the rest if restToLower is TRUE.",
-	     "Cambia el primer caracter a mayúsculas y el resto a minúsculas si "
+	     "Cambia el primer caracter a mayï¿½sculas y el resto a minï¿½sculas si "
        "restToLower es CIERTO."),
 	  BOperClassify::Text_);
 
@@ -966,7 +966,7 @@ DeclareContensClass(BText, BTxtTemporary, BFirstTxtToLower);
 DefExtOpr(1, BFirstTxtToLower, "FirstToLower", 1, 1, "Text",
 	  "(Text txt)",
 	  I2("Changes the first character of a text to lower case.",
-	     "Cambia el primer caracter a minúsculas."),
+	     "Cambia el primer caracter a minï¿½sculas."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -986,7 +986,7 @@ DeclareContensClass(BText, BTxtTemporary, BTxtToUpper);
 DefIntOpr(1, BTxtToUpper, "ToUpper", 1, 1,
 	  "(Text txt)",
 	  I2("Changes a text to upper case characters.",
-	     "Cambia todos los caracteres a mayúsculas."),
+	     "Cambia todos los caracteres a mayï¿½sculas."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -1002,7 +1002,7 @@ DeclareContensClass(BText, BTxtTemporary, BTxtToLower);
 DefIntOpr(1, BTxtToLower, "ToLower", 1, 1,
 	  "(Text txt)",
 	  I2("Changes a text to upper case characters.",
-	     "Cambia todos los caracteres a minúsculas."),
+	     "Cambia todos los caracteres a minï¿½sculas."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -1018,8 +1018,8 @@ DeclareContensClass(BText, BTxtTemporary, BTxtToName);
 DefIntOpr(1, BTxtToName, "ToName", 1, 1,
 	  "(Text txt)",
 	  I2("Changes a text to identifier valid characters.",
-	     "Cambia todos los caracteres no válidos como identificador por "
-	     "el carácter '_'."),
+	     "Cambia todos los caracteres no vï¿½lidos como identificador por "
+	     "el carï¿½cter '_'."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -1052,7 +1052,7 @@ DefExtOpr(1, BTxtIdentify, "Identify",   1, 1, "Anything",
 	  I2("Returns the name of a variable if it has a name. Else returns its "
 	     "description.",
 	     "Devuelve el nombre de una variable si lo tiene. Si no devuelve su "
-	     "descripción"),
+	     "descripciï¿½n"),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1077,7 +1077,7 @@ DefExtOpr(1, BTxtDescription, "Description",	 1, 2, "Anything Text",
        "If first parameter <var> is a constant string true then "
        "searches the Class or Struct which "
        "name is the contens of <var> and returns its description.",
-	     "Devuelve la descripción de una variable. Si el argumento "
+	     "Devuelve la descripciï¿½n de una variable. Si el argumento "
        "<var> es una cadena constante, entonces busca el tipo de "
        "usuario, Struct o Class, cuyo nombre es el contenido de "
        "<var>")+"\n"+Description_second_arg_error,
@@ -1177,7 +1177,7 @@ DeclareContensClass(BText, BTxtTemporary, BTxtExpression);
 DefExtOpr(1, BTxtExpression, "Expression",	 1, 1, "Anything",
 	  "(Anything var)",
 	  I2("Returns the TOL expression of a variable",
-	     "Devuelve la expressión TOL de una variable"),
+	     "Devuelve la expressiï¿½n TOL de una variable"),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1205,10 +1205,10 @@ DefExtOpr(1, BTxtGrammar, "Grammar",	 1, 1, "Anything",
 	     "If it does not exist any object with that name returns the empty chain."
 	     "\nIf there are several objects with the same name in different "
 	     "grammars only it is returned one of them .",
-	     "Devuelve el nombre de la gramática de una variable. \n"
-	     "Si no existe ningún objeto con ese nombre devuelve la cadena vacía. \n"
-	     "Si hay varios objetos con el mismo nombre en diferentes gramáticas "
-	     "sólo se devuelve una de ellas."),
+	     "Devuelve el nombre de la gramï¿½tica de una variable. \n"
+	     "Si no existe ningï¿½n objeto con ese nombre devuelve la cadena vacï¿½a. \n"
+	     "Si hay varios objetos con el mismo nombre en diferentes gramï¿½ticas "
+	     "sï¿½lo se devuelve una de ellas."),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1243,9 +1243,9 @@ DefExtOpr(1, BTxtGetTOLPath, "GetTOLPath",   1, 1, "Anything",
 	     "If there are several objects with the same name in different grammars "
 	     "only it is returned one of them .",
 	     "Devuelve el camino TOL de una variable. \n"
-	     "Si no existe ningún objeto con ese nombre devuelve la cadena vacía. \n"
-	     "Si hay varios objetos con el mismo nombre en diferentes gramáticas "
-	     "sólo se devuelve uno de ellas."),
+	     "Si no existe ningï¿½n objeto con ese nombre devuelve la cadena vacï¿½a. \n"
+	     "Si hay varios objetos con el mismo nombre en diferentes gramï¿½ticas "
+	     "sï¿½lo se devuelve uno de ellas."),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1262,9 +1262,9 @@ DefExtOpr(1, BTxtGetAddressFromObject, "GetAddressFromObject",   1, 1, "Anything
 	  I2("Returns a unique string address for a TOL variable that can "
        "be used after to recover the object with GetObjectFromAddress "
        "if it is still alive.",
-	     "Devuelve una cadena de dirección única para una variable TOL "
+	     "Devuelve una cadena de direcciï¿½n ï¿½nica para una variable TOL "
        "que puede ser utilizada posterormente para recuperar el objeto "
-       "con GetObjectFromAddress si aún existe."),
+       "con GetObjectFromAddress si aï¿½n existe."),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1284,9 +1284,9 @@ DefExtOpr(1, BTxtGetSourcePath, "GetSourcePath",   1, 1, "Anything",
 	     "If there are several objects with the same name in different grammars "
 	     "only it is returned one of them .",
 	     "Devuelve el camino del fichero donde fue creada la variable. \n"
-	     "Si no existe ningún objeto con ese nombre devuelve la cadena vacía. \n"
-	     "Si hay varios objetos con el mismo nombre en diferentes gramáticas "
-	     "sólo se devuelve uno de ellas."),
+	     "Si no existe ningï¿½n objeto con ese nombre devuelve la cadena vacï¿½a. \n"
+	     "Si hay varios objetos con el mismo nombre en diferentes gramï¿½ticas "
+	     "sï¿½lo se devuelve uno de ellas."),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1302,18 +1302,18 @@ DeclareContensClass(BText, BTxtTemporary, BTxtArguments);
 DefExtOpr(1, BTxtArguments, "Arguments",   1, 3, "Code Real Text",
 	  I2("(Code function "
 	     "[, Real argNum=0, Text infoType={\"\";\"TYPE\";\"NAME\"} ])])",
-	     "(Code función "
+	     "(Code funciï¿½n "
 	     "[, Real numArg=0, Text tipoInfo={\"\";\"TYPE\";\"NAME\"} ])"),
 	  I2("Returns the arguments description for a function.\nThe 2nd "
 	     "parameter argNum might be used to specify from which argument "
 	     "we want to get data\n. The 3th parameter infoType might be "
 	     "to specify what data we want: the parameter Type or the "
 	     "parameter Name\n",
-	     "Devuelve la descripción de los argumentos de una función.\n"
-	     "El segundo parámetro puede ser usado para especificar el "
-	     "número del argumento del cual queremos obtener información\n"
-	     "El tercer parámetro puede ser utilizado para especificar que "
-	     "dato queremos: el tipo del parámetro o su nombre\n"),
+	     "Devuelve la descripciï¿½n de los argumentos de una funciï¿½n.\n"
+	     "El segundo parï¿½metro puede ser usado para especificar el "
+	     "nï¿½mero del argumento del cual queremos obtener informaciï¿½n\n"
+	     "El tercer parï¿½metro puede ser utilizado para especificar que "
+	     "dato queremos: el tipo del parï¿½metro o su nombre\n"),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1354,10 +1354,10 @@ DefExtOpr(1, BTxtCodeGrammar, "CodeGrammar",	 1, 1, "Code",
 	     "If it does not exist any function with that name returns the empty "
 	     "chain.\n If there are several functions with the same name in "
 	     "different grammars only it is returned one of them .",
-	     "Devuelve el nombre de la gramática devuelta por una función. \n"
-	     "Si no existe ningúna función con ese nombre devuelve la cadena vacía. "
+	     "Devuelve el nombre de la gramï¿½tica devuelta por una funciï¿½n. \n"
+	     "Si no existe ningï¿½na funciï¿½n con ese nombre devuelve la cadena vacï¿½a. "
 	     "\nSi hay varias funciones con el mismo nombre en diferentes "
-	     "gramáticas sólo se devuelve una de ellas."),
+	     "gramï¿½ticas sï¿½lo se devuelve una de ellas."),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1379,7 +1379,7 @@ DefExtOpr(1, BTxtStructName, "StructName",   1, 1, "Set",
 	  I2("Returns the name of the structure of a set. If it has no structure "
 	     "then returns the null string.",
 	     "Devuelve el nombre de la estructura de un conjunto. Si no la tiene "
-	     "devuelve la cadena vacía."),
+	     "devuelve la cadena vacï¿½a."),
 	  BOperClassify::General_);
 
 //--------------------------------------------------------------------
@@ -1404,14 +1404,14 @@ DefExtOpr(1, BPutTableRealFormat, "PutTableRealFormat", 1, 2, "Anything Real",
 	     "Returns the old format string. See FormatReal function to "
 	     "know more about number formating."
 	     ,
-	     "Cambia el formato de números reales por defecto. Hay dos "
-	     "posibles usos para garantizar la compatibilidad hacia atrás:\n"
+	     "Cambia el formato de nï¿½meros reales por defecto. Hay dos "
+	     "posibles usos para garantizar la compatibilidad hacia atrï¿½s:\n"
 	     " (1.- Correcto) PutTableRealFormat(Text formato)\n"
 	     " (2.- Obsoleto) PutTableRealFormat(Real longitud, "
 	     "Real precision)\n"
 	     "Devuelve la cadena de formato que se acaba de reemplazar."
-	     "Mirar la función FormatReal para saber más acerca de formatos "
-	     "de números."),
+	     "Mirar la funciï¿½n FormatReal para saber mï¿½s acerca de formatos "
+	     "de nï¿½meros."),
 	  BOperClassify::Conversion_);
 //--------------------------------------------------------------------
 /*! \sa BSeriesTable::CreateTextTable (srg.cpp)
@@ -1439,12 +1439,12 @@ DefExtOpr(1, BPutTableDateFormat, "PutTableDateFormat",  1, 2, "Anything Text",
 	     "know more about date formating."
 	     ,
 	     "Cambia el formato de fechas por defecto en las tablas. Hay dos "
-	     "posibles usos para garantizar la compatibilidad hacia atrás:\n"
+	     "posibles usos para garantizar la compatibilidad hacia atrï¿½s:\n"
 	     " (1.- Correcto) PutTableDateFormat(Text formato)\n"
 	     " (2.- Obsoleto) PutTableDateFormat(Real longitud, "
 	     "Text formato)\n"
 	     "Devuelve la cadena de formato que se acaba de reemplazar."
-	     "Mirar la función FormatFate para saber más acerca de formatos "
+	     "Mirar la funciï¿½n FormatFate para saber mï¿½s acerca de formatos "
 	     "de fecha."),
 	  BOperClassify::Conversion_);
 //--------------------------------------------------------------------
@@ -1469,7 +1469,7 @@ DefExtOpr(1, BPutRealFormat, "PutRealFormat", 1, 1, "Text",
 	  I2("(Text format)",
 	     "(Text formato)"),
 	  I2("Change the default real format. ( C and C++ string format ) ",
-	     "Cambia el formato de números reales por defecto."
+	     "Cambia el formato de nï¿½meros reales por defecto."
 	     "( Cadenas de formato C y C++ )."),
 	  BOperClassify::Conversion_);
 
@@ -1522,22 +1522,22 @@ DefExtOpr(1, BTxtFormatReal, "FormatReal", 1, 2, "Real Text",
 	     "     G : Identical to the g format, except that E, rather than e,"
 	     " introduces the exponent (where appropriate)."
 	     ,
-	     "Convierte un número real a texto con un formato dado. Si no se da"
+	     "Convierte un nï¿½mero real a texto con un formato dado. Si no se da"
 	     " se utiliza el formato por defecto, '%lf'.\n"
-	     "  valor: Número a convertir.\n"
+	     "  valor: Nï¿½mero a convertir.\n"
 	     "  formato: Formato a aplicar.\n"
 	     "   %[flags] [width] [.precision] [Size Prefixes] [type]\n"
 	     "    [flags]\n"
 	     "     - : Alinea el resultado a obtenido a la izquierda del ancho"
 	     "         especificado. Por defecto a la derecha.\n"
-	     "     + : Indica el signo del número en la salida (+ o -).\n"
+	     "     + : Indica el signo del nï¿½mero en la salida (+ o -).\n"
 	     "     0 : Rellena el ancho del prefijo con ceros, si este es mayor"
-	     " que la parte entera. Sí 0 y - aparecen, 0 es ignorado.\n"
+	     " que la parte entera. Sï¿½ 0 y - aparecen, 0 es ignorado.\n"
 	     "         Por defecto no aparecen.\n"
 	     "    [width]\n"
-	     "     n : Número de dígtos de la parte entera.\n" 
+	     "     n : Nï¿½mero de dï¿½gtos de la parte entera.\n" 
 	     "    [.precision]\n" 
-	     "     m : Número de díagitos de la parte decimal.\n"
+	     "     m : Nï¿½mero de dï¿½agitos de la parte decimal.\n"
 	     "    [Size Prefixes]\n"
 	     "     l -> Long.\n"
 	     "     L -> Long.\n" 
@@ -1547,7 +1547,7 @@ DefExtOpr(1, BTxtFormatReal, "FormatReal", 1, 2, "Real Text",
 	     "     f : Valor con signo con la forma [-]dddd.dddd.\n"
 	     "     g : Utiliza el formato f o e, el mas apropiado en cada caso.\n"
 	     "         El formato e solo se utilza si el exponente es menor que"
-	     " -4, o mayor o igual que la precisión del argumento.\n"
+	     " -4, o mayor o igual que la precisiï¿½n del argumento.\n"
 	     "     G : Igual que le formato g, exceptuando que se reemplaza"
 	     " E por E.\n."
 	     ),
@@ -1606,9 +1606,9 @@ DefExtOpr(1, BPutDumpFile, "PutDumpFile", 1, 2, "Text Real",
 	  I2("Change the default dump file. If the second parameter is TRUE then "
 	     "the file is rewrited, else the new messages will be append to the "
 	     "end of the file, if this exists.",
-	     "Cambia el fichero de volcado por defecto. Si el segundo parámetro es "
+	     "Cambia el fichero de volcado por defecto. Si el segundo parï¿½metro es "
 	     "CIERTO el fichero se sobreescribe y en otro caso los mensajes se "
-	     "añaden al final del fichero, si es que éste existe."),
+	     "aï¿½aden al final del fichero, si es que ï¿½ste existe."),
 	  BOperClassify::System_);
 
 //--------------------------------------------------------------------
@@ -1652,15 +1652,15 @@ DefExtOpr(1, BTxtFormatDate, "FormatDate",	1, 2, "Date Text",
 		 "  fecha : Fecha a convertir.\n"
 		 "  formato : Formato a aplicar.\n"
 		 "    u : Quita del resultado los elementos no existentes.\n"
-         "    c : Fuerza la aparición de elementos no existentes.\n"
-         "    Y : Año largo (yyyy).\n"
-         "    y : Año corto (yy).\n"
-         "    m : Mes en número (mm).\n"
+         "    c : Fuerza la apariciï¿½n de elementos no existentes.\n"
+         "    Y : Aï¿½o largo (yyyy).\n"
+         "    y : Aï¿½o corto (yy).\n"
+         "    m : Mes en nï¿½mero (mm).\n"
          "    n : Nombre del mes corto (mmm).\n"
          "    N : Nombre del mes largo (mmmm).\n"
-         "    d : Día del mes (dd).\n"
-         "    w : Nombre corto del día de la semana (ddd).\n"
-         "    W : Nombre largo del día de la semana (dddd).\n"
+         "    d : Dï¿½a del mes (dd).\n"
+         "    w : Nombre corto del dï¿½a de la semana (ddd).\n"
+         "    W : Nombre largo del dï¿½a de la semana (dddd).\n"
          "    h : Hora.\n"
          "    i : Minuto.\n"
          "    s : Segundo.\n"),
@@ -1776,107 +1776,107 @@ DefExtOpr(
        "(say,  roman  numerals), and that of the E modifier is to use a "
        "locale-dependent alternative representation."
        ,
-       "Da formato al parámetro CTime de acuerdo con el formato especificado "
-       "en el parámetro format. Los caracteres normales de la cadena de "
-       "formato se copian en s sin conversión ninguna. Los especificadores "
-       "de conversión se introducen con un carácter de porcentaje `%', y se "
+       "Da formato al parï¿½metro CTime de acuerdo con el formato especificado "
+       "en el parï¿½metro format. Los caracteres normales de la cadena de "
+       "formato se copian en s sin conversiï¿½n ninguna. Los especificadores "
+       "de conversiï¿½n se introducen con un carï¿½cter de porcentaje `%', y se "
        "reem plazan en s como sigue:\n\n"
-       "%a   El nombre abreviado del día de la semana según la localización "
+       "%a   El nombre abreviado del dï¿½a de la semana segï¿½n la localizaciï¿½n "
        "en curso.\n\n"
-       "%A   El nombre del día de la semana, completo, según la localización "
+       "%A   El nombre del dï¿½a de la semana, completo, segï¿½n la localizaciï¿½n "
        "en curso.\n\n"
-       "%b   El nombre abreviado del mes segúnn la localización en curso.\n\n"
-       "%B   El nombre completo del mes según la localización en curso.\n\n"
-       "%c   La representación preferida de fecha y hora para la "
-       "localización en curso.\n\n"
-       "%C   El siglo (año/100) como un entero de 2 dígitos. (SU)\n\n"
-       "%d   El día del mes como un número en base diez (en el rango de 01 "
+       "%b   El nombre abreviado del mes segï¿½nn la localizaciï¿½n en curso.\n\n"
+       "%B   El nombre completo del mes segï¿½n la localizaciï¿½n en curso.\n\n"
+       "%c   La representaciï¿½n preferida de fecha y hora para la "
+       "localizaciï¿½n en curso.\n\n"
+       "%C   El siglo (aï¿½o/100) como un entero de 2 dï¿½gitos. (SU)\n\n"
+       "%d   El dï¿½a del mes como un nï¿½mero en base diez (en el rango de 01 "
        "a 31).\n\n"
-       "%D   Equivalente a %m/%d/%y. (Sip - sólo para norteamericanos. Los "
-       "norteamericanos deben darse cuenta que en otros países %d/%m/%y es "
-       "bastante común. Esto significa que en un contexto internacional "
-       "este formato es ambiguo y no se debería usar). (SU)\n\n"
-       "%e   Como %d, el día del mes como un número decimal, pero un cero "
+       "%D   Equivalente a %m/%d/%y. (Sip - sï¿½lo para norteamericanos. Los "
+       "norteamericanos deben darse cuenta que en otros paï¿½ses %d/%m/%y es "
+       "bastante comï¿½n. Esto significa que en un contexto internacional "
+       "este formato es ambiguo y no se deberï¿½a usar). (SU)\n\n"
+       "%e   Como %d, el dï¿½a del mes como un nï¿½mero decimal, pero un cero "
        "inicial se reemplaza por un espacio.(SU)\n\n"
-       "%E   Modificador; use formato alternativo, ver más abajo. (SU)\n\n"
+       "%E   Modificador; use formato alternativo, ver mï¿½s abajo. (SU)\n\n"
        "%F   Equivalente a %Y-%m-%d (el formato de fecha de ISO 8601). "
        "(C99)\n\n"
-       "%G   El  año con siglo como un número decimal según el estándar "
-       "ISO 8601. El año de 4 dígitos correspondiente al número de la semana "
-       "ISO (ver %V).  Éste tiene el mismo formato y valor que %y, salvo que "
-       "si el número de la semana ISO pertenece al año anterior o siguiente, "
-       "ese año se utiliza en su lugar. (TZ).\n\n"
-       "%g   Como %G, pero sin siglo, es decir, con un año de 2 dígitos "
+       "%G   El  aï¿½o con siglo como un nï¿½mero decimal segï¿½n el estï¿½ndar "
+       "ISO 8601. El aï¿½o de 4 dï¿½gitos correspondiente al nï¿½mero de la semana "
+       "ISO (ver %V).  ï¿½ste tiene el mismo formato y valor que %y, salvo que "
+       "si el nï¿½mero de la semana ISO pertenece al aï¿½o anterior o siguiente, "
+       "ese aï¿½o se utiliza en su lugar. (TZ).\n\n"
+       "%g   Como %G, pero sin siglo, es decir, con un aï¿½o de 2 dï¿½gitos "
        "(00-99). (TZ)\n\n"
        "%h   Equivalente a %b. (SU)\n\n"
-       "%H   La hora como un número en base diez en formato de 24 horas "
+       "%H   La hora como un nï¿½mero en base diez en formato de 24 horas "
        "(en el rango de 00 a 23).\n\n"
-       "%I   La hora como un número en base diez en formato de 12 horas (en "
+       "%I   La hora como un nï¿½mero en base diez en formato de 12 horas (en "
        "el rango de 01 a 12).\n\n"
-       "%j   El día juliano (día del año) como un número en base diez (en "
+       "%j   El dï¿½a juliano (dï¿½a del aï¿½o) como un nï¿½mero en base diez (en "
        "el rango de 001 a 366).\n\n"
-       "%k   La hora (en un reloj de 24 horas) como un número decimal (en "
-       "el rango de 0 a 23); los dígitos individuales son precedidos por un "
-       "blanco. (Ver también %H). (TZ)\n\n"
-       "%l   La hora (en un reloj de 12 horas) como un número decimal (en "
-       "el rango de 1  a  12); los dígitos individuales son precedidos por "
-       "un blanco. (Ver tambíen %I). (TZ).\n\n"
-       "%m   El mes como un número en base diez (en el rango de 01 a 12).\n\n"
-       "%M   El minuto como un número en base diez (en el rango de 00 a "
+       "%k   La hora (en un reloj de 24 horas) como un nï¿½mero decimal (en "
+       "el rango de 0 a 23); los dï¿½gitos individuales son precedidos por un "
+       "blanco. (Ver tambiï¿½n %H). (TZ)\n\n"
+       "%l   La hora (en un reloj de 12 horas) como un nï¿½mero decimal (en "
+       "el rango de 1  a  12); los dï¿½gitos individuales son precedidos por "
+       "un blanco. (Ver tambï¿½en %I). (TZ).\n\n"
+       "%m   El mes como un nï¿½mero en base diez (en el rango de 01 a 12).\n\n"
+       "%M   El minuto como un nï¿½mero en base diez (en el rango de 00 a "
        "59).\n\n"
-       "%n   Un carácter de nueva línea. (SU)\n\n"
-       "%O   Modificador; use un formato alternativo, ver más abajo. (SU)\n\n"
-       "%p   O `AM' (\"Ante Meridiem\", antes del mediodía) o `PM' (\"Post "
-       "Meridiem\", después del mediodía) de acuerdo con el valor del "
-       "tiempo dado, o la cadena de caracteres correspondiente  según la "
-       "localización en curso. El mediodía se trata como `pm' y la media "
+       "%n   Un carï¿½cter de nueva lï¿½nea. (SU)\n\n"
+       "%O   Modificador; use un formato alternativo, ver mï¿½s abajo. (SU)\n\n"
+       "%p   O `AM' (\"Ante Meridiem\", antes del mediodï¿½a) o `PM' (\"Post "
+       "Meridiem\", despuï¿½s del mediodï¿½a) de acuerdo con el valor del "
+       "tiempo dado, o la cadena de caracteres correspondiente  segï¿½n la "
+       "localizaciï¿½n en curso. El mediodï¿½a se trata como `pm' y la media "
        "noche como `am'.\n\n"
-       "%P   Como %p pero en letras minúsculas: `am' o `pm' o una cadena "
-       "correspondiente para la localización actual. (GNU)\n\n"
-       "%r   El tiempo en notación a.m. o p.m. En la localización POSIX "
+       "%P   Como %p pero en letras minï¿½sculas: `am' o `pm' o una cadena "
+       "correspondiente para la localizaciï¿½n actual. (GNU)\n\n"
+       "%r   El tiempo en notaciï¿½n a.m. o p.m. En la localizaciï¿½n POSIX "
        "esto es equivalente a `%I:%M:%S %p'. (SU)\n\n"
-       "%R   El tiempo en notación de 24 horas (%H:%M). (SU) Para una "
-       "versión que incluya los segundos, ver %T más abajo.\n\n"
-       "%s   El número de segundos desde la época, es decir, desde "
+       "%R   El tiempo en notaciï¿½n de 24 horas (%H:%M). (SU) Para una "
+       "versiï¿½n que incluya los segundos, ver %T mï¿½s abajo.\n\n"
+       "%s   El nï¿½mero de segundos desde la ï¿½poca, es decir, desde "
        "1970-01-01 00:00:00 UTC. (TZ)\n\n"
-       "%S   El segundo como un número decimal (en el rango de 00 a 61)\n\n"
-       "%t   Un carácter tabulador. (SU)\n\n"
-       "%T   El tiempo en notación de 24 horas (%H:%M:%S). (SU)\n\n"
-       "%u   El día de la semana como un número decimal, en el rango de 1 a "
-       "7, siendo 1 el Lunes. Ver también %w. (SU)\n\n"
-       "%U   El número de la semana del año actual como un número en base "
+       "%S   El segundo como un nï¿½mero decimal (en el rango de 00 a 61)\n\n"
+       "%t   Un carï¿½cter tabulador. (SU)\n\n"
+       "%T   El tiempo en notaciï¿½n de 24 horas (%H:%M:%S). (SU)\n\n"
+       "%u   El dï¿½a de la semana como un nï¿½mero decimal, en el rango de 1 a "
+       "7, siendo 1 el Lunes. Ver tambiï¿½n %w. (SU)\n\n"
+       "%U   El nï¿½mero de la semana del aï¿½o actual como un nï¿½mero en base "
        "decimal, en el rango de 00 a 53, empezando por el primer domingo "
-       "como el primer día de la primera semana. Ver también %V y %W.\n\n"
-       "%W   El  número de la semana del año actual como un número decimal "
-       "según el estandar ISO 8601:1988, donde la semana 1 es la primera "
-       "semana que tiene al menos 4 días del año actual y el lunes como el "
-       "primer día de la semana. Ver también %U y %W. (SU)\n\n"
-       "%w   El día de la semana como un número decimal, en el rango de 0 "
-       "a 6, siendo el domingo el cero. Ver también %u.\n\n"
-       "%x   La  representación preferida de la fecha (sin la hora) para "
-       "la localización en curso.\n\n"
-       "%X   La representación preferida de la hora (sin la fecha) para la "
-       "localización en curso.\n\n"
-       "%y   El año como un número en base diez sin la centuria (en el "
+       "como el primer dï¿½a de la primera semana. Ver tambiï¿½n %V y %W.\n\n"
+       "%W   El  nï¿½mero de la semana del aï¿½o actual como un nï¿½mero decimal "
+       "segï¿½n el estandar ISO 8601:1988, donde la semana 1 es la primera "
+       "semana que tiene al menos 4 dï¿½as del aï¿½o actual y el lunes como el "
+       "primer dï¿½a de la semana. Ver tambiï¿½n %U y %W. (SU)\n\n"
+       "%w   El dï¿½a de la semana como un nï¿½mero decimal, en el rango de 0 "
+       "a 6, siendo el domingo el cero. Ver tambiï¿½n %u.\n\n"
+       "%x   La  representaciï¿½n preferida de la fecha (sin la hora) para "
+       "la localizaciï¿½n en curso.\n\n"
+       "%X   La representaciï¿½n preferida de la hora (sin la fecha) para la "
+       "localizaciï¿½n en curso.\n\n"
+       "%y   El aï¿½o como un nï¿½mero en base diez sin la centuria (en el "
        "rango de 00 a 99).\n\n"
-       "%Y   El año como un número en base diez, incluyendo la centuria.\n\n"
+       "%Y   El aï¿½o como un nï¿½mero en base diez, incluyendo la centuria.\n\n"
        "%z   El huso horario como las horas de diferencia respecto a GMT."
        "Necesario para emitir fechas conformes a RFC822 (usando \"%a, %d %b "
        "%Y %H:%M:%S %z\"). (GNU)\n\n"
        "%Z   La zona horaria, nombre o abreviatura.\n\n"
        "%+   La fecha y hora en el formato de date(1). (TZ)\n\n"
-       "%%   Un carácter de porcentaje literal, '%'.\n\n"
-       "Algunos indicadores de conversión se pueden modificar precediéndolos "
+       "%%   Un carï¿½cter de porcentaje literal, '%'.\n\n"
+       "Algunos indicadores de conversiï¿½n se pueden modificar precediï¿½ndolos "
        "por un modificador E u O para indicar que se debe usar un formato "
        "alternativo.  Si no existen formatos o especificaciones alternativos "
-       "para la localización actual, el comportamiento quedará como si se "
-       "usara la especificación de conversión sin modificar. (SU) `The "
+       "para la localizaciï¿½n actual, el comportamiento quedarï¿½ como si se "
+       "usara la especificaciï¿½n de conversiï¿½n sin modificar. (SU) `The "
        "Single Unix Specification' menciona %Ec, %EC, %Ex, %EX, %Ry, %EY, "
        "%Od, %Oe, %OH, %OI, %Om, %OM, %OS,  %Ou,  %OU,  %OV, %Ow,  %OW, %Oy, "
-       "donde el efecto del modificador O es el de usar símbolos numéricos "
-       "alternativos (digamos, números romanos) y el del modificador E es el "
-       "de usar un representación alternativa dependiente de la "
-       "localización."), BOperClassify::Conversion_);
+       "donde el efecto del modificador O es el de usar sï¿½mbolos numï¿½ricos "
+       "alternativos (digamos, nï¿½meros romanos) y el del modificador E es el "
+       "de usar un representaciï¿½n alternativa dependiente de la "
+       "localizaciï¿½n."), BOperClassify::Conversion_);
 //--------------------------------------------------------------------
 void BTxtFromCTime::CalcContens()
 {
@@ -2002,7 +2002,7 @@ DefExtOpr(1, BTxtShowFile, "ShowFile",   1, 1, "Text",
 	  I2("(Text fileName)",
 	     "(Text nombreFichero)"),
 	  I2("Shows a text file of valid extension (TOL,BDT,BST,BMT,...)",
-	     "Muestra un fichero de texto de extensión válida (TOL,BDT,BST,BMT,...)"),
+	     "Muestra un fichero de texto de extensiï¿½n vï¿½lida (TOL,BDT,BST,BMT,...)"),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -2023,7 +2023,7 @@ DefExtOpr(1, BTxtReadFile, "ReadFile",   1, 1, "Text",
 	  I2("Returns the contents of a text file. If the file not exists returns "
 	     "the void string and displays a warning message.",
 	     "Devuelve el contenido de un fichero de texto. Si el fichero no existe "
-	     " devuelve la cadena vacía y muestra un mensaje de advertencia."),
+	     " devuelve la cadena vacï¿½a y muestra un mensaje de advertencia."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -2043,7 +2043,7 @@ DefExtOpr(1, BTxtWriteFile, "WriteFile",   2, 2, "Text Text",
 	     "the void string and displays a warning message; else it just returns "
 	     "the file name.",
 	     "Escribe una cadena en un fichero. Si el fichero no existe "
-	     "devuelve la cadena vacía y muestra un mensaje de advertencia."
+	     "devuelve la cadena vacï¿½a y muestra un mensaje de advertencia."
 	     "Si existe devuelve el propio nombre del fichero."),
 	  BOperClassify::Text_);
 
@@ -2068,8 +2068,8 @@ DefExtOpr(1, BTxtAppendFile, "AppendFile",   2, 2, "Text Text",
 	  I2("Appends a text at the end of a file. If the file not exists returns "
 	     "the void string and displays a warning message; else it just returns "
 	     "the file name.",
-	     "Añade una cadena al final un fichero. Si el fichero no existe "
-	     "devuelve la cadena vacía y muestra un mensaje de advertencia."
+	     "Aï¿½ade una cadena al final un fichero. Si el fichero no existe "
+	     "devuelve la cadena vacï¿½a y muestra un mensaje de advertencia."
 	     "Si existe devuelve el propio nombre del fichero."),
 	  BOperClassify::Text_);
 void BTxtAppendFile::CalcContens()
@@ -2096,7 +2096,7 @@ DefExtOpr(1, BTxtEncodeBase64FromFile, "EncodeBase64FromFile",   1, 1,
 	   "Devuelve el contenido de un fichero binario codificado con "
      "el algoritmo Base64 (http://es.wikipedia.org/wiki/Base64). "
      "Si el fichero no existe "
-	   "devuelve la cadena vacía y muestra un mensaje de advertencia."),
+	   "devuelve la cadena vacï¿½a y muestra un mensaje de advertencia."),
 	  BOperClassify::Text_);
 
 //--------------------------------------------------------------------
@@ -2119,7 +2119,7 @@ DefExtOpr(1, BDatDecodeBase64ToFile, "DecodeBase64ToFile", 2, 2,
      "It returns the binary file size.",
 	   "Escribe un fichero binario con el resultado de descodificar un "
      "texto usando el algoritmo Base64 "
-     "(http://es.wikipedia.org/wiki/Base64). Develve el tamaño del "
+     "(http://es.wikipedia.org/wiki/Base64). Develve el tamaï¿½o del "
      "fichero creado."),
 	BOperClassify::Text_);
 
@@ -2139,7 +2139,7 @@ DefExtOpr(1, BTxtPeriodicNull, "PeriodicNull", 2, 2, "Serie Real",
 	     "(Serie ser, Real periodo)"),
 	  I2("Returns the expression of periodic time intervals that a serie take "
 	     "null value in. You can to obtain the time set using the function Eval.",
-	     "Devuelve la expresion de los intervalos temporales periódicos en los "
+	     "Devuelve la expresion de los intervalos temporales periï¿½dicos en los "
 	     "que se anula una serie. Se puede obtener el conjunto temporal usando "
 	     "la funcion Eval."),
 	  BOperClassify::TimeSeriesAlgebra_);
@@ -2244,10 +2244,10 @@ DefExtOpr(1, BSetReadAllTokens, "Tokenizer", 2, 4,  "Text Text Text Text",
 	     "Divide un texto en cada una de las partes separadas por el caracter "
 	     "de separacion dado."
        "Si se especifica el argumento <quote>, entonces los campos que "
-       "comiencen por ese caracter podrán incluir el caracter separador sin "
+       "comiencen por ese caracter podrï¿½n incluir el caracter separador sin "
        "que les afecte el mismo."
-       "Si además se especifica el argumento <quote>, entonces el par "
-       "<scape><quote> será tratado como <quote>"),
+       "Si ademï¿½s se especifica el argumento <quote>, entonces el par "
+       "<scape><quote> serï¿½ tratado como <quote>"),
 	  BOperClassify::System_);
 
 //--------------------------------------------------------------------
@@ -2477,7 +2477,7 @@ DefExtOpr(1, BTxtGetFileName, "GetFileName",	 1, 1, "Text",
 	     "GetFileName(\"c:/windows/notepad.exe\") \n"
 	     "returns \n"
 	     "\"notepad.exe\"\n",
-	     "Devuelve el nombre de un fichero sin el camino pero con extensión.\n"
+	     "Devuelve el nombre de un fichero sin el camino pero con extensiï¿½n.\n"
 	     "Ejemplo: \n"
 	     "GetFileName(\"c:/windows/notepad.exe\") \n"
 	     "devuelve \n"
@@ -2502,7 +2502,7 @@ DefExtOpr(1, BTxtGetFilePrefix, "GetFilePrefix",   1, 1, "Text",
 	     "GetFileName(\"c:/windows/notepad.exe\") \n"
 	     "returns \n"
 	     "\"notepad\"\n",
-	     "Devuelve el nombre de un fichero sin el camino ni extensión.\n"
+	     "Devuelve el nombre de un fichero sin el camino ni extensiï¿½n.\n"
 	     "Ejemplo: \n"
 	     "GetFileName(\"c:/windows/notepad.exe\") \n"
 	     "devuelve \n"
@@ -2647,7 +2647,7 @@ void BTxtFormatSerSet::CalcContens()
 	if(!ok)
 	{
 	    Error(I2("Bad rules definition for FormatSerSet function",
-		     "Definición de reglas errónea para la función FormatSerSet"));
+		     "Definiciï¿½n de reglas errï¿½nea para la funciï¿½n FormatSerSet"));
 	    return;
 	}
     }
@@ -2696,8 +2696,8 @@ DefExtOpr(1, BTextParseError, "ParseError", 1, 1, "Text",
 	  I2("(Text TOL_Expression)","(Text expression_TOL)"),
 	  I2("Returns the posible parsing errors of a TOL expression or an "
 	     "empty string if it's correct",
-	     "Devuelve los posibles errores sintácticos de una expresión TOL o bien "
-	     "la cadena vacía si es correcta"),
+	     "Devuelve los posibles errores sintï¿½cticos de una expresiï¿½n TOL o bien "
+	     "la cadena vacï¿½a si es correcta"),
 	  BOperClassify::System_);
 void BTextParseError::CalcContens()
 //--------------------------------------------------------------------
@@ -2713,7 +2713,7 @@ DefExtOpr(1, BTextGranularity, "Granularity", 1, 1, "CTime",
 	  "(CTime tmi)",
 	  I2("Returns granularity associated with Time given as argument",
 	     "Devuelve la granularidad asociada al Time pasado como "
-	     "parámetro"),
+	     "parï¿½metro"),
 	  BOperClassify::Conversion_);
 //--------------------------------------------------
 void BTextGranularity::CalcContens()
@@ -2750,10 +2750,10 @@ DefExtOpr(1, BTexWrap, "Wrap", 2, 4, "Text Real Text Text",
 I2("Breaks lines with more than <maxLineLength> characters.\n"
    "Only when a character in <wordSeparators> it will insert a line break.\n"
    "If <prefix> is not empty it will be insert after each new break line.\n",
-   "Rompe las líneas con más de <maxLineLength> caracteres.\n" 
-   "Sólo cuando se encuentre un caracter de <wordSeparators> se podrá "
-   "insertar un salto de línea. \n"
-   "Si <prefix> no está vacío será insertar después de cada salto de línea "
+   "Rompe las lï¿½neas con mï¿½s de <maxLineLength> caracteres.\n" 
+   "Sï¿½lo cuando se encuentre un caracter de <wordSeparators> se podrï¿½ "
+   "insertar un salto de lï¿½nea. \n"
+   "Si <prefix> no estï¿½ vacï¿½o serï¿½ insertar despuï¿½s de cada salto de lï¿½nea "
    "nueva.\n"),
 	  BOperClassify::System_);
 void BTexWrap::CalcContens()
@@ -2808,9 +2808,9 @@ DefExtOpr(1, BDatCompareVersionString, "Compare.VersionString", 2, 2,
 I2("Compares two version strings with an arbitrary number of numeric "
     "tokens separated by the point character. For example 1.9 would "
     "be prior to 1.10 while it is the reverse alphabetical order.",
-    "Compara dos cadenas de version con un número arbitrario de tokens "
-    "numéricos separados por el caracter punto. Por ejemplo 1.9 sería "
-    "anterior a 1.10 mientras que alfabéticamente es al revés.\n"),
+    "Compara dos cadenas de version con un nï¿½mero arbitrario de tokens "
+    "numï¿½ricos separados por el caracter punto. Por ejemplo 1.9 serï¿½a "
+    "anterior a 1.10 mientras que alfabï¿½ticamente es al revï¿½s.\n"),
 	  BOperClassify::System_);
 void BDatCompareVersionString::CalcContens()
 //--------------------------------------------------------------------
@@ -2825,8 +2825,8 @@ void BDatCompareVersionString::CalcContens()
   DefExtOpr(1, BTextAnsSystem, "AnsSystem", 1, 1, "Text", "(Text command)",
   I2("Calls the operative system to execute a command line "
      "and returns the standard output.",
-     "Llama al sistema operativo para ejecutar una línea de comandos "
-     "y devuelve la salida estándar de la llamada."),
+     "Llama al sistema operativo para ejecutar una lï¿½nea de comandos "
+     "y devuelve la salida estï¿½ndar de la llamada."),
      BOperClassify::System_);
   void BTextAnsSystem::CalcContens()
 //--------------------------------------------------------------------
