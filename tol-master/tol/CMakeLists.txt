@@ -407,7 +407,8 @@ endif( )
 
 foreach( d
     contrib bmath bparser btol dbdrivers lang LoadDynLib
-    bbasic PackArchive OIS )
+    bbasic  # Must come before PackArchive/OIS which depend on bbasic headers
+    PackArchive OIS )
   add_subdirectory(${d})
 #  get_property(type TARGET ${d} PROPERTY TYPE)
 #  message("type(${d}) = '${type}'") 
