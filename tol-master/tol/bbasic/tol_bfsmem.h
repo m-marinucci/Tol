@@ -55,6 +55,9 @@ public:
   }
 };
 
+// Custom memory management system - conditionally enabled for MSVC builds
+// On Linux, fall back to standard memory allocation to avoid compatibility issues
+#if defined(_MSC_VER)
 #define RedeclareClassNewDelete(ANY_) \
 public:	\
   BFixedSizeMemoryBase* GetMemHandler() const \
@@ -76,8 +79,8 @@ public:	\
   } \
   static void* operator new(size_t size) \
   { \
-    register unsigned short pageNum; \
-    register ANY_* obj = (ANY_*)BFSMSingleton<sizeof(ANY_)>::Handler()->New(size, pageNum); \
+    unsigned short pageNum; \
+    ANY_* obj = (ANY_*)BFSMSingleton<sizeof(ANY_)>::Handler()->New(size, pageNum); \
     obj->_bfsm_PageNum__ = pageNum; \
     return(obj); \
   } \
@@ -85,12 +88,48 @@ public:	\
   { \
     register ANY_* obj = (ANY_*)ptr; \
     BFSMSingleton<sizeof(ANY_)>::Handler()->Delete(obj,obj->_bfsm_PageNum__); \
-  } 
+  }
+#else
+// Linux/GCC: Use standard memory allocation
+#define RedeclareClassNewDelete(ANY_) \
+public:	\
+  BFixedSizeMemoryBase* GetMemHandler() const \
+  { \
+    return(nullptr); \
+  } \
+  size_t GetSizeOf() const \
+  { \
+    return(sizeof(ANY_)); \
+  } \
+  unsigned short GetPageNum() const \
+  { \
+    return(0); \
+  } \
+  short IsAssigned() const  \
+  { \
+    return(-1); \
+  } \
+  static void* operator new(size_t size) \
+  { \
+    return(malloc(size)); \
+  } \
+  static void operator delete(void* ptr) \
+  { \
+    free(ptr); \
+  }
+#endif
 
+// Conditional memory management member declaration
+#if defined(_MSC_VER)
 #define DeclareClassNewDelete(ANY_) \
  protected: \
   unsigned short _bfsm_PageNum__; \
-  RedeclareClassNewDelete(ANY_);	
+  RedeclareClassNewDelete(ANY_);
+#else
+// Linux/GCC: No custom memory management member needed
+#define DeclareClassNewDelete(ANY_) \
+  RedeclareClassNewDelete(ANY_);
+#endif
 
 #define UndeclareClassNewDelete \
 public:	\

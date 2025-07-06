@@ -475,23 +475,30 @@ class TOL_API BObjClassify: public BUniKey
   }
 };
 
-#if (__USE_HASH_MAP__==__HASH_MAP_MSVC__)
+#if defined(_MSC_VER) && (__USE_HASH_MAP__==__HASH_MAP_MSVC__)
 
+namespace stdext {
 template<>
-inline size_t stdext::hash_value(const BObjClassify& k)
+inline size_t hash_value(const BObjClassify& k)
 {
   return (k.UniqueKey());
 }
-template<> 
+}
+
+#endif
+
+// Common less operator for all hash map implementations
+namespace std {
+template<>
 struct less<BObjClassify>
 {
-  bool operator()(const BObjClassify & x, const BObjClassify & y) const 
+  bool operator()(const BObjClassify & x, const BObjClassify & y) const
   {
     if ( x.UniqueKey() < y.UniqueKey() ) { return(true); }
     return(false);
   }
 };
-#endif
+}
 
 //--------------------------------------------------------------------
 //hash_map class for Tol objects classify

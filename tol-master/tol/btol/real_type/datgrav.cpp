@@ -80,14 +80,14 @@ BBool ForzeLinkerDatGraVarious() { return(BTRUE); }
      "Returns the state before the call.\n"
      "When <show> is false and <disableLogAndCounters> is true, log file, "
      "and error and warning counters will be disabled too.",
-     "A partir de la llamada a esta función el sistema mostrará o no los "
-     "mensajes del tipo dado según sea cierto o no el parámetro <show>.\n"
+     "A partir de la llamada a esta funciï¿½n el sistema mostrarï¿½ o no los "
+     "mensajes del tipo dado segï¿½n sea cierto o no el parï¿½metro <show>.\n"
      "Los tipos posibles son : ALL, STANDARD, ERROR, WARNING, USER, TRACE\n"
      "Devuelve el estado anterior a la llamada.\n"
      "Cuando <show> es falso y <disableLogAndCounters> es cierto, se "
-     "deshabilitarán las salidas al fichero de log y los contadores de "
+     "deshabilitarï¿½n las salidas al fichero de log y los contadores de "
      "errores y warnings, en el caso de "
-     "estén afectados por <type>"),
+     "estï¿½n afectados por <type>"),
      BOperClassify::TimeAlgebra_);
   void BDatShowErrors::CalcContens()
 //--------------------------------------------------------------------
@@ -156,12 +156,12 @@ DefExtOpr(1, BDatJulianDay, "cJulianDay", 1, 1, "CTime",
 	     "by 1 every day. Day number 0 is 17 November 1858. Day number "
 	     "51604 is 1 March 2000.\n"
 	     "Parameter CTime tmi must have at least a DAILY granularity.",
-	     "Devuelve el día Juliano modificado que corresponde con la "
-	     "fecha dada como parámetro de tipo CTime. A cada fecha del "
-	     "calendario le corresponde un número Juliano modificado. El "
-	     "número se incrementa una unidad cada día. El día 0 corresponde "
-	     "con el 17 de Noviembre de 1858. El día 51604 corresponde con "
-	     "el 1 de Marzo de 2000.\nEl parámetro CTime tmi debe tener al "
+	     "Devuelve el dï¿½a Juliano modificado que corresponde con la "
+	     "fecha dada como parï¿½metro de tipo CTime. A cada fecha del "
+	     "calendario le corresponde un nï¿½mero Juliano modificado. El "
+	     "nï¿½mero se incrementa una unidad cada dï¿½a. El dï¿½a 0 corresponde "
+	     "con el 17 de Noviembre de 1858. El dï¿½a 51604 corresponde con "
+	     "el 1 de Marzo de 2000.\nEl parï¿½metro CTime tmi debe tener al "
 	     "menos granularidad Diaria (DAILY)."),
 	  BOperClassify::TimeAlgebra_);
 //--------------------------------------------------
@@ -181,11 +181,11 @@ void BDatJulianDay::CalcContens()
 //--------------------------------------------------
 DeclareContensClass(BDat, BDatTemporary, BDatIsLeapYear);
 DefIntOpr(1, BDatIsLeapYear, "cIsLeapYear", 1, 1,
-	  I2("(Real year)","(Real año)"),
+	  I2("(Real year)","(Real aï¿½o)"),
 	  I2("Returns 1 if the given year parameter corresponds to a leap "
 	     "year, otherwise returns 0.",
-	     "Devuelve 1 si el año especificado como parámetro corresponde "
-	     "a un año bisiesto, en otro caso devuelve 0."),
+	     "Devuelve 1 si el aï¿½o especificado como parï¿½metro corresponde "
+	     "a un aï¿½o bisiesto, en otro caso devuelve 0."),
 	  BOperClassify::System_);
 //--------------------------------------------------
 void BDatIsLeapYear::CalcContens()
@@ -199,7 +199,7 @@ void BDatIsLeapYear::CalcContens()
 DeclareContensClass(BDat, BDatTemporary, BDatGetYear);
 DefExtOpr(1, BDatGetYear, "cGetYear", 1, 1, "CTime",
 	  "(CTime tmi)",
-	  I2("Returns the tmi year","Devuelve el año del tmi"),
+	  I2("Returns the tmi year","Devuelve el aï¿½o del tmi"),
 	  BOperClassify::TimeAlgebra_);
 //--------------------------------------------------
 void BDatGetYear::CalcContens()
@@ -228,7 +228,7 @@ void BDatGetMonth::CalcContens()
 DeclareContensClass(BDat, BDatTemporary, BDatGetDay);
 DefExtOpr(1, BDatGetDay, "cGetDay", 1, 1, "CTime",
 	  "(CTime tmi)",
-	  I2("Returns the tmi day","Devuelve el día del tmi"),
+	  I2("Returns the tmi day","Devuelve el dï¿½a del tmi"),
 	  BOperClassify::TimeAlgebra_);
 //--------------------------------------------------
 void BDatGetDay::CalcContens()
@@ -289,7 +289,7 @@ DeclareContensClass(BDat, BDatTemporary, BDatIsEmpty);
 DefExtOpr(1, BDatIsEmpty, "cIsEmpty", 1, 1, "CTimeSet",
 	  "(CTimeSet ctms)",
 	  I2("Returns 1 whether CTimeSet ctms is empty",
-	     "Devuelve 1 si el CTimeSet ctms está vacío"),
+	     "Devuelve 1 si el CTimeSet ctms estï¿½ vacï¿½o"),
 	  BOperClassify::TimeAlgebra_);
 //--------------------------------------------------
 void BDatIsEmpty::CalcContens()
@@ -318,7 +318,7 @@ DeclareContensClass(BDat, BDatTemporary, BDatDistance);
 DefExtOpr(1, BDatDistance, "cDistance", 2, 2, "CTime CTime",
 	  "(CTime tmi1, CTime tmi2)",
 	  I2("Distance between both CTime values in their lowest granularity.",
-	     "Distancia entre los dos valores CTime en su granularidad más "
+	     "Distancia entre los dos valores CTime en su granularidad mï¿½s "
 	     "baja"),
 	  BOperClassify::SetAlgebra_);
 //--------------------------------------------------
@@ -369,7 +369,7 @@ void BDatDistanceIn::CalcContens()
      "(Date fecha)"),
   I2("Returns the number of elapsed days and fraction from y1900m1d1 until "
      "a date.",
-     "Devuelve el número de días y fracción transcurridos desde y1900m1d1 "
+     "Devuelve el nï¿½mero de dï¿½as y fracciï¿½n transcurridos desde y1900m1d1 "
      "hasta una fecha."),
      BOperClassify::TimeAlgebra_);
   void BDatDateToIndex::CalcContens()
@@ -451,7 +451,7 @@ void BDatOfCSeries::CalcContens()
   I2("Changes the value of an element of a finite time series and returns  "
      "the oldvalue.",
      "Cambia el valor de un elemento de una serie temporal finita y "
-     "devuelve el valor que tenía anteriormente."),
+     "devuelve el valor que tenï¿½a anteriormente."),
      BOperClassify::Conversion_);
   void BDatPutSerDat::CalcContens()
 //--------------------------------------------------------------------
@@ -481,7 +481,7 @@ DefExtOpr(1, BDatPutCSerDat, "PutCSerDat", 3, 3, "CSeries CTime Real",
 	  I2("Changes the value of an element of a time series and returns "
 	     "the old value.",
 	     "Cambia el valor de un elemento de una serie temporal y "
-	     "devuelve el valor que tenía anteriormente."),
+	     "devuelve el valor que tenï¿½a anteriormente."),
 	  BOperClassify::Conversion_);
 void BDatPutCSerDat::CalcContens()
 //--------------------------------------------------------------------
@@ -513,7 +513,7 @@ void BDatPutCSerDat::CalcContens()
   I2("(TimeSet dating, Date from, Date until)",
      "(TimeSet fechado, Date desde, Date hasta)"),
   I2("Returns the number of dates between two dates throughout a dating.",
-     "Devuelve el número de fechas entre dos fechas a lo largo de un fechado."),
+     "Devuelve el nï¿½mero de fechas entre dos fechas a lo largo de un fechado."),
      BOperClassify::TimeAlgebra_);
   void BDatDateDif::CalcContens()
 //--------------------------------------------------------------------
@@ -530,7 +530,7 @@ void BDatPutCSerDat::CalcContens()
   I2("(Date date)",
      "(Date fecha)"),
   I2("Returns the year of a date.",
-     "Devuelve el año de una fecha."),
+     "Devuelve el aï¿½o de una fecha."),
      BOperClassify::TimeAlgebra_);
   void BDatYear::CalcContens()
 //--------------------------------------------------------------------
@@ -556,7 +556,7 @@ void BDatPutCSerDat::CalcContens()
   I2("(Date date)",
      "(Date fecha)"),
   I2("Returns the day in month of a date.",
-     "Devuelve el día del mes de una fecha."),
+     "Devuelve el dï¿½a del mes de una fecha."),
      BOperClassify::TimeAlgebra_);
   void BDatDay::CalcContens()
 //--------------------------------------------------------------------
@@ -608,7 +608,7 @@ void BDatPutCSerDat::CalcContens()
   I2("(Date date)",
      "(Date fecha)"),
   I2("Returns the fraction of day of a date.",
-     "Devuelve la fracción de día de una fecha."),
+     "Devuelve la fracciï¿½n de dï¿½a de una fecha."),
      BOperClassify::TimeAlgebra_);
   void BDatFraction::CalcContens()
 //--------------------------------------------------------------------
@@ -621,7 +621,7 @@ void BDatPutCSerDat::CalcContens()
   I2("(Date date)",
      "(Date fecha)"),
   I2("Returns the number yyyymmdd of a date.",
-     "Devuelve el número yyyymmdd de una fecha."),
+     "Devuelve el nï¿½mero yyyymmdd de una fecha."),
      BOperClassify::TimeAlgebra_);
   void BDatHash::CalcContens()
 //--------------------------------------------------------------------
@@ -634,7 +634,7 @@ void BDatPutCSerDat::CalcContens()
   I2("(Date date)",
      "(Date fecha)"),
   I2("Returns the day of the week of a date.",
-     "Devuelve el día de la semana de una fecha."),
+     "Devuelve el dï¿½a de la semana de una fecha."),
      BOperClassify::TimeAlgebra_);
   void BDatWeekDay::CalcContens()
 //--------------------------------------------------------------------
@@ -658,7 +658,7 @@ void BDatPutCSerDat::CalcContens()
   DefExtOpr(1, BDatPolSize, "PolSize", 1, 1, "Polyn",
   "(Polyn pol)",
   I2("Returns the number of non null monomials of a polynomial.",
-     "Devuelve el número de monomios no nulos de un polinomio."),
+     "Devuelve el nï¿½mero de monomios no nulos de un polinomio."),
      BOperClassify::RetardPolynomial_);
   void BDatPolSize::CalcContens()
 //--------------------------------------------------------------------
@@ -671,7 +671,7 @@ void BDatPutCSerDat::CalcContens()
   "(Text txt)",
   I2("Calls the operative system to execute a command line and returns false "
      "on error.",
-     "Llama al sistema operativo para ejecutar una línea de comando y "
+     "Llama al sistema operativo para ejecutar una lï¿½nea de comando y "
      "devuelve falso en caso de error."),
      BOperClassify::System_);
   void BDatSystem::CalcContens()
@@ -682,23 +682,23 @@ void BDatPutCSerDat::CalcContens()
 }
 
 
-#ifndef UNIX
+#if defined(_WIN32) || defined(WIN32)
 //--------------------------------------------------------------------
   DeclareContensClass(BDat, BDatTemporary, BDatShellExecute);
   DefExtOpr(1, BDatShellExecute, "ShellExecute", 2, 2, "Text Text",
   I2("(Text fileName, Text action)",
-     "(Text nombreFichero, Text acción)"),
+     "(Text nombreFichero, Text acciï¿½n)"),
   I2("Calls the Windows operative system to do an action over a file."
      "The action and the file extension must be known by Windows."
      "For example, if you write ShellExecute(\"f.txt\",\"open\") "
      "then windows will open the file with the default text editor "
      "associated to \".txt\" extension. Another valid action is \"print\".",
-     "Llama al sistema operativo Windows para ejecutar una acción sobre un "
-     "fichero. Tanto la extensión del fichero como la acción deben ser "
+     "Llama al sistema operativo Windows para ejecutar una acciï¿½n sobre un "
+     "fichero. Tanto la extensiï¿½n del fichero como la acciï¿½n deben ser "
      "reconocidas por Windows. Por ejemplo, si se escribe "
-     "ShellExecute(\"f.txt\",\"open\")	Windows abrirá el fichero con el "
-     "editor de texto por defecto asociado a la extensión \".txt\". Otra "
-     "acción posible es \"print\" (imprimir)."),
+     "ShellExecute(\"f.txt\",\"open\")	Windows abrirï¿½ el fichero con el "
+     "editor de texto por defecto asociado a la extensiï¿½n \".txt\". Otra "
+     "acciï¿½n posible es \"print\" (imprimir)."),
      BOperClassify::System_);
   void BDatShellExecute::CalcContens()
 //--------------------------------------------------------------------
@@ -728,9 +728,9 @@ void BDatPutCSerDat::CalcContens()
      "and returns false on error. In Windows, 'showMode' indicates the window "
      "display mode and if 'wait' is true then it wait until process ends."
      ,
-     "Llama al sistema operativo para ejecutar una línea de comando "
-     "y devuelve falso en caso de error. En windows, el parámetro 'showMode' "
-     "indica la forma de visualización de la ventana y si 'wait' es cierto "
+     "Llama al sistema operativo para ejecutar una lï¿½nea de comando "
+     "y devuelve falso en caso de error. En windows, el parï¿½metro 'showMode' "
+     "indica la forma de visualizaciï¿½n de la ventana y si 'wait' es cierto "
      "se espera a que acabe el proceso.")+"\n\n"+
      "-showMode valid values: "+
       ShwMd(SW_HIDE             ,"Hides the window and activates another window. ")
@@ -757,15 +757,13 @@ void BDatPutCSerDat::CalcContens()
   contens_ = (BReal)BSys::WinSystem(command,show,wait);
 }
 
-#endif
-
 //--------------------------------------------------------------------
   DeclareContensClass(BDat, BDatTemporary, BDatChildProcess);
   DefExtOpr(1, BDatChildProcess, "ChildProcess", 1, 1, "Text",
   "(Text txt)",
   I2("Calls the operative system to execute a command line as a child "
      "process and returns false on error.",
-     "Llama al sistema operativo para ejecutar una línea de comando como "
+     "Llama al sistema operativo para ejecutar una lï¿½nea de comando como "
      "un proceso hijo y devuelve falso en caso de error."),
      BOperClassify::System_);
   void BDatChildProcess::CalcContens()
@@ -826,7 +824,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
       graObj = set[i+1];
       if(!graObj || (graObj->Grammar()!=GraText()))
       {
-        Error(I2("Element number ", "El elemento número ")+(i+1)+
+        Error(I2("Element number ", "El elemento nï¿½mero ")+(i+1)+
           ((graObj)?(BText(" {")+graObj->Identify()+"} "):BText(" "))+
           I2(" of argument 'grammar' for FunctionExist, is not a Text ",
           " del arguemnto 'gramatica' para FunctionExist, no es un Text "));
@@ -837,7 +835,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
         graOpt[i] = FindGrammar(Text(graObj));
         if(!graOpt[i])
         {
-          Error(I2("Element number ", "El elemento número ")+(i+1)+
+          Error(I2("Element number ", "El elemento nï¿½mero ")+(i+1)+
             " {"+graObj->Dump()+"} "+
             I2("of argument 'grammar' for FunctionExist, is not a valid "
                "grammar name.",
@@ -881,10 +879,10 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   "(Text address)",
   I2("Returns true if the address given matches for an alive TOL object."
      "The address must be obtained by mean of calling GetAddressFromObject",
-     "Devuelve verdadero si la dirección dada por el argumento 'address' "
+     "Devuelve verdadero si la direcciï¿½n dada por el argumento 'address' "
      "corresponde efectivamente a un objeto TOL vivo."
-     "Dicha dirección interna se habrá obtenido previamente llamando a "
-     "la función GetAddressFromObject."),
+     "Dicha direcciï¿½n interna se habrï¿½ obtenido previamente llamando a "
+     "la funciï¿½n GetAddressFromObject."),
      BOperClassify::System_);
   void BDatAddressIsAlive::CalcContens()
 //--------------------------------------------------------------------
@@ -923,7 +921,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatObjectExist, "ObjectExist", 2, 2, "Text Text",
   I2("(Text grammar, Text name)","(Text gramatica, Text nombre)"),
   I2("Returns true if exists an object with the given grammar and name.",
-     "Devuelve verdadero si existe un objeto con la gramática y el nombre"
+     "Devuelve verdadero si existe un objeto con la gramï¿½tica y el nombre"
      "dados."),
      BOperClassify::System_);
   void BDatObjectExist::CalcContens()
@@ -1013,9 +1011,9 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   I2("Returns true if exists an function returning one the given grammars "
      "accesible as the specified reference, I.E., a TOL name or a TOL "
      "expression involving just accessing operators",
-     "Devuelve verdadero si existe una función que devuelva alguna de las "
-     "gramáticas dadas acesible mediante la refencia especificada, es decir, "
-     "un nombre TOL o una expresión TOL involucrando exclusivamente los "
+     "Devuelve verdadero si existe una funciï¿½n que devuelva alguna de las "
+     "gramï¿½ticas dadas acesible mediante la refencia especificada, es decir, "
+     "un nombre TOL o una expresiï¿½n TOL involucrando exclusivamente los "
      "operadores de acceso")+" [], Element, ->, Field, ::",
      BOperClassify::System_);
   void BDatFunctionExist::CalcContens()
@@ -1065,7 +1063,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatFileBytes, "FileBytes", 1, 1, "Text",
   I2("(Text path)","(Text camino)"),
   I2("Returns size of given file in bytes.",
-     "Devuelve el tamaño del fichero dado en bytes."),
+     "Devuelve el tamaï¿½o del fichero dado en bytes."),
      BOperClassify::System_);
   void BDatFileBytes::CalcContens()
 //--------------------------------------------------------------------
@@ -1176,7 +1174,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
     {
       Error(BText("[FileCat] ")+
         I2("Argument 'origin' must have just Text elements",
-           "El argumento 'origin' debe tener sólo elementos "
+           "El argumento 'origin' debe tener sï¿½lo elementos "
            "de tipo Text"));
     }
   }
@@ -1189,7 +1187,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatMkDir, "MkDir", 1, 1, "Text",
   I2("(Text newDirectory)","(Text nuevoDirectorio)"),
   I2("Makes a new directory. Returns TRUE if success.",
-     "Crea un directorio nuevo. Devuelve CIERTO en caso de éxito."),
+     "Crea un directorio nuevo. Devuelve CIERTO en caso de ï¿½xito."),
      BOperClassify::System_);
   void BDatMkDir::CalcContens()
 //--------------------------------------------------------------------
@@ -1205,7 +1203,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefIntOpr(1, BDatExit, "Exit", 1, 1,
   I2("(Real notUsed)","(Real noUsado)"),
   I2("Aborts TOL program execution.",
-     "Aborta la ejecución del programa TOL."),
+     "Aborta la ejecuciï¿½n del programa TOL."),
      BOperClassify::System_);
   void BDatExit::CalcContens()
 //--------------------------------------------------------------------
@@ -1221,8 +1219,8 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
      "(Matrix mat)"),
   I2("Returns the Frobenius norm of a matrix, it's to say, the "
      "standard desviation of its elements",
-     "Devuelve la norma de Frobenious de una matriz que es la desviación "
-     "típica de sus elementos."),
+     "Devuelve la norma de Frobenious de una matriz que es la desviaciï¿½n "
+     "tï¿½pica de sus elementos."),
      BOperClassify::Conversion_);
   void BDatMatFrobeniusNorm::CalcContens()
 //--------------------------------------------------------------------
@@ -1271,7 +1269,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   {
     BText id = Arg(1)->Identify();
     Warning(I2("Attempt to invalid access of function MatDat(",
-         "Intento de acceso no válido de la función MatDat(")+
+         "Intento de acceso no vï¿½lido de la funciï¿½n MatDat(")+
       id+","+Arg(2)->Dump()+","+Arg(3)->Dump()+")");
   }
 }
@@ -1284,7 +1282,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
      "(Matrix mat, Real fila, Real columna, Real nuevoValor)"),
   I2("Changes the value of an element of a matrix and returns the old value.",
      "Cambia el valor de un elemento de una matriz y devuelve el valor "
-     "que tenía anteriormente."),
+     "que tenï¿½a anteriormente."),
      BOperClassify::Conversion_);
   void BDatPutMatDat::CalcContens()
 //--------------------------------------------------------------------
@@ -1304,7 +1302,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   {
     BText id = Arg(1)->Identify();
     Warning(I2("Attempt to invalid access of function PutMatDat(",
-         "Intento de acceso no válido de la función PutMatDat(")+
+         "Intento de acceso no vï¿½lido de la funciï¿½n PutMatDat(")+
       id+","+Arg(2)->Dump()+","+Arg(3)->Dump()+","+Arg(4)->Dump()+")");
   }
 }
@@ -1315,7 +1313,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatMatRows, "Rows", 1, 1, "Matrix",
   "(Matrix mat)",
   I2("Returns the number of rows of a matrix.",
-     "Devuelve el número de filas de una matriz."),
+     "Devuelve el nï¿½mero de filas de una matriz."),
      BOperClassify::MatrixAlgebra_);
   void BDatMatRows::CalcContens()
 //--------------------------------------------------------------------
@@ -1329,7 +1327,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatMatColumns, "Columns", 1, 1, "Matrix",
   "(Matrix mat)",
   I2("Returns the number of columns of a matrix.",
-     "Devuelve el número de columnas de una matriz."),
+     "Devuelve el nï¿½mero de columnas de una matriz."),
      BOperClassify::MatrixAlgebra_);
   void BDatMatColumns::CalcContens()
 //--------------------------------------------------------------------
@@ -1346,8 +1344,8 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   "(Polyn pol [, Real tolerance=MachineEpsilon])",
   I2("Returns true if all the roots of the polynomial are would be of the "
      "unit circle.",
-     "Devuelve verdadero si todas las raíces del polinomio están fuera del "
-     "círculo unidad."),
+     "Devuelve verdadero si todas las raï¿½ces del polinomio estï¿½n fuera del "
+     "cï¿½rculo unidad."),
      BOperClassify::RetardPolynomial_);
   void BDatIsStationary::CalcContens()
 //--------------------------------------------------------------------
@@ -1365,8 +1363,8 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   "(Polyn pol)",
   I2("Returns the period of a polynomial, i.e. the greatest common "
      "divisor of the degrees of all its monomials.",
-     "Devuelve el periodo de un polinomio, entendido como el máximo "
-     "común divisor de los grados de todos sus monomios."),
+     "Devuelve el periodo de un polinomio, entendido como el mï¿½ximo "
+     "comï¿½n divisor de los grados de todos sus monomios."),
      BOperClassify::RetardPolynomial_);
   void BDatPolPeriod::CalcContens()
 //--------------------------------------------------------------------
@@ -1381,7 +1379,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   "(Polyn pol [, Real tolerance=MachineEpsilon])",
   I2("Returns a measure of the distence to the unit circle of the "
      "polynomial roots .",
-     "Devuelve una medida de la distancia al círculo unidad de las raíces de "
+     "Devuelve una medida de la distancia al cï¿½rculo unidad de las raï¿½ces de "
      "un polinomio."),
      BOperClassify::RetardPolynomial_);
   void BDatStationaryValue::CalcContens()
@@ -1403,7 +1401,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   "(Polyn pol, Matrix L, Real v, Real numIter)",
   I2("Returns the probability of a polynomial should be stationary.",
      "Devuelve la probabilidad de que un polinomio sea estacionario."
-     "El parámetro pol es una estimación del polinomio con v grados de "
+     "El parï¿½metro pol es una estimaciï¿½n del polinomio con v grados de "
      "libertad y Cov = L*Tra(L)"),
      BOperClassify::RetardPolynomial_);
   void BDatStationaryProb::CalcContens()
@@ -1426,7 +1424,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   for(i=0; i<m; i++) { P(i,0) = -p.Coef(i+1); }
   for(k=1; k<N; k++)
   {
-    //Matriz aleatoria con distribución t-Student m-dimensional estandar
+    //Matriz aleatoria con distribuciï¿½n t-Student m-dimensional estandar
     //con v grados de libertad
     if(v<=100)
     {
@@ -1482,7 +1480,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatEvalPol, "EvalPol", 2, 2, "Polyn Real",
   "(Polyn p, Real x)",
   I2(".",
-     "Evalúa la función polinomial correspondiente en el valor dado."),
+     "Evalï¿½a la funciï¿½n polinomial correspondiente en el valor dado."),
      BOperClassify::RetardPolynomial_);
   void BDatEvalPol::CalcContens()
 //--------------------------------------------------------------------
@@ -1498,7 +1496,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   DefExtOpr(1, BDatEvalRat, "EvalRat", 2, 2, "Ratio Real",
   "(Ratio r, Real x)",
   I2(".",
-     "Evalúa la función racional correspondiente en el valor dado."),
+     "Evalï¿½a la funciï¿½n racional correspondiente en el valor dado."),
      BOperClassify::RetardPolynomial_);
   void BDatEvalRat::CalcContens()
 //--------------------------------------------------------------------
@@ -1516,7 +1514,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
      "(Polyn pol, Real grado, Real nuevoValor)"),
   I2("Changes the value of an element of a polyn and returns the old value.",
      "Cambia el valor de un elemento de un polinomio y devuelve el valor "
-     "que tenía anteriormente."),
+     "que tenï¿½a anteriormente."),
      BOperClassify::Conversion_);
   void BDatPutCoef::CalcContens()
 //--------------------------------------------------------------------
@@ -1541,11 +1539,11 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
      "Use a 21 point Gauss-Kronrod rule,\n"
      "see 'QAG adaptive integration' in GSL documentation.\n"
      "(In a future, Gauss-Kronrod rule used could be also given as a parameter)",
-     "Devuelve la integral numérica de una función entre dos límites con una "
-     "tolerancia dada. f debe ser una función R->R.\n"
+     "Devuelve la integral numï¿½rica de una funciï¿½n entre dos lï¿½mites con una "
+     "tolerancia dada. f debe ser una funciï¿½n R->R.\n"
      "Utiliza la regla Gauss-Kronrod de 21 puntos,\n"
-     "ver 'QAG adaptive integration' en documentación de GSL.\n"
-     "(En un futuro, la regla Gauss-Kronrod utilizada puede ser dada como parámetro)"),
+     "ver 'QAG adaptive integration' en documentaciï¿½n de GSL.\n"
+     "(En un futuro, la regla Gauss-Kronrod utilizada puede ser dada como parï¿½metro)"),
      BOperClassify::NumericalAnalysis_);
   void BDatIntegrateQAG::CalcContens()
 //--------------------------------------------------------------------
@@ -1558,7 +1556,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
 
   if (!code->Operator()) {
     english += "invalid code argument";
-    spanish += "argumento código inválido";
+    spanish += "argumento cï¿½digo invï¿½lido";
     Error(I2(english,spanish));
     return;
   }
@@ -1569,7 +1567,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
     english += "invalid type ";
     english += code->Grammar()->Name();
     english += " for f argument: should be Real";
-    spanish += " tipo inválido ";
+    spanish += " tipo invï¿½lido ";
     spanish += code->Grammar()->Name();
     spanish += " para argumento f: debe ser Real";
     Error(I2(english,spanish));
@@ -1580,7 +1578,7 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
   if (code->Operator()->MinArg()!=1 && 
       code->Operator()->MaxArg()!=1) {
     english += "invalid argument number for f argument: should be 1";
-    spanish += "número de argumentos inválidos para argumento f: debe ser 1";
+    spanish += "nï¿½mero de argumentos invï¿½lidos para argumento f: debe ser 1";
     Error(I2(english,spanish));  
     return;
   }
@@ -1607,20 +1605,20 @@ static BSyntaxObject* classGra_  = (BSyntaxObject*)classFinder_;
 static BText _comment_diffDist_ = BText("\n")+
 I2("You can modify differential step used in calculations by "
    "means of global variable DiffDist",
-   "Es posible modificar el tamaño de paso diferencial utilizado "
-   "para los cálculos con la variable global Real DiffDist");
+   "Es posible modificar el tamaï¿½o de paso diferencial utilizado "
+   "para los cï¿½lculos con la variable global Real DiffDist");
 
 static BText _comment_tolerance_ = BText("\n")+
 I2("You can modify the minimum enhancement between consecutive "
    "iterations by means of global variable Tolerance",
-   "Es posible especificar la mínima mejora entre iteraciones "
+   "Es posible especificar la mï¿½nima mejora entre iteraciones "
    "consecutivas necesaria para continuar con la variable global "
    "Real Tolerance");
 
 static BText _comment_maxIter_ = BText("\n")+
 I2("You can modify the maximum number of iterations by means of "
    "global variable MaxIter",
-   "Es posible especificar el máximo número de iteraciones "
+   "Es posible especificar el mï¿½ximo nï¿½mero de iteraciones "
    "con la variable global Real MaxIter");
 
 //--------------------------------------------------------------------
@@ -1630,7 +1628,7 @@ I2("You can modify the maximum number of iterations by means of "
      "(Code f, Real x [, Real fx])"),
   I2("Returns the first derivative of a function in x."
      "with a given tolerance",
-     "Devuelve la derivada primera numérica de una función en x.")+
+     "Devuelve la derivada primera numï¿½rica de una funciï¿½n en x.")+
   _comment_diffDist_,
      BOperClassify::NumericalAnalysis_);
   void BDatNFirstDer::CalcContens()
@@ -1651,8 +1649,8 @@ I2("You can modify the maximum number of iterations by means of "
   DefExtOpr(1, BDatNSecondDer, "SecondDer", 2, 2, "Code Real",
   I2("(Code f, Real x)",
      "(Code f, Real x)"),
-  I2("Returns the numérical second derivative of a function in x.",
-     "Devuelve la derivada segunda numérica de una función en x.")+
+  I2("Returns the numï¿½rical second derivative of a function in x.",
+     "Devuelve la derivada segunda numï¿½rica de una funciï¿½n en x.")+
   _comment_diffDist_,
      BOperClassify::NumericalAnalysis_);
   void BDatNSecondDer::CalcContens()
@@ -1672,7 +1670,7 @@ I2("You can modify the maximum number of iterations by means of "
   "(Code f, Real y, Real a, Real b, Real tolerance [, Real maxEval])",
   I2("Solves the equation f(x) = y using the Fibonacci method between min "
      "and max with the given tolerance.",
-     "Resuelve la ecuación f(x) = y usando el método de Fibonacci con valor "
+     "Resuelve la ecuaciï¿½n f(x) = y usando el mï¿½todo de Fibonacci con valor "
      "inicial x0."),
      BOperClassify::NumericalAnalysis_);
   void BDatFibonacciSolve::CalcContens()
@@ -1688,7 +1686,7 @@ I2("You can modify the maximum number of iterations by means of "
   if(min>max)
   {
     Error(I2("Cannot use empty interval in ",
-             "No se puede usar un intervalo vacío en ")+
+             "No se puede usar un intervalo vacï¿½o en ")+
           "FibonacciSolve");
   }
   else if(tol<0)
@@ -1711,7 +1709,7 @@ I2("You can modify the maximum number of iterations by means of "
   "Code Real Real Real Real Real",
   "(Code f, Real y, Real a, Real b, Real tolerance [, Real maxEval])",
   I2("Minimizes the function f(x) between a and b using the Fibonacci method",
-     "Minimiza la función f(x) entre a y b por el método de Fibonacci."),
+     "Minimiza la funciï¿½n f(x) entre a y b por el mï¿½todo de Fibonacci."),
      BOperClassify::NumericalAnalysis_);
   void BDatFibonacciMin::CalcContens()
 //--------------------------------------------------------------------
@@ -1726,7 +1724,7 @@ I2("You can modify the maximum number of iterations by means of "
   if(min>max)
   {
     Error(I2("Cannot use empty interval in ",
-             "No se puede usar un intervalo vacío en ")+
+             "No se puede usar un intervalo vacï¿½o en ")+
           "FibonacciMin");
   }
   else if(tol<0)
@@ -1749,8 +1747,8 @@ I2("You can modify the maximum number of iterations by means of "
   I2("Solves the equation 'f(x)=y' using the Newton-Raphson iterative "
      "method with numerical derivatives (secant method) starting at "
      "initial value x0.",
-     "Resuelve la ecuación 'f(x)=y' usando el método iterativo de "
-     "Newton-Raphson con derivadas numéricas (método de la secante) y "
+     "Resuelve la ecuaciï¿½n 'f(x)=y' usando el mï¿½todo iterativo de "
+     "Newton-Raphson con derivadas numï¿½ricas (mï¿½todo de la secante) y "
      "comenzando con valor inicial x0.")+
   _comment_diffDist_+
   _comment_maxIter_+
@@ -1775,8 +1773,8 @@ I2("You can modify the maximum number of iterations by means of "
   I2("Solves the equation 'f(x)=y' using the Newton-Raphson iterative "
      "method with numerical derivatives (secant method) starting at "
      "initial value x0.",
-     "Resuelve la ecuacion 'f(x)=y' usando el método iterativo de "
-     "Newton-Raphson con derivadas numéricas (método de la secante) y "
+     "Resuelve la ecuacion 'f(x)=y' usando el mï¿½todo iterativo de "
+     "Newton-Raphson con derivadas numï¿½ricas (mï¿½todo de la secante) y "
      "comenzando con valor inicial x0.")+
   _comment_diffDist_+
   _comment_maxIter_+
@@ -1828,8 +1826,8 @@ DeclareContensClass(BDat, BDatTemporary, BDatAsymptoticSampler1D);
 DefExtOpr(1, BDatAsymptoticSampler1D, "AsymptoticSampler1D", 3, 5,
 "Code Real Real Real Real",
 "(Code logDens, Real L, Real R [, Real numOfCandidates = 10, Real maxIter = 100])",
-"Este método consiste en una aproximación asintótica muy sencilla "
-"para simular realizaciones de una distribución de probabilidad con "
+"Este mï¿½todo consiste en una aproximaciï¿½n asintï¿½tica muy sencilla "
+"para simular realizaciones de una distribuciï¿½n de probabilidad con "
 "densidad arbitraria con dominio no necesariamente conexo dentro de un "
 "intervalo [L,R] orientativo:\n"
 " 1. Se toman secuencialmente valores x[k] uniformemente distribuidos en [L,R] \n"
@@ -1837,8 +1835,8 @@ DefExtOpr(1, BDatAsymptoticSampler1D, "AsymptoticSampler1D", 3, 5,
 "      f[k] = log(d(x[k]))+c \n"
 " 3. Se descartan los que den logaritmo de densidad -Inf, para forzar, densidad no nula, o sea, \n"
 "      d(x[k])>0 \n"
-" 4. Se para cuando se obtiene el número deseado de candidatos con densidad no nula o se supera el máximo de iteraciones\n"
-" 5. Se resta a cada uno el máximo de las f y se toma su exponencial \n"
+" 4. Se para cuando se obtiene el nï¿½mero deseado de candidatos con densidad no nula o se supera el mï¿½ximo de iteraciones\n"
+" 5. Se resta a cada uno el mï¿½ximo de las f y se toma su exponencial \n"
 "      g[k] = Exp( f[k] - max{f[i]} ) \n"
 " 6. Se calcula el peso relativo w[k] de cada valor de forma proporcional a su densidad \n"
 "      w[k] = g[k] / Sum( g[i] ) \n"
@@ -1851,8 +1849,8 @@ DefExtOpr(1, BDatAsymptoticSampler1D, "AsymptoticSampler1D", 3, 5,
 "10. Se elige el primer valor que supera o iguala a p en peso acumulado \n"
 "      W(x[k-1]) < p <= W(x[k]) \n"
 "\n"
-"Cuando n->Inf esto da simulación exacta, pero con valores de apenas n=10 nos "
-"da puede dar una buena aproximación si el intervalo es lo bastante denso como "
+"Cuando n->Inf esto da simulaciï¿½n exacta, pero con valores de apenas n=10 nos "
+"da puede dar una buena aproximaciï¿½n si el intervalo es lo bastante denso como "
 "para que no se descarte la totalidad de los candidatos.",
 BOperClassify::Statistic_);
 void BDatAsymptoticSampler1D::CalcContens()
@@ -1871,7 +1869,7 @@ void BDatAsymptoticSampler1D::CalcContens()
 
   if (!cod.Operator()) {
     english += "invalid code argument";
-    spanish += "argumento código inválido";
+    spanish += "argumento cï¿½digo invï¿½lido";
     Error(I2(english,spanish));
     return;
   }
@@ -1879,7 +1877,7 @@ void BDatAsymptoticSampler1D::CalcContens()
   if (cod.Operator()->MinArg()!=1 && 
       cod.Operator()->MaxArg()!=1) {
     english += "invalid argument number for logf argument: should be 1";
-    spanish += "número de argumentos inválidos para argumento logf: debe ser 1";
+    spanish += "nï¿½mero de argumentos invï¿½lidos para argumento logf: debe ser 1";
     Error(I2(english,spanish));  
     return;
   }
@@ -1889,7 +1887,7 @@ void BDatAsymptoticSampler1D::CalcContens()
     english += "invalid type ";
     english += cod.Grammar()->Name();
     english += " for logf argument: should be Real";
-    spanish += " tipo inválido ";
+    spanish += " tipo invï¿½lido ";
     spanish += cod.Grammar()->Name();
     spanish += " para argumento logf: debe ser Real";
     Error(I2(english,spanish));
@@ -1901,7 +1899,7 @@ void BDatAsymptoticSampler1D::CalcContens()
     english += "invalid type ";
     english += cod.Operator()->GrammarForArg(1)->Name();
     english += " for first argument of logf argument: should be Real";
-    spanish += "tipo inválido ";
+    spanish += "tipo invï¿½lido ";
     spanish += cod.Operator()->GrammarForArg(1)->Name();
     spanish += " en el primer argumento del argumento logf: debe ser Real";
     Error(I2(english,spanish));
@@ -1956,13 +1954,13 @@ DefExtOpr(1, BDatTextToReal, "TextToReal", 1, 2, "Text Text",
   I2("Convers to real a formatted text. You can specify any standard "
      "C format for type double.",
      "Convierte a real un texto formateado. Se puede especificar un "
-     "formato estándar cualquiera de C para el tipo double ")+
+     "formato estï¿½ndar cualquiera de C para el tipo double ")+
   I2("\nWARNING: Not all formats are inversible. "
      "For example, format strings with literals "
      "they must be separated with a specified separator character.",
-     "\nCUIDADO: No todas las cadenas de formato tienen porqué ser inversibles. "
+     "\nCUIDADO: No todas las cadenas de formato tienen porquï¿½ ser inversibles. "
      "Por ejemplo, si usan literales "
-     "éstos deben estar separados del resto por un caracter especificado."),
+     "ï¿½stos deben estar separados del resto por un caracter especificado."),
 	  BOperClassify::TimeAlgebra_);
 //--------------------------------------------------------------------
 void BDatTextToReal::CalcContens()
@@ -1985,7 +1983,7 @@ void BDatTextToReal::CalcContens()
   DefExtOpr(1, BDatTextLength, "TextLength", 1, 1, "Text",
   "(Text txt)",
   I2("Returns the number of characters of a text variable.",
-     "Devuelve el número de caracteres de una variable de texto."),
+     "Devuelve el nï¿½mero de caracteres de una variable de texto."),
      BOperClassify::Text_);
   void BDatTextLength::CalcContens()
 //--------------------------------------------------------------------
@@ -2013,17 +2011,17 @@ void BDatTextToReal::CalcContens()
 	 "    1 of left to right, -1 of right to left.\n"
      "    To specify another number one returns omitted."
      ,
-     "Devuelve la posición de la enésima ocurrencia del texto buscado, "
-     "a partir de una posición inicial dentro de la cadena dada.\n"
+     "Devuelve la posiciï¿½n de la enï¿½sima ocurrencia del texto buscado, "
+     "a partir de una posiciï¿½n inicial dentro de la cadena dada.\n"
      "Si no se encuentra el texto buscado, se devuelve cero.\n"
      "  cadena: texto donde buscar.\n"
 	 "  buscado: texto que buscamos.\n"
-	 "  [desde=1]: posición desde del texto original desde donde se "
+	 "  [desde=1]: posiciï¿½n desde del texto original desde donde se "
 	              "empieza a buscar.\n"
-	 "  [ocurrencia=1]: indica el número de ocurrecia de la busqueda.\n"
-	 "  [direccion=1]: [1|-1] indica la dirección de la busqueda.\n"
+	 "  [ocurrencia=1]: indica el nï¿½mero de ocurrecia de la busqueda.\n"
+	 "  [direccion=1]: [1|-1] indica la direcciï¿½n de la busqueda.\n"
 	 "    1 de izquierda a derecha, -1 de derecha a izquierda.\n"
-     "    De especificar otro número se retorna omitido."),
+     "    De especificar otro nï¿½mero se retorna omitido."),
      BOperClassify::Text_);
   void BDatFindText::CalcContens()
 //--------------------------------------------------------------------
@@ -2040,7 +2038,7 @@ void BDatTextToReal::CalcContens()
       "TextFind. Nonvalid value for the parameter 'direction'"
 	  "It was expected  [-1 | 1] and it has been received: "<< direction
 	  ,
-      "TextFind. Valor no válido para el parámetro 'direccion'."
+      "TextFind. Valor no vï¿½lido para el parï¿½metro 'direccion'."
 	  "Se esperaba [-1 | 1] y se ha recibido: "<< direction));
 	contens_ = BDat::Unknown ();
   } else {
@@ -2063,7 +2061,7 @@ void BDatTextToReal::CalcContens()
      "(Text cadena, Text buscado)"),
   I2("Returns the number of occurrences of the searched text, within the "
      "given chain.",
-     "Devuelve el número de ocurrencias del texto buscado, dentro de la "
+     "Devuelve el nï¿½mero de ocurrencias del texto buscado, dentro de la "
      "cadena dada."),
      BOperClassify::Text_);
   void BDatTextOccurrences::CalcContens()
@@ -2135,11 +2133,11 @@ static BUserFunction *tclTextMatch = NULL;
      "	Match (\"Alfa\", \"*lfaX\") = FALSE; \n"
      "	Match (\"Alfa\", \"*l*f*\") = FALSE; \n"
      ,
-     "Devuelve verdadero si el modelo o patrón es equiparable con una cadena "
-     "dada. Trabaja o no de modo sensible a mayúsculas y minúsculas. "
+     "Devuelve verdadero si el modelo o patrï¿½n es equiparable con una cadena "
+     "dada. Trabaja o no de modo sensible a mayï¿½sculas y minï¿½sculas. "
      "Si no es especificado dicho modo, se sobreentiende el caso no sensible."
-     "El carácter comodín * puede equipararse a cualquier combinación de uno "
-     "o más caracteres. El carácter comodín * único puede usarse al "
+     "El carï¿½cter comodï¿½n * puede equipararse a cualquier combinaciï¿½n de uno "
+     "o mï¿½s caracteres. El carï¿½cter comodï¿½n * ï¿½nico puede usarse al "
      "comienzo o al final del modelo.\n"
      "Ejemplos: \n"
      "	Match (\"Alfa\", \"Alfa\")  = CIERTO; \n"
@@ -2164,9 +2162,7 @@ static BUserFunction *tclTextMatch = NULL;
 }
 
 
-  #ifdef UNIX
-
-  #else // WINDOWS
+  #if defined(_WIN32) || defined(WIN32)
     #include <dos.h>
   #endif
 
@@ -2178,8 +2174,8 @@ static BUserFunction *tclTextMatch = NULL;
   I2("Sleeps TOL process while the specified time. Minimum unit is "
      "millsecond, I.E. 0.001 seconds ",
      "El proceso TOL se queda en estado de espera no activa durante el "
-     "tiempo especificado. El proceso no consumirá CPU en este periodo. "
-     "La unidad mínima de tiempo es el milisegundo, o sea, 0.001 "
+     "tiempo especificado. El proceso no consumirï¿½ CPU en este periodo. "
+     "La unidad mï¿½nima de tiempo es el milisegundo, o sea, 0.001 "
      "segundos"),
      BOperClassify::Conversion_);
   void BDatSleep::CalcContens()
@@ -2197,7 +2193,7 @@ static BUserFunction *tclTextMatch = NULL;
   I2("(Text chain [, Real n=1])",
      "(Text cadena [, Real n=1])"),
   I2("Returns the ASCII code of the n-th character of the given chain.",
-     "Devuelve el código ASCII del enésimo caracter de la cadena dada."),
+     "Devuelve el cï¿½digo ASCII del enï¿½simo caracter de la cadena dada."),
      BOperClassify::Conversion_);
   void BDatASCII::CalcContens()
 //--------------------------------------------------------------------
@@ -2217,7 +2213,7 @@ static BUserFunction *tclTextMatch = NULL;
   I2("(Code f)",
      "(Code f)"),
   I2("Returns the number of arguments of a function.",
-     "Devuelve el número de argumentos de una función."),
+     "Devuelve el nï¿½mero de argumentos de una funciï¿½n."),
      BOperClassify::General_);
   void BDatNumArg::CalcContens()
 //--------------------------------------------------------------------
@@ -2232,7 +2228,7 @@ static BUserFunction *tclTextMatch = NULL;
   I2("(Complex z)",
      "(Complex z)"),
   I2("Returns the real part of a complex number.",
-     "Devuelve la parte real de un número complejo."),
+     "Devuelve la parte real de un nï¿½mero complejo."),
      BOperClassify::ComplexArythmetic_);
   void BDatCReal::CalcContens()
 //--------------------------------------------------------------------
@@ -2247,7 +2243,7 @@ static BUserFunction *tclTextMatch = NULL;
   I2("(Complex z)",
      "(Complex z)"),
   I2("Returns the imaginary part of a complex number.",
-     "Devuelve la parte imaginaria de un número complejo."),
+     "Devuelve la parte imaginaria de un nï¿½mero complejo."),
      BOperClassify::ComplexArythmetic_);
   void BDatCImag::CalcContens()
 //--------------------------------------------------------------------
@@ -2262,7 +2258,7 @@ static BUserFunction *tclTextMatch = NULL;
   I2("(Complex z)",
      "(Complex z)"),
   I2("Returns the absolute value of a complex number.",
-     "Devuelve el valor absoluto de un número complejo."),
+     "Devuelve el valor absoluto de un nï¿½mero complejo."),
      BOperClassify::ComplexArythmetic_);
   void BDatCAbs::CalcContens()
 //--------------------------------------------------------------------
@@ -2277,7 +2273,7 @@ static BUserFunction *tclTextMatch = NULL;
   I2("(Complex z)",
      "(Complex z)"),
   I2("Returns the argument of a complex number.",
-     "Devuelve el argumento de un número complejo."),
+     "Devuelve el argumento de un nï¿½mero complejo."),
      BOperClassify::ComplexArythmetic_);
   void BDatCArg::CalcContens()
 //--------------------------------------------------------------------
@@ -2287,10 +2283,11 @@ static BUserFunction *tclTextMatch = NULL;
 }
 
 
-#if defined(UNIX)
-  //incuir cabecera de sockets UNIX
-#else
+#if defined(_WIN32) || defined(WIN32)
   #include<winsock.h>
+#else
+  //incluir cabecera de sockets UNIX si es necesario
+#endif
 
 #ifdef WRCMD_TRACE
   #include<stdio.h>
@@ -2651,7 +2648,7 @@ int WinRmtProcessAlive(const char         *ServerName,
      "Ejecuta un comando Windows en una maquina remota identificada por "
      "su NombreServidor (o DireccionIP) y Puerto. Dicha maquina debe disponer "
      "de un servidor de comandos remotos en dicho puerto. Hay varios modos"
-     "de ejecución:\n"
+     "de ejecuciï¿½n:\n"
      " Min (Por defecto) El comando se ejecuta en una ventana minimizada.\n"
      " Max               El comando se ejecuta en una ventana maximizada.\n"
      " Nor               El comando se ejecuta en una ventana normal.\n"
@@ -2728,7 +2725,7 @@ int WinRmtProcessAlive(const char         *ServerName,
      "Retorna:\n"
      " -1 si el servidor no esta activo o hubo error en la comunicacion.\n"
      "	0 si el proceso no existe o ha sido eliminado.\n"
-     "	1 si el proceso está vivo."
+     "	1 si el proceso estï¿½ vivo."
      ),
      BOperClassify::System_);
   void BDatWinRmtProcessAlive::CalcContens()
@@ -2739,7 +2736,7 @@ int WinRmtProcessAlive(const char         *ServerName,
 				  (BInt)Real(Arg(2)), 
 				  (BInt)Real(Arg(3)) );
 }
-#endif // UNIX
+#endif // _WIN32 || WIN32
 
 //--------------------------------------------------------------------
 DeclareContensClass(BDat, BDatTemporary, BDatLLKR);
@@ -2781,12 +2778,12 @@ void BDatLLKR::CalcContens()
   }
   if (!pAR) {
     Error(I2("Invalid pAR polynomial",
-             "Polinomio pAR inválido"));
+             "Polinomio pAR invï¿½lido"));
     return;
   }
   if (!pMA) {
     Error(I2("Invalid pMA polynomial",
-             "Polinomio pMA inválido"));
+             "Polinomio pMA invï¿½lido"));
     return;
   }
   if (NumArgs()>3) {
@@ -2834,7 +2831,7 @@ DeclareContensClass(BDat, BDatTemporary, BDatTolShowStatus);
 DefExtOpr(1, BDatTolShowStatus, "TolShowStatus", 1, 1, "Real",
           "(Real unused)",
           I2("Shows statistics of resources used by TOL",
-             "Muestra estadísticas de los recursos usados por TOL"),
+             "Muestra estadï¿½sticas de los recursos usados por TOL"),
           BOperClassify::Conversion_);
 void BDatTolShowStatus::CalcContens()
 //--------------------------------------------------------------------

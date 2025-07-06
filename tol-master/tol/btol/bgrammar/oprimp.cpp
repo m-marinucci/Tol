@@ -54,8 +54,7 @@
 #include <tol/tol_bnameblock.h>
 #include <tol/tol_btimer.h>
 
-#ifdef UNIX
-#else // WINDOWS
+#if defined(_WIN32) || defined(WIN32)
   #include <windows.h>
 #endif
 
@@ -205,8 +204,8 @@ struct BTolOprProfiler
         enabled_,
         I2("If true then a full timing and calling profiler report of each TOL "
            "operator will be generated and saved into file ",
-           "Si es cierto se generará al final de la sesión TOL un informe de "
-           "perfil de llamadas y tiempo de cada operador TOL, y se almacenarán "
+           "Si es cierto se generarï¿½ al final de la sesiï¿½n TOL un informe de "
+           "perfil de llamadas y tiempo de cada operador TOL, y se almacenarï¿½n "
            "en los ficheros ")+profilerPath_+" and "
       );
     //SetEmptyKey(profilerTable_, NULL);
@@ -598,12 +597,12 @@ void SampleProfiler()
      "variable TolOprProfiler.Enabled was changed to true.\n"
      "NOTE: At this release it can be used just one time by TOL "
      "session.",
-     "Vuelca al fichero especificado la información almacenada del "
+     "Vuelca al fichero especificado la informaciï¿½n almacenada del "
      "perfil de rendimiento de las funciones de TOL llamadas "
-     "desde el momento en que se cambió la variable "
+     "desde el momento en que se cambiï¿½ la variable "
      "TolOprProfiler.Enabled a cierto.\n"
-     "NOTA: en esta versión sólo se puede utilizar una vez por "
-     "cada sesión TOL."),
+     "NOTA: en esta versiï¿½n sï¿½lo se puede utilizar una vez por "
+     "cada sesiï¿½n TOL."),
      BOperClassify::TimeAlgebra_);
   void BDatTolOprProfilerDump::CalcContens()
 //--------------------------------------------------------------------
@@ -620,7 +619,7 @@ void SampleProfiler()
   DefExtOpr(1, BDatTolOprProfilerInit, "TolOprProfiler.Init", 1, 1, 
   "Real", "(Real microSec)",
   I2("Enable profiling with sampling resolution of microSec meaasured in microseconds",
-     "Habilita la medición de rendimiento por función. El argumento microSec indica la frecuencia de medición en microsegundos."),
+     "Habilita la mediciï¿½n de rendimiento por funciï¿½n. El argumento microSec indica la frecuencia de mediciï¿½n en microsegundos."),
      BOperClassify::TimeAlgebra_);
   void BDatTolOprProfilerInit::CalcContens()
 //--------------------------------------------------------------------
@@ -629,7 +628,7 @@ void SampleProfiler()
   if (BTolOprProfiler::ptrThread)
     {
     Error(I2("There is already one profiler running",
-             "Ya hay un profiler ejecutándose"));
+             "Ya hay un profiler ejecutï¿½ndose"));
     return;
     }
 #endif
@@ -641,7 +640,7 @@ void SampleProfiler()
     char buffer[256];
     snprintf(buffer, 255, 
              I2("Invalid sampling (tick) resolution %d, must be a possitive integer",
-                "Resolution de muestreo (tick) inválida, debe ser un entero positivo"),
+                "Resolution de muestreo (tick) invï¿½lida, debe ser un entero positivo"),
              iFreq);
     Warning(buffer);
     iFreq = 1;
@@ -888,7 +887,7 @@ static BBool IsIdentifier(const BText& expression)
         (expression=="Stop"))
     {
 	Error(expression + I2(" is not a valid variable identifier.",
-			      " no es un identificador de variable válido."));
+			      " no es un identificador de variable vï¿½lido."));
 	return(BFALSE);
     }
     if((expression.Length()>=5) &&
@@ -900,7 +899,7 @@ static BBool IsIdentifier(const BText& expression)
     {
 	Error(expression + I2(" is not a valid variable identifier because it "
 			      "has date format.",
-			      " no es un identificador de variable válido "
+			      " no es un identificador de variable vï¿½lido "
 			      "porque tiene formato de fecha."));
 	return(BFALSE);
     }
@@ -908,8 +907,8 @@ static BBool IsIdentifier(const BText& expression)
     if((expression(0)>='0') && (expression(0)<='9'))
     {
 	Deprecated(expression + I2(" will be soon not accepted as an "
-				   "identifier.", " no será aceptado "
-				   "próximamente como identificador."));
+				   "identifier.", " no serï¿½ aceptado "
+				   "prï¿½ximamente como identificador."));
     }
 
     return(BTRUE);
@@ -931,7 +930,7 @@ static BSyntaxObject* CreateObject(      List*	   tre,
   if(!IsIdentifier(name)) 
   { 
     Error(name+I2(" is not a valid identifier and could not be created.", 
-                  " no es un identificador válido y no se pudo crear."));
+                  " no es un identificador vï¿½lido y no se pudo crear."));
     return(NIL); 
   }
 
@@ -1034,7 +1033,7 @@ static BSyntaxObject* CreateObject(      List*	   tre,
   	    {
           TRACE_SHOW_MEDIUM(fun," 16");
   		    Std(I2("This error has been produced in function ",
-  		           "El error se ha producido en la función \"") + 
+  		           "El error se ha producido en la funciï¿½n \"") + 
   		        functionName + "\"");
           if(functionPath.HasName()) 
           {
@@ -1051,7 +1050,7 @@ static BSyntaxObject* CreateObject(      List*	   tre,
             TRACE_SHOW_MEDIUM(fun," 19");
             Error(BText("Variable '") + name +
   		            I2("' already defined as parameter of the function '",
-  			             "' ya definida como parámetro de la función '")
+  			             "' ya definida como parï¿½metro de la funciï¿½n '")
   		               + functionName + "'");
           }
   	      else 
@@ -1059,7 +1058,7 @@ static BSyntaxObject* CreateObject(      List*	   tre,
             TRACE_SHOW_MEDIUM(fun," 20");
             Error(BText("Variable '") + name +
   		            I2("' already defined as a parameter of the function",
-  			             "' ya definida como un parámetro de la función"));
+  			             "' ya definida como un parï¿½metro de la funciï¿½n"));
             if(functionPath.HasName()) 
             {
               Std(I2("File: ","Fichero: ") + functionPath + "\n");
@@ -1073,7 +1072,7 @@ static BSyntaxObject* CreateObject(      List*	   tre,
   		             "Conflicto entre variables.\n") +
   		          I2("Trying to change \"","Se ha intentado modificar \"") + 
   		          result->Name() + 
-  		          I2("using ","\" a través de la ") + "variable \"" + name + 
+  		          I2("using ","\" a travï¿½s de la ") + "variable \"" + name + 
   		          "\"");
         }
   	  }
@@ -1234,7 +1233,7 @@ BSyntaxObject* BUserFunctionCreator::Evaluate(const List* argList)
     result = gra->FindOperator(name); 
     if(result && result->NameBlock() && !BNameBlock::Building())
     {
-      Warning(I2("Function ","La función ")+
+      Warning(I2("Function ","La funciï¿½n ")+
               " "+gra->Name()+" "+name+" "+
               I2("hides published NameBlock member",
                  "oculta el miembro de NameBlock publicado")+
@@ -1269,7 +1268,7 @@ BSyntaxObject* BUserFunctionCreator::Evaluate(const List* argList)
       if(!(usf->SetExpression(Tree::treNode((List*)argList),
            Tree::treLeft((List*)argList))))
       {
-        Error(Out()+I2("Function ","La función ")+name+
+        Error(Out()+I2("Function ","La funciï¿½n ")+name+
               I2(" could not been created", " no se pudo crear"));
         DESTROY(result);
       }
@@ -1283,7 +1282,7 @@ BSyntaxObject* BUserFunctionCreator::Evaluate(const List* argList)
     { 
       msg = BText("\n<")+name+"> "+
             I2("is not a valid type of data.",
-               "no es un tipo de datos válido."); 
+               "no es un tipo de datos vï¿½lido."); 
     }
     else if(!rest)
     {
@@ -1291,7 +1290,7 @@ BSyntaxObject* BUserFunctionCreator::Evaluate(const List* argList)
                "No hay lista de argumentos."); 
     }
     BText args = BParser::Unparse(Tree::treNode((List*)argList));  
-	  Error(I2("Wrong function declaration\n","Declaración errónea de función\n")+
+	  Error(I2("Wrong function declaration\n","Declaraciï¿½n errï¿½nea de funciï¿½n\n")+
           args+msg);
   }
   return(result);
@@ -1644,7 +1643,7 @@ BSyntaxObject* BStandardOperator::Evaluate(const List* argTrees)
     {
 	    BText desc   = Grammar()->Name()+" "+Name()+" "+Arguments();
 	    Error(BText(I2("Insuficient arguments in call to ",
-		            	   "Número de argumentos insuficientes para ")) + desc);
+		            	   "Nï¿½mero de argumentos insuficientes para ")) + desc);
 	  } 
     else if(branch) 
     {
@@ -1666,7 +1665,7 @@ BSyntaxObject* BStandardOperator::Evaluate(const List* argTrees)
     {
     BText desc = Grammar()->Name()+" "+Name()+" "+Arguments();
     Error(I2("Wrong arguments in call to ",
-             "Argumentos erróneos para ") + desc);
+             "Argumentos errï¿½neos para ") + desc);
     }
   BGrammar::PutLast(Grammar());
   TRACE_SHOW_LOW(fun," END");
@@ -1852,7 +1851,7 @@ BBool BUserFunction::Compile()
   if(!allRight)
   {
     BText msg = I2("Wrong declaration in user function ",
-                   "Declaración errónea en función de usuario ")+
+                   "Declaraciï¿½n errï¿½nea en funciï¿½n de usuario ")+
                 BParser::Unparse(declaration_);
     if(errMsg)
     {
@@ -1927,7 +1926,7 @@ BSyntaxObject* BUserFunction::Evaluator(BList* argList) const
       char en[1024];
         
       sprintf(sp, "Tipos no coincidentes para argumento # %d en "
-                  "llamada a función %s: %s != %s",
+                  "llamada a funciï¿½n %s: %s != %s",
             n+1, Name().String(), gra?gra->Name().String():"NONE", 
             g->Name().String());
       sprintf(en, "Type mismatch for argument # %d in calling "
@@ -2002,14 +2001,14 @@ BSyntaxObject* BUserFunction::Evaluator(BList* argList) const
     {
       if(inFile_.HasName()) 
       {
-        Error(I2("Fail in function \"","Fallo en la función \"") + 
+        Error(I2("Fail in function \"","Fallo en la funciï¿½n \"") + 
               Name() + I2("\" declared in file:\n",
               "\" declarada en el fichero:\n") + 
               inFile_ + "\n");
       }
       else
       {
-        Error(I2("Fail in function \"","Fallo en la función \"") + 
+        Error(I2("Fail in function \"","Fallo en la funciï¿½n \"") + 
               Name() + "\"");
       }
     }

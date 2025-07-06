@@ -189,9 +189,9 @@ using namespace std;
 #  include <time.h>
 # endif
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__linux__) || defined(__linux) || defined(linux)
 #define _FILE_OFFSET_BITS 64
-#elif defined(WIN32)
+#elif defined(_WIN32) || defined(WIN32)
 #define fseeko _fseeki64
 #define ftello _ftelli64
 #define off_t  __int64
@@ -199,7 +199,6 @@ using namespace std;
 #define fseeko fseek
 #define ftello ftell
 typedef long off_t;
-
 #endif
 
 
@@ -279,10 +278,12 @@ enum BSign { BPOSITIVE=1, BNULL=0, BNEGATIVE = -1 };
 #  define NIL 0	  /* Pointer to nothing */
 #endif
 
-#ifdef UNIX
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__GNUC__)
 #  define BINT64 long long int
-#else
+#elif defined(_WIN32) || defined(WIN32)
 #  define BINT64 __int64
+#else
+#  define BINT64 long long int
 #endif
 
 

@@ -36,7 +36,10 @@
 #define clapack_dpotri LAPACKE_dpotri
 #else
 BEGIN_DECLS
+// Prevent CBLAS redefinition conflicts
+#define CBLAS_H
 #include <clapack.h>
+#undef CBLAS_H
 #define LAPACK_UPLO(UpLo) UpLo
 #define LAPACK_ORDER(Order) Order
 END_DECLS

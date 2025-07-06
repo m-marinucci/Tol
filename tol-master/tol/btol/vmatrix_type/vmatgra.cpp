@@ -355,7 +355,7 @@ void BDatStoredBytes::CalcContens()
   "Real Set",
   "(Real nrow, Set items)",
   I2("Merge rows of a set of virtual matrices and row indexes.",
-     "Mezcla las filas de un conjunto de matrices virtuales e índices "
+     "Mezcla las filas de un conjunto de matrices virtuales e ï¿½ndices "
      "de filas ."),
      BOperClassify::Conversion_);
   void BVMatMergeRows::CalcContens()
@@ -519,16 +519,16 @@ DefExtOpr(1, BVMatPack, "Pack", 1, 2,
      "If argument 'sparsity' is unknown then it will be calculated to ensure the "
      "minimum size of returned matrix."
 ,
-     "Convierte una matriz virtual para ser almacenados en la forma óptima:\n"
+     "Convierte una matriz virtual para ser almacenados en la forma ï¿½ptima:\n"
      " * Convierte una matriz densa a escasa si tiene bastantes celdas cero, es decir, si\n"
      "1-VNonNullCells (M) / (VRows (M) * VColumns (M))> = sparsity\n"
      "* Convierte una matriz dispersa a densa si no hay bastantes celdas cero, es decir, si\n"
      "1-VNonNullCells (M) / (VRows (M) * VColumns (M)) <= sparsity\n"
-     "Si no es así, las matrices sparse serán empaquetadas al máximo internamente.\n"
-     "* Convierte las matrices triplet a denso o sparse según estas mismas reglas\n"
-     "* Las matrices factor serán empaquetadas al máximo internamente\n"
-     "Si el argumento 'sparsity' es desconocido entonces será calculado "
-     "para garantizar el mínimo tamaño posible de la matriz devuelta."),
+     "Si no es asï¿½, las matrices sparse serï¿½n empaquetadas al mï¿½ximo internamente.\n"
+     "* Convierte las matrices triplet a denso o sparse segï¿½n estas mismas reglas\n"
+     "* Las matrices factor serï¿½n empaquetadas al mï¿½ximo internamente\n"
+     "Si el argumento 'sparsity' es desconocido entonces serï¿½ calculado "
+     "para garantizar el mï¿½nimo tamaï¿½o posible de la matriz devuelta."),
 BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BVMatPack::CalcContens()
@@ -566,14 +566,14 @@ DefExtOpr(1, BVMatTriplet, "Triplet", 3, 5,
      "TripletUnique" ,
      "Construye una VMatrix Cholmod.R.Triplet T con la sdimensiones dadas a "
      "partir de una lista de tripletas ijx que pueden expresarse bien "
-     "como un conjunto de conjuntos de tres números cada uno, bien como "
+     "como un conjunto de conjuntos de tres nï¿½meros cada uno, bien como "
      "una matriz con tres columnas. Cada tripleta (i,j,x) define una celda "
      "almacenada T(i,j)=x. Las celdas no listadas se asumen como cero.\n"
-     "Si los índices de fila i ó columna j no son enteros serán truncados.\n"
-     "Es posible reubicar los índices de las filas y columnas de las celdas "
-     "especificándolo con los argumentos rowIdx y colIdx, que deben ser "
-     "matrices fila o columna de números enteros.\n"
-     "CUIDADO: ¡Las celdas repetidas serán sumadas! Para evitarlo use "
+     "Si los ï¿½ndices de fila i ï¿½ columna j no son enteros serï¿½n truncados.\n"
+     "Es posible reubicar los ï¿½ndices de las filas y columnas de las celdas "
+     "especificï¿½ndolo con los argumentos rowIdx y colIdx, que deben ser "
+     "matrices fila o columna de nï¿½meros enteros.\n"
+     "CUIDADO: ï¿½Las celdas repetidas serï¿½n sumadas! Para evitarlo use "
      "TripletUnique"),
 BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -612,8 +612,8 @@ void BVMatTriplet::CalcContens()
     {
       Error(I2(BText("Just row or column matrices of maximum length nrow=")+nrow+
                " are allowed as rowIdx argument of function Triplet",
-               BText("Sólo se permiten matrices fila o columna de tamaño máximo ncol=")+nrow+
-               " como argumento rowIdx de la función Triplet"));
+               BText("Sï¿½lo se permiten matrices fila o columna de tamaï¿½o mï¿½ximo ncol=")+nrow+
+               " como argumento rowIdx de la funciï¿½n Triplet"));
       return;
     }
     BDat* rIdxData = rIdx.GetData().GetBuffer();
@@ -626,7 +626,7 @@ void BVMatTriplet::CalcContens()
                  ri+", are not allowed in rowIdx argument of function Triplet",
                  BText("No se permiten valores desconocidos, infinitos ni fuera del "
                  "rango [1,...,nrow=")+nrow+"], como "+ ri+", en el argumento "
-                 "rowIdx de la función Triplet"));
+                 "rowIdx de la funciï¿½n Triplet"));
         return;
       }
       rowIdx[i] = (int)rIdxData[i].Value()-1; 
@@ -646,8 +646,8 @@ void BVMatTriplet::CalcContens()
       {
         Error(I2(BText("Just row or column matrices of maximum length ncol=")+ncol+
                  " are allowed as rowIdx argument of function Triplet",
-                 BText("Sólo se permiten matrices fila o columna de tamaño máximo ncol=")+ncol+
-                 " como argumento rowIdx de la función Triplet"));
+                 BText("Sï¿½lo se permiten matrices fila o columna de tamaï¿½o mï¿½ximo ncol=")+ncol+
+                 " como argumento rowIdx de la funciï¿½n Triplet"));
         return;
       }
       BDat* cIdxData = cIdx.GetData().GetBuffer();
@@ -660,7 +660,7 @@ void BVMatTriplet::CalcContens()
                    cj+", are not allowed in colIdx argument of function Triplet",
                    BText("No se permiten valores desconocidos, infinitos ni fuera del "
                    "rango [1,...,ncol=")+ncol+"], como "+ cj+", en el argumento "
-                   "colIdx de la función Triplet"));
+                   "colIdx de la funciï¿½n Triplet"));
           return;
         }
         colIdx[j] = (int)cj.Value()-1; 
@@ -687,13 +687,13 @@ DefExtOpr(1, BVMatTripletUnique, "TripletUnique", 3, 3,
      "of integer numbers.",
      "Construye una VMatrix Cholmod.R.Triplet T con la sdimensiones dadas a "
      "partir de una lista de tripletas ijx que pueden expresarse bien "
-     "como un conjunto de conjuntos de tres números cada uno, bien como "
+     "como un conjunto de conjuntos de tres nï¿½meros cada uno, bien como "
      "una matriz con tres columnas. Cada tripleta (i,j,x) define una celda "
      "almacenada T(i,j)=x. Las celdas no listadas se asumen como cero.\n"
-     "Si los índices de fila i ó columna j no son enteros serán truncados.\n"
-     "Es posible reubicar los índices de las filas y columnas de las celdas "
-     "especificándolo con los argumentos rowIdx y colIdx, que deben ser "
-     "matrices fila o columna de números enteros."),
+     "Si los ï¿½ndices de fila i ï¿½ columna j no son enteros serï¿½n truncados.\n"
+     "Es posible reubicar los ï¿½ndices de las filas y columnas de las celdas "
+     "especificï¿½ndolo con los argumentos rowIdx y colIdx, que deben ser "
+     "matrices fila o columna de nï¿½meros enteros."),
 BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BVMatTripletUnique::CalcContens()
@@ -731,12 +731,12 @@ DefExtOpr(1, BPol2VMat, "Pol2VMat", 3, 3,
   "(Polyn pol, Real nrow, Real ncol)",
   I2("Returns the matrix representation of a backshift polynomial.",
      "Devuelve la representacion matricial de un polinomio de retardos."
-     "Si el polinomio no contiene términos en F, entonces "
+     "Si el polinomio no contiene tï¿½rminos en F, entonces "
      "se trata de una matriz triangular inferior que tiene todos los "
      "valores de la diagonal principal iguales al coeficiente de grado 0 "
      "del polinomio, y los de las diagonales inferiores iguales al "
      "coeficiente del grado correspondiente. "
-     "Si tiene térmnos en F, ocurre de forma análoga con las diagonales "
+     "Si tiene tï¿½rmnos en F, ocurre de forma anï¿½loga con las diagonales "
      "superiores"),
     BOperClassify::Conversion_);
 //--------------------------------------------------------------------
@@ -806,8 +806,8 @@ DefExtOpr(1, BVMatEye, "Eye", 1, 4,
      "elements that are equal to 1.\n",
      "Devuelve una matriz Cholmod.R.Sparse cuyas celdas son todas cero "
      "excepto los elementos de la diagonal especificada cuyos valores "
-     "vendrán dados por el argumento x. Si es un Real todos ellos serán igual "
-     "a éste y si es una VMatrix fila o columna se utilizarán sus valores "
+     "vendrï¿½n dados por el argumento x. Si es un Real todos ellos serï¿½n igual "
+     "a ï¿½ste y si es una VMatrix fila o columna se utilizarï¿½n sus valores "
      "ordenados. La diagonal principal se referencia como diag=0, las "
      "sub-diagonales principales como diag<0 y las superiores como diag>0."),
 BOperClassify::MatrixAlgebra_);
@@ -1204,7 +1204,7 @@ DefExtOpr(1, BVMatSubBand, "SubBand", 1, 3,
      "referenced as 0, lower ones are negative numbers and upper ones "
      "positive. Returned matrix has same dimensions than incoming one.",
      "Extrae las diagonales consecutivas seleccionadas. La diagonal "
-     "principal se referencia como 0, las inferiores como números "
+     "principal se referencia como 0, las inferiores como nï¿½meros "
      "negativos y las superiores como positivos. La matriz devuelta "
      "tiene las mismas dimensiones que la entrante."),
     BOperClassify::MatrixAlgebra_);
@@ -1231,7 +1231,7 @@ DefExtOpr(1, BVMatSubDiag, "SubDiag", 1, 2,
      "referenced as 0, lower ones are negative numbers and upper ones "
      "positive.",
      "Extrae la diagonales seleccionada como una matriz fila. La diagonal "
-     "principal se referencia como 0, las inferiores como números "
+     "principal se referencia como 0, las inferiores como nï¿½meros "
      "negativos y las superiores como positivos."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1333,8 +1333,8 @@ void BVMatDrop::CalcContens()
 DeclareContensClass(BVMat, BVMatTemporary, BVMat##FUN);                        \
 DefIntOpr(1, BVMat##FUN, #FUN, 1, 1,                                           \
 "(VMatrix mat)",                                                               \
-I2("Returns "ENGLISH" of each element of a virtual matrix.",                   \
-   "Devuelve "SPANISH" de cada elemento de una matriz virtual."),              \
+I2("Returns " ENGLISH " of each element of a virtual matrix.",                   \
+   "Devuelve " SPANISH " de cada elemento de una matriz virtual."),              \
 BOperClassify::MatrixAlgebra_);                                                \
 void BVMat##FUN::CalcContens()                                                 \
 {                                                                              \
@@ -1346,8 +1346,8 @@ void BVMat##FUN::CalcContens()                                                 \
 DeclareContensClass(BVMat, BVMatTemporary, BVMat##FUN);                        \
 DefIntOpr(1, BVMat##FUN, #FUN, 1, 1,                                           \
 "(VMatrix mat)",                                                               \
-I2("Returns "ENGLISH" of each element of a virtual matrix.",                   \
-   "Devuelve "SPANISH" de cada elemento de una matriz virtual.")+              \
+I2("Returns " ENGLISH " of each element of a virtual matrix.",                   \
+   "Devuelve " SPANISH " de cada elemento de una matriz virtual.")+              \
 warn_auto_dense(),                                                             \
 BOperClassify::MatrixAlgebra_);                                                \
 void BVMat##FUN::CalcContens()                                                 \
@@ -1698,7 +1698,7 @@ DefIntOpr(1, BVMatYes, "Yes", 1, 1,
   "(VMatrix mat)",
   I2("Returns a boolean matrix with cells equal to 1 just for each non zero "
      "cell.",
-     "Devuelve una matriz booleana con celdas igual a 1 sólo para las celdas "
+     "Devuelve una matriz booleana con celdas igual a 1 sï¿½lo para las celdas "
      "distintas de cero."),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1714,7 +1714,7 @@ DeclareContensClass(BVMat, BVMatTemporary, BVMatNot);
 DefIntOpr(1, BVMatNot, "Not", 1, 1,
   "(VMatrix mat)",
   I2("Returns a boolean matrix with cells equal to 1 just for each zero cell.",
-     "Devuelve una matriz booleana con celdas igual a 1 sólo para las celdas "
+     "Devuelve una matriz booleana con celdas igual a 1 sï¿½lo para las celdas "
      "iguales a cero.")+warn_auto_dense(),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1730,7 +1730,7 @@ DeclareContensClass(BVMat, BVMatTemporary, BVMatIsUnknown);
 DefIntOpr(1, BVMatIsUnknown, "IsUnknown", 1, 1,
   "(VMatrix mat)",
   I2("Returns a boolean matrix with cells equal to 1 just for each unknown cell.",
-     "Devuelve una matriz booleana con celdas igual a 1 sólo para las celdas "
+     "Devuelve una matriz booleana con celdas igual a 1 sï¿½lo para las celdas "
      "con valores desconocidos.")+warn_auto_dense(),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1747,7 +1747,7 @@ DeclareContensClass(BVMat, BVMatTemporary, BVMatIsFinite);
 DefIntOpr(1, BVMatIsFinite, "IsFinite", 1, 1,
   "(VMatrix mat)",
   I2("Returns a boolean matrix with cells equal to 1 just for each finite known cell.",
-     "Devuelve una matriz booleana con celdas igual a 1 sólo para las celdas "
+     "Devuelve una matriz booleana con celdas igual a 1 sï¿½lo para las celdas "
      "con valores finitos conocidos.")+warn_auto_dense(),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1784,7 +1784,7 @@ DefExtOpr(1, BVMatAnd, "And", 1, 0,
   "VMatrix {VMatrix|Real}",
   "(VMatrix A [, {VMatrix|Real} B, ...])",
   I2("Returns the logical AND of arguments.",
-     "Devuelve el AND (Y) lógico de los argumentos"),                              
+     "Devuelve el AND (Y) lï¿½gico de los argumentos"),                              
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BVMatAnd::CalcContens()
@@ -1814,7 +1814,7 @@ DefExtOpr(1, BVMatOr, "Or", 1, 0,
   "VMatrix {VMatrix|Real}",
   "(VMatrix A [, {VMatrix|Real} B, ...])",
   I2("Returns the logical OR of arguments.",
-     "Devuelve el OR (O) lógico de los argumentos"),                              
+     "Devuelve el OR (O) lï¿½gico de los argumentos"),                              
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BVMatOr::CalcContens()
@@ -1844,7 +1844,7 @@ DefExtOpr(1, BVMatMin, "Min", 1, 0,
   "VMatrix {VMatrix|Real}",
   "(VMatrix A [, {VMatrix|Real} B, ...])",
   I2("Returns in each cell the minimum value of arguments ",
-     "Devuelve en cada celda el mínimo de los argumentos ")+
+     "Devuelve en cada celda el mï¿½nimo de los argumentos ")+
      "Min(A[i,j],B[i,j])",                              
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1874,7 +1874,7 @@ DefExtOpr(1, BVMatMax, "Max", 1, 0,
   "VMatrix {VMatrix|Real}",
   "(VMatrix A [, {VMatrix|Real} B, ...])",
   I2("Returns in each cell the maximum value of arguments ",
-     "Devuelve en cada celda el máximo de los argumentos ")+
+     "Devuelve en cada celda el mï¿½ximo de los argumentos ")+
      "Max(A[i,j],B[i,j])",                              
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1905,7 +1905,7 @@ DefExtOpr(1, BVMatEq, "Eq", 2, 0,
   "VMatrix {VMatrix|Real} {VMatrix|Real}",
   "(VMatrix A, {VMatrix|Real} B [, {VMatrix|Real} C, ...])",
   I2("Returns TRUE just in each cell where ",
-     "Devuelve CIERTO sólo para las celdas para las que ")+
+     "Devuelve CIERTO sï¿½lo para las celdas para las que ")+
      "A[i,j]==B[i,j]",   
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1938,7 +1938,7 @@ DefExtOpr(1, BVMatNE, "NE", 2, 0,
   "VMatrix {VMatrix|Real} {VMatrix|Real}",
   "(VMatrix A, {VMatrix|Real} B [, {VMatrix|Real} C, ...])",
   I2("Returns TRUE just in each cell where ",
-     "Devuelve CIERTO sólo para las celdas para las que ")+
+     "Devuelve CIERTO sï¿½lo para las celdas para las que ")+
      "A[i,j]!=B[i,j]"+warn_auto_dense(),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1971,7 +1971,7 @@ DefExtOpr(1, BVMatLE, "LE", 2, 0,
   "VMatrix {VMatrix|Real} {VMatrix|Real}",
   "(VMatrix A, {VMatrix|Real} B [, {VMatrix|Real} C, ...])",
   I2("Returns TRUE just in each cell where ",
-     "Devuelve CIERTO sólo para las celdas para las que ")+
+     "Devuelve CIERTO sï¿½lo para las celdas para las que ")+
      "A[i,j]<=B[i,j]",   
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -2004,7 +2004,7 @@ DefExtOpr(1, BVMatLT, "LT", 2, 0,
   "VMatrix {VMatrix|Real} {VMatrix|Real}",
   "(VMatrix A, {VMatrix|Real} B [, {VMatrix|Real} C, ...])",
   I2("Returns TRUE just in each cell where ",
-     "Devuelve CIERTO sólo para las celdas para las que ")+
+     "Devuelve CIERTO sï¿½lo para las celdas para las que ")+
      "A[i,j]<B[i,j]"+warn_auto_dense(),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -2038,7 +2038,7 @@ DefExtOpr(1, BVMatGE, "GE", 2, 0,
   "VMatrix {VMatrix|Real} {VMatrix|Real}",
   "(VMatrix A, {VMatrix|Real} B [, {VMatrix|Real} C, ...])",
   I2("Returns TRUE just in each cell where ",
-     "Devuelve CIERTO sólo para las celdas para las que ")+
+     "Devuelve CIERTO sï¿½lo para las celdas para las que ")+
      "A[i,j]>=B[i,j]",   
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -2072,7 +2072,7 @@ DefExtOpr(1, BVMatGT, "GT", 2, 0,
   "VMatrix {VMatrix|Real} {VMatrix|Real}",
   "(VMatrix A, {VMatrix|Real} B [, {VMatrix|Real} C, ...])",
   I2("Returns TRUE just in each cell where ",
-     "Devuelve CIERTO sólo para las celdas para las que ")+
+     "Devuelve CIERTO sï¿½lo para las celdas para las que ")+
      "A[i,j]>B[i,j]"+warn_auto_dense(),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -2152,9 +2152,9 @@ DefExtOpr(1, BVMatCholeskiFactor, "CholeskiFactor", 1, 4, "VMatrix Text Real Rea
      "Blas.R.Dense tal que\n"
      "  S = L*L'\n"
      "Si es Cholmod.R.Sparse una Cholmod.R.Factor que contiene internamente "
-     "una matriz triangular inferior L y una permutación P tales que \n"
+     "una matriz triangular inferior L y una permutaciï¿½n P tales que \n"
      "  S = P'*L*L'*P\n"
-     "En este caso sólo se puede operar con L y P a través de la función "
+     "En este caso sï¿½lo se puede operar con L y P a travï¿½s de la funciï¿½n "
      "CholeskiSolve.\n"
      "En otro caso no se realiza ninguna operacion y se devuelve la matriz "
      "virtual desconocida.\n"
@@ -2258,8 +2258,8 @@ DefExtOpr(1, BVMatCholeskiMinimumResiduals, "CholeskiMinimumResiduals",
   "(VMatrix M, VMatrix B)",
   I2("Applies the Cholesky decomposition to solve X in the linear "
      "regresion M*X=B+e ",
-     "Aplica la descomposición de Cholesky para resolver X en la "
-     "regresión lineal M*X=B+e."),
+     "Aplica la descomposiciï¿½n de Cholesky para resolver X en la "
+     "regresiï¿½n lineal M*X=B+e."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BVMatCholeskiMinimumResiduals::CalcContens()
@@ -2289,7 +2289,7 @@ DefExtOpr(1, BVMatMinimumResidualsSolve, "MinimumResidualsSolve",
      "Aplica el metodo de los Minimos Residuos para resolver el "
      "sistema lineal M*X=B comenzando por el valor inicial <X0> y "
      "continuando hasta  que el error sea menor que <chop> o se "
-     "supere el número de iteraciones indicadas."),
+     "supere el nï¿½mero de iteraciones indicadas."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BVMatMinimumResidualsSolve::CalcContens()
@@ -2411,7 +2411,7 @@ void BDatCholeskiDelRow::CalcContens()
   DefExtOpr(1, BDatVMatCount, "VMatCount", 1, 1, "VMatrix",
   "(VMatrix mat)",
   I2("Returns the number of cells of a matrix (rows x columns).",
-     "Devuelve el número de celdas de una matriz (filas x columnas)."),
+     "Devuelve el nï¿½mero de celdas de una matriz (filas x columnas)."),
      BOperClassify::Statistic_);
   void BDatVMatCount::CalcContens()
 //--------------------------------------------------------------------
@@ -2425,7 +2425,7 @@ void BDatCholeskiDelRow::CalcContens()
   DefExtOpr(1, BDatVMatKnown, "VMatKnown", 1, 1, "VMatrix",
   "(VMatrix mat)",
   I2("Returns the number of cells of a matrix (rows x columns).",
-     "Devuelve el número de celdas de una matriz (filas x columnas)."),
+     "Devuelve el nï¿½mero de celdas de una matriz (filas x columnas)."),
      BOperClassify::Statistic_);
   void BDatVMatKnown::CalcContens()
 //--------------------------------------------------------------------
@@ -2470,7 +2470,7 @@ void BDatCholeskiDelRow::CalcContens()
   DefExtOpr(1, BDatVMatAvr, "VMatAvr", 1, 1, "VMatrix",
   "(VMatrix mat)",
   I2("Returns the arithmetic average of all elements of a matrix.",
-     "Devuelve la media aritmética de todos los elementos de una matriz."),
+     "Devuelve la media aritmï¿½tica de todos los elementos de una matriz."),
      BOperClassify::Statistic_);
   void BDatVMatAvr::CalcContens()
 //--------------------------------------------------------------------
@@ -2483,7 +2483,7 @@ void BDatCholeskiDelRow::CalcContens()
   DefExtOpr(1, BDatVMatGeometricAvr, "VMatGeometricAvr", 1, 1, "VMatrix",
   "(VMatrix mat)",
   I2("Returns the geometric average of all elements of a matrix.",
-     "Devuelve la media geométrica de todos los elementos de una matriz."),
+     "Devuelve la media geomï¿½trica de todos los elementos de una matriz."),
      BOperClassify::Statistic_);
   void BDatVMatGeometricAvr::CalcContens()
 //--------------------------------------------------------------------
@@ -2499,7 +2499,7 @@ void BDatCholeskiDelRow::CalcContens()
   DefExtOpr(1, BDatVMatHarmonicAvr, "VMatHarmonicAvr", 1, 1, "VMatrix",
   "(VMatrix mat)",
   I2("Returns the harmonic average of all elements of a matrix.",
-     "Devuelve la media armónica de todos los elementos de una matriz."),
+     "Devuelve la media armï¿½nica de todos los elementos de una matriz."),
      BOperClassify::Statistic_);
   void BDatVMatHarmonicAvr::CalcContens()
 //--------------------------------------------------------------------
@@ -2694,12 +2694,12 @@ DefExtOpr(1, BVMatTruncStdGaussian, "TruncStdGaussian", 3, 6,
   I2("Creates a random virtual matrix X which ncol columns are distributed as "
      "independent standard normal truncated into a polytope",
      "Devuelve una matriz virtual X cuyas columnas se distribuiran como "
-     "normales estándar independientes truncadas en un politopo")+
+     "normales estï¿½ndar independientes truncadas en un politopo")+
      "\n X ~ TN(0, I, D*X<=d);\n\n"+
   I2("The number of rows of X is obviously the number of columns of D that "
      "must have at least one columns and one row, having also the same number "
      "of rows than d.",
-     "El número de filas de X será el de columnas de D, la cual ha de tener "
+     "El nï¿½mero de filas de X serï¿½ el de columnas de D, la cual ha de tener "
      "al menos una colmna y una fila, coincidiendo con las filas de d.")+"\n"+
   I2("The internal algorithm is a Gibbs sampler begining at a feasible point "
      "z0 that must match constrain inequations D*z0<=d ",
@@ -2733,7 +2733,7 @@ DefExtOpr(1, BSetGetBoundsInPolytope, "GetBoundsInPolytope", 4, 4,
   "(VMatrix D, VMatrix d, VMatrix z, Real j)",
   I2("Calculates minimum and maximum values of j-th component of "
      "vector z inside the polytope D*z <= d",
-     "Calcula los valores mínimo y máximo de la j-ésima componente "
+     "Calcula los valores mï¿½nimo y mï¿½ximo de la j-ï¿½sima componente "
      "del vector z dentro del politopo D*z <= d"),
 BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -2772,7 +2772,7 @@ void BSetGetBoundsInPolytope::CalcContens()
      "which is an entirely different operation."
      ,
      "En matematicas, el producto de Kronecker, denotado por una x dentro "
-     "de un circulo, es una operacion de dos matrices de tamaño arbitrario "
+     "de un circulo, es una operacion de dos matrices de tamaï¿½o arbitrario "
      "dando por resultado la matriz del bloque (aij*B).  "
      "Es un caso especial de un producto del tensor. El producto de "
      "Kronecker no se debe confundir con la multiplicacion usual de matrices, "
@@ -2807,17 +2807,17 @@ DefExtOpr(1, BSetParseResLinReg, "BSR.Parse", 2, 2,
      ,
      "Analiza un archivo ASCII escrito en lenguaje BSR (Bayesian "
      "Sparse Regression) y devuelve un Set con la estructura de "
-     "@BSR.ModelDef que contiene toda la información necesaria para "
-     "hacer estimación bayesian de un modelo de regresión lineal sujeto "
-     "a inecuaciones lineales utilizando métodos MCMC (MonteCarlo Markov "
+     "@BSR.ModelDef que contiene toda la informaciï¿½n necesaria para "
+     "hacer estimaciï¿½n bayesian de un modelo de regresiï¿½n lineal sujeto "
+     "a inecuaciones lineales utilizando mï¿½todos MCMC (MonteCarlo Markov "
      "Chain):\n"
      "  Y = X*B + E \n"
      "  A*B <= a\n"
-     "El campo LinearBlock contiene información sobre las variables del "
+     "El campo LinearBlock contiene informaciï¿½n sobre las variables del "
      "vector b y debe tener la estructura de BSR.LinearBlock, que "
      "incluye valores iniciales B0 que cumplen las inecuaciones A * B0 "
      "<= a.\n"
-     "El campo NoiseDistrib contiene información sobre el "
+     "El campo NoiseDistrib contiene informaciï¿½n sobre el "
      "ruido del vector E y debe tener la estructura de BSR."
      "NoiseDistrib.\n"
      "El argumento <moduleType> debe ser uno de los siguientes:\n")+
@@ -2848,11 +2848,11 @@ DefExtOpr(1, BVMatHistogram,  "Histogram", 2, 4, "VMatrix Real Real Real",
      "Hace un analisis de frecuencia de p intervalos para cada  "
      "columna de una matriz M:rxc y devuelve una matriz con c+1 columnas y p filas. "
      "La primera columna contiene el limite superior de cada intervalo. "
-     "Las siguientes columnas j=2..c+1 contienen la proporción de valores de "
-     "la columna (j-1)-ésima de M que pertenecen al intervalo correspondiente "
+     "Las siguientes columnas j=2..c+1 contienen la proporciï¿½n de valores de "
+     "la columna (j-1)-ï¿½sima de M que pertenecen al intervalo correspondiente "
      "a la fila.")+"\n"+
   I2("Defining the size of internal intervals as ",
-     "Definiendo el tamaño de los intervalos interiores como ")+"\n"+
+     "Definiendo el tamaï¿½o de los intervalos interiores como ")+"\n"+
      "  h = (max-min)/p\n"+
   I2("we will have the next p intervals",
      "tendremos los siguientes p intervalos")+"\n"+
