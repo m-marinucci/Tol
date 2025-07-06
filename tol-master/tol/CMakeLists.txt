@@ -48,6 +48,9 @@ set( CMAKE_MODULE_PATH
 include( MSysMacros )
 include( GetPrerequisites )
 
+# Include testing configuration
+include( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Testing.cmake" )
+
 if( MSYS )
   msys_convert_path( msys_usrlocal "/usr/local" )
   set( CMAKE_PREFIX_PATH "${msys_usrlocal}" ${CMAKE_PREFIX_PATH} )
@@ -578,3 +581,8 @@ if( WGET_EXECUTABLE )
 else( WGET_EXECUTABLE )
   message( ${WGET_ERROR_MESSAGE} "WGET is not available. Could not download default TOL packages." )
 endif( WGET_EXECUTABLE )
+
+# Discover and register tests (if testing is enabled)
+if(ENABLE_TESTING)
+  discover_and_register_tests()
+endif()

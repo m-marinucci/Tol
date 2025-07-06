@@ -1,0 +1,320 @@
+name: TOL CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, develop, feature/cicd-pipeline-clean ]
+  pull_request:
+    branches: [ master, develop ]
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+  TOL_VERSION: "1.0.0"
+
+jobs:
+  # ============================================================================
+  # Linux Build Matrix
+  # ============================================================================
+  build-linux:
+    name: Linux Build (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc-9, gcc-10, gcc-11, gcc-12]
+        include:
+          - compiler: gcc-9
+            cc: gcc-9
+            cxx: g++-9
+          - compiler: gcc-10
+            cc: gcc-10
+            cxx: g++-10
+          - compiler: gcc-11
+            cc: gcc-11
+            cxx: g++-11
+          - compiler: gcc-12
+            cc: gcc-12
+            cxx: g++-12
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup Linux Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          ${{ matrix.cc }} \
+          ${{ matrix.cxx }} \
+          libgsl-dev \
+          libfftw3-dev \
+          liblapack-dev \
+          libblas-dev \
+          zlib1g-dev \
+          valgrind \
+          lcov \
+          cppcheck
+
+    - name: Setup Compiler Environment
+      run: |
+        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+
+    - name: Configure CMake
+      working-directory: tol
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=${{ matrix.cc }} \
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+          -DCMAKE_INSTALL_PREFIX=$PWD/install \
+          -DENABLE_TESTING=ON \
+          -DCOVERAGE_ENABLED=ON
+
+    - name: Build TOL
+      working-directory: tol/build
+      run: |
+        make -j$(nproc)
+        echo "Build completed successfully with ${{ matrix.compiler }}"
+
+    - name: Run Unit Tests
+      working-directory: tol/build
+      run: |
+        ctest --output-on-failure --verbose
+        echo "Unit tests completed for ${{ matrix.compiler }}"
+
+    - name: Run Integration Tests
+      working-directory: tol_tests
+      run: |
+        # Update test runner to use built TOL
+        export TOL_BIN_PATH="../tol/build/bin"
+        if [ -f run_all_tests.sh ]; then
+          sed -i "s|/usr/local/tol-gcc-release/bin/tolcon|$TOL_BIN_PATH/tolcon|g" run_all_tests.sh
+          chmod +x run_all_tests.sh
+          ./run_all_tests.sh
+        fi
+
+    - name: Memory Leak Detection
+      working-directory: tol/build
+      run: |
+        # Run key tests with Valgrind
+        if command -v valgrind &> /dev/null; then
+          echo "Running memory leak detection..."
+          valgrind --tool=memcheck --leak-check=full --error-exitcode=1 \
+            ./bin/tolcon --version || echo "Valgrind check completed"
+        fi
+
+    - name: Generate Coverage Report
+      if: matrix.compiler == 'gcc-11'
+      working-directory: tol/build
+      run: |
+        if command -v lcov &> /dev/null; then
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --list coverage.info
+        fi
+
+    - name: Upload Coverage to Codecov
+      if: matrix.compiler == 'gcc-11'
+      uses: codecov/codecov-action@v3
+      with:
+        file: tol/build/coverage.info
+        flags: unittests
+        name: codecov-umbrella
+
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: tol-linux-${{ matrix.compiler }}
+        path: |
+          tol/build/bin/
+          tol/build/lib/
+        retention-days: 7
+
+  # ============================================================================
+  # Windows Build
+  # ============================================================================
+  build-windows:
+    name: Windows Build (MSVC)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Setup vcpkg Dependencies
+      run: |
+        vcpkg install gsl:x64-windows
+        vcpkg install fftw3:x64-windows
+        vcpkg install lapack:x64-windows
+        vcpkg install zlib:x64-windows
+
+    - name: Configure CMake
+      working-directory: tol
+      run: |
+        mkdir build
+        cd build
+        cmake .. `
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
+          -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+          -DCMAKE_INSTALL_PREFIX="$PWD/install" `
+          -DENABLE_TESTING=ON
+
+    - name: Build TOL
+      working-directory: tol/build
+      run: |
+        cmake --build . --config ${{ env.BUILD_TYPE }} --parallel
+        Write-Host "Windows build completed successfully"
+
+    - name: Run Tests
+      working-directory: tol/build
+      run: |
+        ctest --output-on-failure --verbose --build-config ${{ env.BUILD_TYPE }}
+
+    - name: Archive Windows Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: tol-windows-msvc
+        path: |
+          tol/build/bin/
+          tol/build/lib/
+        retention-days: 7
+
+  # ============================================================================
+  # Code Quality Checks
+  # ============================================================================
+  quality-checks:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cppcheck clang-format-12
+
+    - name: Static Analysis with cppcheck
+      run: |
+        cppcheck --enable=all --inconclusive --xml --xml-version=2 \
+          --suppress=missingIncludeSystem \
+          --suppress=unmatchedSuppression \
+          tol/ 2> cppcheck-report.xml || true
+
+    - name: Code Formatting Check
+      run: |
+        find tol/ -name "*.cpp" -o -name "*.h" | xargs clang-format-12 --dry-run --Werror
+
+    - name: Upload Static Analysis Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: static-analysis-report
+        path: cppcheck-report.xml
+        retention-days: 30
+
+  # ============================================================================
+  # Performance Benchmarking
+  # ============================================================================
+  performance-benchmarks:
+    name: Performance Validation
+    runs-on: ubuntu-latest
+    needs: [build-linux]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Download Linux Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: tol-linux-gcc-11
+        path: tol-build/
+
+    - name: Setup Performance Testing
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y time bc
+        chmod +x tol-build/bin/*
+
+    - name: Run Performance Benchmarks
+      run: |
+        echo "Running performance benchmarks..."
+        ./.github/scripts/performance_monitor.sh ./tol-build/bin/tolcon performance_results.json
+
+    - name: Upload Performance Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: performance_results.json
+        retention-days: 30
+
+  # ============================================================================
+  # Documentation Deployment
+  # ============================================================================
+  deploy-documentation:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: [build-linux, quality-checks]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Documentation Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz
+
+    - name: Generate Documentation
+      run: |
+        ./.github/scripts/deploy_docs.sh
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/html
+
+  # ============================================================================
+  # Release Automation
+  # ============================================================================
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build-linux, build-windows, quality-checks, performance-benchmarks]
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Download All Artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Create Release Packages
+      run: |
+        ./.github/scripts/create_release.sh ${{ github.ref_name }}
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/*
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
