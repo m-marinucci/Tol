@@ -405,9 +405,10 @@ if( ${WRITE_CONFIG_H} )
     ${CMAKE_CURRENT_BINARY_DIR}/tol/config.h )
 endif( )
 
-foreach( d 
-    contrib bmath bparser btol dbdrivers lang LoadDynLib  
-    PackArchive OIS bbasic )
+foreach( d
+    contrib bmath bparser btol dbdrivers lang LoadDynLib
+    bbasic  # Must come before PackArchive/OIS which depend on bbasic headers
+    PackArchive OIS )
   add_subdirectory(${d})
 #  get_property(type TARGET ${d} PROPERTY TYPE)
 #  message("type(${d}) = '${type}'") 
