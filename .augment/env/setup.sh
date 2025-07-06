@@ -14,8 +14,13 @@ sudo apt-get install -y \
     cmake build-essential python3 python3-pip \
     git wget curl
 
-# Set working directory
-cd /mnt/persist/workspace
+# Set working directory (configurable via WORKSPACE_DIR, defaults to /mnt/persist/workspace)
+WORKSPACE_DIR="${WORKSPACE_DIR:-/mnt/persist/workspace}"
+if [ ! -d "$WORKSPACE_DIR" ]; then
+    echo "Workspace directory $WORKSPACE_DIR does not exist. Creating it..."
+    mkdir -p "$WORKSPACE_DIR"
+fi
+cd "$WORKSPACE_DIR"
 
 # Create a mock TOL interpreter for testing the test framework
 echo "Creating mock TOL interpreter for test framework validation..."
