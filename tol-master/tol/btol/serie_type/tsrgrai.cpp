@@ -221,7 +221,7 @@ DefIntOpr(1, BTsrSign, "Sign", 1, 1,
   "(Serie S)",
   I2("Returns - 1, 0, or 1 according to S will be smaller, equal or greater "
      "than zero.",
-     "Devuelve -1, 0, o 1 según S sea menor, igual o mayor que "
+     "Devuelve -1, 0, o 1 segï¿½n S sea menor, igual o mayor que "
      "cero"),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
@@ -251,7 +251,7 @@ DefIntOpr(1, BTsrRound, "Round", 1, 1,
   "(Serie S)",
   I2("Returns the series of the nearest entire numbers to each datum of "
      "a given series.",
-     "Devuelve la serie de los números enteros mas cercanos a cada dato de "
+     "Devuelve la serie de los nï¿½meros enteros mas cercanos a cada dato de "
      "una serie dada."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
@@ -280,12 +280,12 @@ BDat BTsrFloor::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrSqrt, "Sqrt", 1, 1,
   "(Serie S)",
   I2("Returns the square root of S.",
-     "Devuelve la raíz cuadrada de S."),
+     "Devuelve la raï¿½z cuadrada de S."),
   BOperClassify::TimeSeriesAlgebra_);
   DefIntOpr(2, BTsrSqrt, "SqRt", 1, 1,
   "(Serie S)",
   I2("Returns the square root of S.",
-     "Devuelve la raíz cuadrada de S."),
+     "Devuelve la raï¿½z cuadrada de S."),
 	    BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrSqrt::GetDat(const BDate& dte)
@@ -341,7 +341,7 @@ BDat BTsrExp::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrSin, "Sin", 1, 1,
   "(Serie S)",
   I2("Returns the trigonometric sine of S.",
-     "Devuelve el seno trigonométrico de S."),
+     "Devuelve el seno trigonomï¿½trico de S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrSin::GetDat(const BDate& dte)
@@ -355,7 +355,7 @@ BDat BTsrSin::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrCos, "Cos", 1, 1,
   "(Serie S)",
   I2("Returns the trigonometric cosine of S.",
-     "Devuelve el coseno trigonométrico de S."),
+     "Devuelve el coseno trigonomï¿½trico de S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrCos::GetDat(const BDate& dte)
@@ -369,7 +369,7 @@ BDat BTsrCos::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrTan, "Tan", 1, 1,
   "(Serie S)",
   I2("Returns the trigonometric tangent of S.",
-     "Devuelve la tangente trigonométrica de S."),
+     "Devuelve la tangente trigonomï¿½trica de S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrTan::GetDat(const BDate& dte)
@@ -383,7 +383,7 @@ BDat BTsrTan::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrASin, "ASin", 1, 1,
   "(Serie S)",
   I2("Returns the series wich trigonometric sine is S.",
-     "Devuelve la serie cuyo seno trigonométrico es S."),
+     "Devuelve la serie cuyo seno trigonomï¿½trico es S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrASin::GetDat(const BDate& dte)
@@ -397,7 +397,7 @@ BDat BTsrASin::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrACos, "ACos", 1, 1,
   "(Serie S)",
   I2("Returns the series wich trigonometric cosine is S.",
-     "Devuelve la serie cuyo coseno trigonométrico es S."),
+     "Devuelve la serie cuyo coseno trigonomï¿½trico es S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrACos::GetDat(const BDate& dte)
@@ -411,7 +411,7 @@ BDat BTsrACos::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrATan, "ATan", 1, 1,
   "(Serie S)",
   I2("Returns the series wich trigonometric tangent is S.",
-     "Devuelve la serie cuya tangente trigonométrica es S."),
+     "Devuelve la serie cuya tangente trigonomï¿½trica es S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrATan::GetDat(const BDate& dte)
@@ -425,7 +425,7 @@ BDat BTsrATan::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrASinH, "ASinH", 1, 1,
   "(Serie S)",
   I2("Returns the series wich hyperbolic sine is S.",
-     "Devuelve la serie cuyo seno hiperbólico es S."),
+     "Devuelve la serie cuyo seno hiperbï¿½lico es S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrASinH::GetDat(const BDate& dte)
@@ -440,7 +440,7 @@ BDat BTsrASinH::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrACosH, "ACosH", 1, 1,
   "(Serie S)",
   I2("Returns the sereis wich hyperbolic cosine is S.",
-     "Devuelve la serie cuyo coseno hiperbólico es S."),
+     "Devuelve la serie cuyo coseno hiperbï¿½lico es S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrACosH::GetDat(const BDate& dte)
@@ -455,7 +455,7 @@ BDat BTsrACosH::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrATanH, "ATanH", 1, 1,
   "(Serie S)",
   I2("Returns the series wich hyperbolic tangent is S.",
-     "Devuelve la serie cuya tangente hiperbólica es S."),
+     "Devuelve la serie cuya tangente hiperbï¿½lica es S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrATanH::GetDat(const BDate& dte)
@@ -470,7 +470,7 @@ BDat BTsrATanH::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrSinH, "SinH", 1, 1,
   "(Serie S)",
   I2("Returns the hyperbolic sine of the S.",
-     "Devuelve el seno hiperbólico de S."),
+     "Devuelve el seno hiperbï¿½lico de S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrSinH::GetDat(const BDate& dte)
@@ -484,7 +484,7 @@ BDat BTsrSinH::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrCosH, "CosH", 1, 1,
   "(Serie S)",
   I2("Returns the hyperbolic cosine of S.",
-     "Devuelve el coseno hiperbólico de ."),
+     "Devuelve el coseno hiperbï¿½lico de ."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrCosH::GetDat(const BDate& dte)
@@ -498,7 +498,7 @@ BDat BTsrCosH::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrTanH, "TanH", 1, 1,
   "(Serie S)",
   I2("Returns the hyperbolic tangent of S.",
-     "Devuelve la tangente hiperbólica de S."),
+     "Devuelve la tangente hiperbï¿½lica de S."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrTanH::GetDat(const BDate& dte)
@@ -570,7 +570,7 @@ DefIntOpr(2, BTsrPow, "^", 2, 2,
   I2("Returns the power of S1 increased to S2.",
      "Devuelve la potencia de S1 elevada a S2.")+
   I2("Also it can be used the operator ** or the function Pow.",
-     "También se puede utilizar el operador ** o la función Pow."),
+     "Tambiï¿½n se puede utilizar el operador ** o la funciï¿½n Pow."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrPow::GetDat(const BDate& dte)
@@ -663,8 +663,8 @@ public:									     \
 DeclareEvaluator(BTsrSet##STAT)						     \
 DefExtOpr(1, BTsrSet##STAT, NAME, 1, 1, "Set",				     \
 "(Set series)",								     \
-I2("Returns "ENGLISH" of a set of series.",				     \
-   "Devuelve "SPANISH" de un conjunto de series."),			     \
+I2("Returns " ENGLISH " of a set of series.",				     \
+   "Devuelve " SPANISH " de un conjunto de series."),			     \
 BOperClassify::TimeSeriesAlgebra_);					     \
 									     \
 BDat BTsrSet##STAT::GetDat(const BDate& dte)				     \
@@ -676,24 +676,24 @@ BDat BTsrSet##STAT::GetDat(const BDate& dte)				     \
 DecSerStat("SetSum",Sum,"the sum","la suma");
 DecSerStat("SetProd",Product,"the product","el producto");
 DecSerStat("SetAvr",Average,"the average","la media");
-DecSerStat("SetHarmonicAvr",HarmonicAverage,"the harmonic average","la media armónica");
-DecSerStat("SetGeometricAvr",GeometricAverage,"the geometric average","la media geométrica");
+DecSerStat("SetHarmonicAvr",HarmonicAverage,"the harmonic average","la media armï¿½nica");
+DecSerStat("SetGeometricAvr",GeometricAverage,"the geometric average","la media geomï¿½trica");
 DecSerStat("SetVar",Varianze,"the varianze","la varianza");
-DecSerStat("SetStDs",StandardDeviation,"the standard deviation","la desviación estándar");
-DecSerStat("SetAsymmetry",AsymmetryCoefficient,"the asymmetry coefficient","el coeficiente de asimetría");
+DecSerStat("SetStDs",StandardDeviation,"the standard deviation","la desviaciï¿½n estï¿½ndar");
+DecSerStat("SetAsymmetry",AsymmetryCoefficient,"the asymmetry coefficient","el coeficiente de asimetrï¿½a");
 DecSerStat("SetKurtosis",Kurtosis,"the kurtosis","la kurtosis");
-DecSerStat("SetMax",Maximum,"the maximum","el máximo");
-DecSerStat("SetMin",Minimum,"the minimum","el mínimo");
+DecSerStat("SetMax",Maximum,"the maximum","el mï¿½ximo");
+DecSerStat("SetMin",Minimum,"the minimum","el mï¿½nimo");
 DecSerStat("SetMedian",Median,"the median","la mediana");
 
 
 //--------------------------------------------------------------------
 DefIntOpr(1, BTsrIf, "IfSer", 3, 3,
   I2("(Serie condition, Serie S1, Serie S2)",
-     "(Serie condición, Serie S1, Serie S2)"),
+     "(Serie condiciï¿½n, Serie S1, Serie S2)"),
   I2("For each date returns the value of S1 if condition is true. Else "
      "returns the value of S2.",
-     "Para cada fecha devuelve el valor de S1 si la condición se cumple."
+     "Para cada fecha devuelve el valor de S1 si la condiciï¿½n se cumple."
      "En otro caso devuelve el valor de S2."),
 	  BOperClassify::TimeSeriesLogic_);
 //--------------------------------------------------------------------
@@ -837,7 +837,7 @@ BDat BTsrNe::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrMin, "Min", 1, 0,
   "(Serie S1 [, Serie S2, ...])",
   I2("Returns the series of the minima from among two or more series.",
-     "Devuelve la serie de los mínimos de entre dos o más series."),
+     "Devuelve la serie de los mï¿½nimos de entre dos o mï¿½s series."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrMin::GetDat(const BDate& dte)
@@ -861,7 +861,7 @@ BDat BTsrMin::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrMax, "Max", 1, 0,
   "(Serie S1 [, Serie S2, ...])",
   I2("Returns the series of the maxima from among two or more series.",
-     "Devuelve la serie de los máximos de dos o mas numeros."),
+     "Devuelve la serie de los mï¿½ximos de dos o mas numeros."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrMax::GetDat(const BDate& dte)
@@ -884,7 +884,7 @@ BDat BTsrMax::GetDat(const BDate& dte)
 DefIntOpr(1, BTsrNormalDist, "F01", 1, 1,
   "(Serie S)",
   I2("Normal(0,1) probability distribution of a serie.",
-     "Distribución de probabilidad Normal(0,1) de una serie."),
+     "Distribuciï¿½n de probabilidad Normal(0,1) de una serie."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrNormalDist::GetDat(const BDate& dte)
@@ -945,8 +945,8 @@ public:
     {
     	Error(I2("Wrong argument function in EvalSet function calling."
 		           "It must have just one argument of Real type and return another Real.",
-		           "Función argumento errónea en llamada a la función EvalSet."
-		           "Ésta debe tener exactamente un argumento de tipo Real y devolver un Real."));
+		           "Funciï¿½n argumento errï¿½nea en llamada a la funciï¿½n EvalSet."
+		           "ï¿½sta debe tener exactamente un argumento de tipo Real y devolver un Real."));
       code_ = NULL;
 	    return;
     }
@@ -962,7 +962,7 @@ DefExtOpr(1, BTsrEvalSerie, "EvalSerie", 2, 2, "Serie Code",
   I2("Returns a time serie with the same dating and dates of given one "
      "applying a real to real function to each datum",
      "Devuelve una serie con el mismo fechado y fechas que la serie "
-     "dada aplicando una función de real a real para cada dato."),
+     "dada aplicando una funciï¿½n de real a real para cada dato."),
 	  BOperClassify::TimeSeriesAlgebra_);
 //--------------------------------------------------------------------
 BDat BTsrEvalSerie::GetDat(const BDate& dte)
