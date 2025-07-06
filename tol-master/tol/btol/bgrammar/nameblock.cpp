@@ -1492,8 +1492,10 @@ BSyntaxObject* BNameBlock::FindPublicMember(
 {
   BArray<BText> tok;
   BText expression = memberExpression;
-  expression.Replace("::","�");
-  ReadAllTokens(expression, tok, '�');
+  // Replace "::" with ASCII control character 1 (SOH) as temporary separator
+  // This avoids multi-character constant issues on Linux while maintaining functionality
+  expression.Replace("::","\x01");
+  ReadAllTokens(expression, tok, '\x01');
   if(tok.Size()<2) { return(NULL); }
   BSyntaxObject* unb = GraNameBlock()->FindOperand(tok[0],false);
   if(!unb) { return(NULL); }
