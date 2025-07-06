@@ -19,19 +19,24 @@ if(ENABLE_TESTING)
     # Coverage configuration
     option(COVERAGE_ENABLED "Enable code coverage analysis" OFF)
     
-    if(COVERAGE_ENABLED AND CMAKE_COMPILER_IS_GNUCXX)
+if(COVERAGE_ENABLED)
+    if(CMAKE_COMPILER_IS_GNUCXX)
         message(STATUS "Code coverage enabled")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-        
+
         # Find lcov for coverage reporting
         find_program(LCOV_PATH lcov)
         find_program(GENHTML_PATH genhtml)
-        
+
         if(LCOV_PATH AND GENHTML_PATH)
             message(STATUS "lcov found: ${LCOV_PATH}")
             message(STATUS "genhtml found: ${GENHTML_PATH}")
+        endif()
+    else()
+        message(WARNING "COVERAGE_ENABLED is set, but the compiler is not GNUCXX. Code coverage will not be enabled.")
+    endif()
             
             # Add coverage target
             add_custom_target(coverage
