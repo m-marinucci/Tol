@@ -225,7 +225,13 @@ EOF
     log_info "OS: $OS $VER"
     log_info "Architecture: $(uname -m)"
     log_info "CPU cores: $(nproc)"
-    log_info "Memory: $(free -h | awk '/^Mem:/ {print $2}')"
+    if command -v free >/dev/null 2>&1; then
+        log_info "Memory: $(free -h | awk '/^Mem:/ {print $2}')"
+    elif [ -r /proc/meminfo ]; then
+        log_info "Memory: $(awk '/^MemTotal:/ {printf \"%.2f GiB\", $2/1024/1024}' /proc/meminfo)"
+    else
+        log_info "Memory: [unknown]"
+    fi
     log_info "Disk space: $(df -h / | awk 'NR==2 {print $4}') available"
 }
 
