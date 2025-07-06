@@ -290,8 +290,8 @@ export BLAS_NUM_THREADS=$(nproc)
 EOF
     fi
     
-    # Add to bashrc if not already present
-    if ! grep -q "source ~/.tol_env" ~/.bashrc; then
+    # Add to bashrc if not already present (ignore commented or whitespace-prefixed lines)
+    if ! grep -E '^\s*source\s+~/.tol_env\s*$' ~/.bashrc | grep -vq '^\s*#'; then
         echo "source ~/.tol_env" >> ~/.bashrc
         log_info "Added TOL environment setup to ~/.bashrc"
     fi
