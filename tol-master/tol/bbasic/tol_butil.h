@@ -23,6 +23,7 @@
 #define TOL_BUTIL_H 1
 
 #include <tol/tol_bcommon.h>
+#include <cstring>
 
 //--------------------------------------------------------------------
 // INLINE FUCTIONS

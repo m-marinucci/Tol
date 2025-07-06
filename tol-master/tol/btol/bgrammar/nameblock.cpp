@@ -27,6 +27,7 @@
 #endif
 
 #include <tol/tol_bnameblock.h>
+#include <tol/tol_bfsmem.h>
 #include <tol/tol_bdatgra.h>
 #include <tol/tol_btxtgra.h>
 
@@ -86,7 +87,7 @@ static bool BNameBlock_IsInitialized()
   if(BNameBlock_IsInitialized()) { return(false); }
   unknown_ = new BNameBlock;
 //emptyHashKey_ = new char(64);
-//sprintf(emptyHashKey_, "_#_&¬!?_NameBlock_empty_hash_key_");
+//sprintf(emptyHashKey_, "_#_&ï¿½!?_NameBlock_empty_hash_key_");
   SetEmptyKey  (using_,               emptyHashKey_);
   SetEmptyKey  (usingSymbolsByClass_, BObjClassify::null_);
   SetEmptyKey  (usingSymbols_,        emptyHashKey_);
@@ -453,7 +454,7 @@ const BText& BNameBlock::LocalName() const
           I2(" an instance of Class ", " como instancia de la clase ")+
           cls->FullName()+
           I2(" due to it have "," porque tiene ")+cls->notImplementedMethods_+
-          I2(" not defined methods "," métodos no definidos ")+undefMet);
+          I2(" not defined methods "," mï¿½todos no definidos ")+undefMet);
     return(NULL);
   };
 
@@ -480,7 +481,7 @@ const BText& BNameBlock::LocalName() const
              "No se puede crear un NameBlock de nombre ")+fullName+
           I2(" due to "," porque ")+name+
           I2(" is already in use\n",
-             " ya está siendo usado\n")+ ((!BNameBlock::current_)?"":
+             " ya estï¿½ siendo usado\n")+ ((!BNameBlock::current_)?"":
           I2("Current NameBlock is ",
              "El NameBlock en curso es ")+BNameBlock::current_->Name()));
     return(NULL);
@@ -704,7 +705,7 @@ const BText& BNameBlock::LocalName() const
                          " "+set_[i]->Name()+"\n";
     };
     Error(I2("A NameBlock cannot have members without a valid name ",
-             "Un NameBlock no puede tener miembros sin un nombre válido ")
+             "Un NameBlock no puede tener miembros sin un nombre vï¿½lido ")
           +"'"+name+"'\n"+set_dump+"\n"+
           I2("Cannot build NameBlock ",
              "No se puede construir el NameBlock ")+Name());
@@ -771,18 +772,18 @@ const BText& BNameBlock::LocalName() const
       {
         if(obj->Grammar()!=GraSet())
         { 
-          Error(I2("Wrong declaration of ","Definición errónea de ")+
+          Error(I2("Wrong declaration of ","Definiciï¿½n errï¿½nea de ")+
                 obj->Grammar()->Name()+" "+LocalName()+"::_.autodoc.dependencies"+
-                I2("It should be of type ","Debería ser de tipo ")+"Set");
+                I2("It should be of type ","Deberï¿½a ser de tipo ")+"Set");
           return(false);
         }
         BSet& dep = ::Set(obj); 
         if(dep.Card())
         { 
-          Warning(I2("Obsolete declaration of ","Definición obsoleta de ")+
+          Warning(I2("Obsolete declaration of ","Definiciï¿½n obsoleta de ")+
                 obj->Grammar()->Name()+" "+LocalName()+"::_.autodoc.dependencies"+
                 I2("It should be empty due it will be filled with required packages",
-                   "Debería estar vacío porque se rellena automáticamente con los "
+                   "Deberï¿½a estar vacï¿½o porque se rellena automï¿½ticamente con los "
                    "paquetes requeridos"));
         }
         int reqNum = CountRequiredPackage();
@@ -799,17 +800,17 @@ const BText& BNameBlock::LocalName() const
       {
         if(obj->Grammar()!=GraText())
         { 
-          Error(I2("Wrong declaration of ","Definición errónea de ")+
+          Error(I2("Wrong declaration of ","Definiciï¿½n errï¿½nea de ")+
                 obj->Grammar()->Name()+" "+LocalName()+"::_.autodoc.name"+
-                I2("It should be of type ","Debería ser de tipo ")+"Text");
+                I2("It should be of type ","Deberï¿½a ser de tipo ")+"Text");
           return(false);
         }
         BText& nt = Text(obj); 
         if(nt.HasName() && (nt!=LocalName()))
         {
-          Error(I2("Wrong declaration of ","Definición errónea de ")+
+          Error(I2("Wrong declaration of ","Definiciï¿½n errï¿½nea de ")+
                 obj->Grammar()->Name()+" "+LocalName()+"::_.autodoc.name = \""+nt+"\";\n"+
-                I2("It should be ","Debería ser \"")+LocalName()+"\"");
+                I2("It should be ","Deberï¿½a ser \"")+LocalName()+"\"");
           return(false);
         } 
         nt = LocalName();
@@ -848,7 +849,7 @@ const BText& BNameBlock::LocalName() const
   {
     Warning(BText("NameBlock ")+Name()+" "+
             I2("should have at least a public or read only member.",
-               "debería tener al menos un miembro público o de sólo lectura."));
+               "deberï¿½a tener al menos un miembro pï¿½blico o de sï¿½lo lectura."));
     return(false);
   }
   else
@@ -1090,8 +1091,8 @@ bool BNameBlock::add_using_symbol(
     Warning(found->second->FullName()+
             I2(" is already in use as global. "
                "So cannot add ",
-               " ya se está usando como global. "
-               "Por lo tanto no se puede añadir ")+
+               " ya se estï¿½ usando como global. "
+               "Por lo tanto no se puede aï¿½adir ")+
                name+"::"+iter->second->Name());
     ok = false;
   }
@@ -1119,7 +1120,7 @@ bool BNameBlock::add_using_symbol(
   { 
     Error(BText("NameBlock ")+name+
           I2(" is already in use as global",
-             " ya se está usando como global"));
+             " ya se estï¿½ usando como global"));
     return(false);
   }
   bool ok = true;
@@ -1491,8 +1492,8 @@ BSyntaxObject* BNameBlock::FindPublicMember(
 {
   BArray<BText> tok;
   BText expression = memberExpression;
-  expression.Replace("::","¬");
-  ReadAllTokens(expression, tok, '¬');
+  expression.Replace("::","ï¿½");
+  ReadAllTokens(expression, tok, 'ï¿½');
   if(tok.Size()<2) { return(NULL); }
   BSyntaxObject* unb = GraNameBlock()->FindOperand(tok[0],false);
   if(!unb) { return(NULL); }
@@ -1647,7 +1648,7 @@ DefExtOpr(1, BNameBlockMembers, "Members", 1, 1, "NameBlock",
  "(NameBlock nameBlock)",
  I2("Returns a set with a register of information about each member "
     " of a NameBlock by mean of structure",
-    "Devuelve un conjunto con un registro de información acerca "
+    "Devuelve un conjunto con un registro de informaciï¿½n acerca "
     "de cada uno de los miembros de un NameBlock mediante la "
     "estructura")+"\n"
     "  @NameBlockMemberInfo {\n" 
@@ -1813,8 +1814,8 @@ DeclareEvaluator(BDatUsingNameBlock);
      "If usingAlsoSpecial is true then special members and methods "
      "as StartActions of packages will be also exported.\n"
      ,
-     "En determinadas circunstancias los miembros públicos de un "
-     "NameBlock pueden pasar al ámbito global, es decir, se puede "
+     "En determinadas circunstancias los miembros pï¿½blicos de un "
+     "NameBlock pueden pasar al ï¿½mbito global, es decir, se puede "
      "acceder a ellos sin explicitarlo con :: \n"
      "Ello se logra con el operador\n"
      "\n"
@@ -1822,20 +1823,20 @@ DeclareEvaluator(BDatUsingNameBlock);
      "\n"
      "El operador UsingNameBlock devuelve cierto si es compatible "
      "con el resto de variables de tipo NameBlock actualmente "
-     "globalizadas, es decir, si no contiene ningún miembro público "
+     "globalizadas, es decir, si no contiene ningï¿½n miembro pï¿½blico "
      "con el mismo nombre que otro o que una variable global. \n"
-     "Los miembros que ya estuvieran presentes no serán accesibles "
-     "de forma implícita pero sí mediante :: y se mostrará un "
+     "Los miembros que ya estuvieran presentes no serï¿½n accesibles "
+     "de forma implï¿½cita pero sï¿½ mediante :: y se mostrarï¿½ un "
      "mensaje de aviso para advertirlo.\n"
      "Este operador no surte efecto si se llama en ambiente local, "
-     "lo cual incluye dentro de un NameBlock, y devolverá un "
+     "lo cual incluye dentro de un NameBlock, y devolverï¿½ un "
      "error si se intenta.\n"
      "Si usingAlsoReadOnly es cierto los miembros de solo lectura "
-     "también serán exportados.\n"
+     "tambiï¿½n serï¿½n exportados.\n"
      "Si usingAlsoPrivate es cierto los miembros privados "
-     "también serán exportados.\n"
-     "Si usingAlsoSpecial es cierto los miembros y métodos especiales "
-     "como StartActions también serán exportados.\n"),
+     "tambiï¿½n serï¿½n exportados.\n"
+     "Si usingAlsoSpecial es cierto los miembros y mï¿½todos especiales "
+     "como StartActions tambiï¿½n serï¿½n exportados.\n"),
   BOperClassify::System_);
 
 //--------------------------------------------------------------------
@@ -1847,7 +1848,7 @@ DefExtOpr(1, BTxtNameBlock, "GetNameBlock", 1, 1, "Anything",
        "string \"\".",
 	     "Devuelve el nombre completo del NameBlock al que pertenece "
        "un objeto. Si no pertenece a ninguno devuelve la cadena "
-       "vacía \"\" "),
+       "vacï¿½a \"\" "),
 	  BOperClassify::System_);
 //--------------------------------------------------------------------
 void BTxtNameBlock::CalcContens()
@@ -1867,7 +1868,7 @@ DefExtOpr(1, BTxtFullName, "FullName", 1, 1, "Anything",
 	  I2("Returns the full name of an object, including the prefix of "
        "its NameBlock if is inside one.",
 	     "Devuelve el nombre completo de un objeto, incluyendo el "
-       "prefijo de su NameBlock si está dentro de uno."),
+       "prefijo de su NameBlock si estï¿½ dentro de uno."),
 	  BOperClassify::System_);
 //--------------------------------------------------------------------
 void BTxtFullName::CalcContens()
@@ -1892,17 +1893,17 @@ DefExtOpr(1, BDatAddMember, "AddMember", 2, 2, "NameBlock Anything",
        "Returns True if success. Otherwise, the consequences could "
        "be unpredictable, so it is not advisable to use this "
        "function except for expert users and for cause.",
-	     "Añade un nuevo miembro a un NameBlock. No se puede añadir "
-       "un objeto sin un nombre válido y no usado previamente "
+	     "Aï¿½ade un nuevo miembro a un NameBlock. No se puede aï¿½adir "
+       "un objeto sin un nombre vï¿½lido y no usado previamente "
        "dentro del NameBlock.\n"
        "Para evitar problemas es mejor crear el nuevo miembro en "
        "un entorno local:\n"
        "  Real AddMember(nb,{Real _.newMember=2}); \n"
        "Si se utiliza sobre una instancia de una clase el nuevo "
-       "miembro sólo afectará a esa instancia.\n" 
-       "Devuelve True en caso de éxito. En caso contrario las "
+       "miembro sï¿½lo afectarï¿½ a esa instancia.\n" 
+       "Devuelve True en caso de ï¿½xito. En caso contrario las "
        "consecuencias son imprevisibles, por lo que no se aconseja "
-       "el uso de esta función salvo para usuarios expertos y con "
+       "el uso de esta funciï¿½n salvo para usuarios expertos y con "
        "causa justificada. "),
 	  BOperClassify::System_);
 //--------------------------------------------------------------------
@@ -1947,7 +1948,7 @@ DefExtOpr(1, BDatRequireSetOfPackages, "RequireSetOfPackages", 1, 1, "Set",
  "(Set packages)",
  I2("Requires a list of packages. Returns the number of true loaded "
     "packages.",
-    "Requiere una lista de paquetes. Devuelve el número de paquetes "
+    "Requiere una lista de paquetes. Devuelve el nï¿½mero de paquetes "
     "que realmente se han podido cargar o ya lo estaban."),
  BOperClassify::System_);
 //--------------------------------------------------------------------

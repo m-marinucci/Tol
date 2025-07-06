@@ -168,10 +168,10 @@ BSyntaxObject* BGraContensBase<BMat>::Casting(BSyntaxObject* obj)
              "\n Bytes por BDat s_BDat :")+
           (int)sizeof(BDat)+
           I2("\n Expected file size: ",
-             "\n Tamaño esperado del fichero:")+
+             "\n Tamaï¿½o esperado del fichero:")+
           (int)(rows*cols*sizeof(BDat)+2*sizeof(int))+
           I2("\n Real file size e: ",
-             "\n Tamaño real del fichero:")+(int)fs + comment;
+             "\n Tamaï¿½o real del fichero:")+(int)fs + comment;
          if(msgType=='E') { Error(msg); }
     else if(msgType=='W') { Warning(msg); }
   }
@@ -453,7 +453,7 @@ DefExtOpr(1, BMatAppendFile, "MatAppendFile", 2, 2, "Text Matrix",
     I2("(Text filename, Matrix mat)",
        "(Text nombreFichero, Matrix mat)"),
     I2("Append matrix 'mat' to file 'filename'.",
-       "Añade la matrix 'mat' al fichero 'nombreFichero'."),
+       "Aï¿½ade la matrix 'mat' al fichero 'nombreFichero'."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatAppendFile::CalcContens()
@@ -472,7 +472,7 @@ DefExtOpr(1, BMatReadFile, "MatReadFile", 1, 3, "Text Text Real",
      "Lee una matriz de un fichero en el formato especificado")+":\n"+
      "BINARY: "+
      I2("Standard TOL binary format",
-        "Formato estándar binario de TOL ")+
+        "Formato estï¿½ndar binario de TOL ")+
      "WGRIB2TXT: "+
      I2("Result of command", "Resultado del comando")+
      " wgrib2 ... -text file\n"+
@@ -481,7 +481,7 @@ DefExtOpr(1, BMatReadFile, "MatReadFile", 1, 3, "Text Text Real",
      " datum[1,2]\n" +
      " ...\n" +
      " datum[rows,cols]\n"+
-     I2("View more on ", "Ver más en ")+
+     I2("View more on ", "Ver mï¿½s en ")+
      "http://www.cpc.noaa.gov/products/wesley/wgrib2/",
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -532,7 +532,7 @@ DefExtOpr(1, BMatReadDimensions, "MatReadDimensions", 1, 1, "Text",
   "(Text filename)",
   I2("Returns rows and columns of the matrix stored in a file with "
      "binary format",
-     "Devuelve el número de filas y columnas de la matriz almacenada "
+     "Devuelve el nï¿½mero de filas y columnas de la matriz almacenada "
      "en un fichero con formato binario"),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -568,13 +568,13 @@ DefExtOpr(1, BMatReadRows, "MatReadRows", 3, 6,
      "greatly accelerate the process.",
      "Lee un rango de filas de una matriz de un fichero en formato binario\n"
      "Si el argumento <file> es un Text entonces el fichero en ese "
-     "camino será abierto antes de leer y cerrado después.\n"
+     "camino serï¿½ abierto antes de leer y cerrado despuï¿½s.\n"
      "Si el argumento <file> es un Real creado con FOpen entonces el "
-     "fichero ya está abierto y será el usuario el que lo cierre cuando "
-     "se requiera. Este es el método más rápido cuando hay que hacer "
-     "múltiples lecturas sobre un mismo fichero.\n"
-     "Si además los argumentos <numRows> y <numColumns> son mayores que "
-     "cero entonces no será necesario leerlos del propio fichero lo cual "
+     "fichero ya estï¿½ abierto y serï¿½ el usuario el que lo cierre cuando "
+     "se requiera. Este es el mï¿½todo mï¿½s rï¿½pido cuando hay que hacer "
+     "mï¿½ltiples lecturas sobre un mismo fichero.\n"
+     "Si ademï¿½s los argumentos <numRows> y <numColumns> son mayores que "
+     "cero entonces no serï¿½ necesario leerlos del propio fichero lo cual "
      "puede acelerarse mucho el proceso."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -623,7 +623,7 @@ DefExtOpr(1, BMatReadRowSet, "MatReadRowSet", 3, 3,
      "Argument <rows> gives de number of lines to be reeaded.",
      "Lee un rango de filas de una matriz de un fichero en formato binario\n"
      "El argumento <file> es el resultado de una llamada previa a FOpen.\n"
-     "El argumento <rows> indica las líneas a ser leídas."),
+     "El argumento <rows> indica las lï¿½neas a ser leï¿½das."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatReadRowSet::CalcContens()
@@ -666,13 +666,13 @@ DefExtOpr(1, BMatReadCell, "MatReadCell", 3, 5,
      "greatly accelerate the process.",
      "Lee una celda de una matriz de un fichero en formato binario\n"
      "Si el argumento <file> es un Text entonces el fichero en ese "
-     "camino será abierto antes de leer y cerrado después.\n"
+     "camino serï¿½ abierto antes de leer y cerrado despuï¿½s.\n"
      "Si el argumento <file> es un Real creado con FOpen entonces el "
-     "fichero ya está abierto y será el usuario el que lo cierre cuando "
-     "se requiera. Este es el método más rápido cuando hay que hacer "
-     "múltiples lecturas sobre un mismo fichero.\n"
-     "Si además los argumentos <numRows> y <numColumns> son mayores que "
-     "cero entonces no será necesario leerlos del propio fichero lo cual "
+     "fichero ya estï¿½ abierto y serï¿½ el usuario el que lo cierre cuando "
+     "se requiera. Este es el mï¿½todo mï¿½s rï¿½pido cuando hay que hacer "
+     "mï¿½ltiples lecturas sobre un mismo fichero.\n"
+     "Si ademï¿½s los argumentos <numRows> y <numColumns> son mayores que "
+     "cero entonces no serï¿½ necesario leerlos del propio fichero lo cual "
      "puede acelerarse mucho el proceso."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -1488,8 +1488,8 @@ void BMatSqRt::CalcContens()
 DeclareContensClass(BMat, BMatTemporary, BMat##FUN);           \
 DefIntOpr(1, BMat##FUN, #FUN, 1, 1,               \
 "(Matrix mat)",                     \
-I2("Returns "ENGLISH" of each element of a matrix.",           \
-  "Devuelve "SPANISH" de cada elemento de una matriz."),         \
+I2("Returns " ENGLISH " of each element of a matrix.",           \
+  "Devuelve " SPANISH " de cada elemento de una matriz."),         \
 BOperClassify::MatrixAlgebra_);                 \
                        \
 void BMat##FUN::CalcContens()                 \
@@ -1849,8 +1849,8 @@ DefExtOpr(1, BMatInversePermutation, "InversePermutation", 1, 1, "Matrix",
   "(Matrix p)",
   I2("Given a column or row of any realignment of integers numbers "
      "1 ... N returns the inverse permutation. ",
-     "Dada una fila o columna con una reordenación cualquiera de "
-     "los enteros 1 ... N, devuelve la permutación inversa."),
+     "Dada una fila o columna con una reordenaciï¿½n cualquiera de "
+     "los enteros 1 ... N, devuelve la permutaciï¿½n inversa."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatInversePermutation::CalcContens()
@@ -1966,8 +1966,8 @@ DefExtOpr(1, BMatCholeskiMinimumResiduals, "CholeskiMinimumResiduals",
   "(Matrix M, Matrix B)",
   I2("Applies the Cholesky decomposition to solve X in the linear "
      "regresion M*X=B+e ",
-     "Aplica la descomposición de Cholesky para resolver X en la "
-     "regresión lineal M*X=B+e."),
+     "Aplica la descomposiciï¿½n de Cholesky para resolver X en la "
+     "regresiï¿½n lineal M*X=B+e."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatCholeskiMinimumResiduals::CalcContens()
@@ -1993,7 +1993,7 @@ DefExtOpr(1, BMatMinimumResidualsSolve, "MinimumResidualsSolve",
      "Aplica el metodo de los Minimos Residuos para resolver el "
      "sistema lineal M*X=B comenzando por el valor inicial <X0> y "
      "continuando hasta  que el error sea menor que <chop> o se "
-     "supere el número de iteraciones indicadas."),
+     "supere el nï¿½mero de iteraciones indicadas."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatMinimumResidualsSolve::CalcContens()
@@ -2107,7 +2107,7 @@ DefIntOpr(1, BMatLTInverse, "LTInverse", 1, 1,
      "square matrix.  For more general triangular systems use function TrSolve."
      "passing Diag(n,1) as B argument.",
      "Aplica el metodo de reduccion de Gauss para invertir una matriz "
-     "cuadrada triangular inferior. Para sistemas triangulares más generales "
+     "cuadrada triangular inferior. Para sistemas triangulares mï¿½s generales "
      "use TrSolve pasando Diag(n,1) como argumento B"),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -2130,7 +2130,7 @@ DefIntOpr(1, BMatLTSolve, "LTSolve", 2, 2,
      "use function TrSolve.",
      "Aplica el metodo de reduccion de Gauss para resolver el sistema "
      "lineal L*X=B donde L es triangular inferior. Para sistemas triangulares "
-     "más generales use TrSolve"),
+     "mï¿½s generales use TrSolve"),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatLTSolve::CalcContens()
@@ -2716,9 +2716,9 @@ DefExtOpr(1, BMatAutoScale, "AutoScale", 4, 7,
      "evaluation of a function in an environment of a given point inside "
      "the hyper-rectangle defined by limits [xMin,xMax].",
      "Devuelve el vector de escalado con el que se obtienen variaciones "
-     "unitarias de las evaluaciones de una función en un entorno de "
-     "un punto dado x0 interior al hiper-rectángulo definido por los "
-     "límites [xMin,xMax]."
+     "unitarias de las evaluaciones de una funciï¿½n en un entorno de "
+     "un punto dado x0 interior al hiper-rectï¿½ngulo definido por los "
+     "lï¿½mites [xMin,xMax]."
      ),
     BOperClassify::NumericalAnalysis_);
 //--------------------------------------------------------------------
@@ -2757,12 +2757,12 @@ DefExtOpr(1, BMatGradient, "Gradient", 2, 3,
      "Arguments:                                                         \n" 
      "function ---> function to be analyzed,                             \n"
      "point    ---> point where the gradient is calculated               \n",
-     "Calcula el gradiente numérico de una funcion evaluada en un punto "
+     "Calcula el gradiente numï¿½rico de una funcion evaluada en un punto "
      "dado.\n"
-     "En primer lugar intenta usar la fórmula central de cinco puntos. "
-     "Si el punto está muy cerca de la frontera del dominio, es posible que "
-     "la evaluación falle en algún punto lateral. En tal caso se intentará " 
-     "usar una fórmula asimétrica con cuatro o tres puntos.\n" 
+     "En primer lugar intenta usar la fï¿½rmula central de cinco puntos. "
+     "Si el punto estï¿½ muy cerca de la frontera del dominio, es posible que "
+     "la evaluaciï¿½n falle en algï¿½n punto lateral. En tal caso se intentarï¿½ " 
+     "usar una fï¿½rmula asimï¿½trica con cuatro o tres puntos.\n" 
      "Argumentos:                                                        \n" 
       "function ---> funcion a analizar,                                 \n"
      "point    ---> punto de calculo del gradiente                       \n"
@@ -2805,12 +2805,12 @@ DefExtOpr(1, BMatGradient2, "Gradient2", 2, 3,
      "Arguments:                                                           \n" 
      "  function ---> function to be analyzed,                             \n"
      "  point    ---> point where the gradient is calculated               \n",
-     "Calcula el vector segundo gradiente numérico (diagonal del hessiano) "
+     "Calcula el vector segundo gradiente numï¿½rico (diagonal del hessiano) "
      "de una funcion evaluada en un punto dado.          \n"
-     "En primer lugar intenta usar la fórmula central de cinco puntos. "
-     "Si el punto está muy cerca de la frontera del dominio, es posible que "
-     "la evaluación falle en algún punto lateral. En tal caso se intentará " 
-     "usar una fórmula asimétrica con cuatro o tres puntos.\n" 
+     "En primer lugar intenta usar la fï¿½rmula central de cinco puntos. "
+     "Si el punto estï¿½ muy cerca de la frontera del dominio, es posible que "
+     "la evaluaciï¿½n falle en algï¿½n punto lateral. En tal caso se intentarï¿½ " 
+     "usar una fï¿½rmula asimï¿½trica con cuatro o tres puntos.\n" 
      "Argumentos:                                                          \n" 
      "  function ---> funcion a analizar,                                  \n"
      "  point    ---> punto de calculo del gradiente                       \n"
@@ -2849,7 +2849,7 @@ DefExtOpr(1, BMatHessian, "Hessian", 2, 2,
      "Arguments:                                                                \n" 
      "function ---> function to be analyzed,                                    \n"
      "point    ---> point where the hessian is calculated                       \n",
-     "Calcula el hessiano numérico de una funcion evaluada en un punto dado.     \n"
+     "Calcula el hessiano numï¿½rico de una funcion evaluada en un punto dado.     \n"
      "Argumentos:                                                               \n" 
       "function ---> funcion a analizar,                                        \n"
      "point    ---> punto de calculo del hessiano                               \n"
@@ -2979,7 +2979,7 @@ DefExtOpr(1, BMatRandMultinomial, "RandMultinomial", 3, 3, "Real Real Matrix",
      "This function calls to GSL function gsl_ran_multinomial: "
      "http://www.network-theory.co.uk/docs/gslref/TheMultinomialDistribution.html ",
      "Devuelve una matriz de filas distribuidas como multinomiales con "
-     "tamaño poblacional <N> y vector de probabilidades <p>\n."
+     "tamaï¿½o poblacional <N> y vector de probabilidades <p>\n."
      "Esta funcion llama a la funcion GSL gsl_ran_multinomial: "
      "http://www.network-theory.co.uk/docs/gslref/TheMultinomialDistribution.html "),
     BOperClassify::MatrixAlgebra_);
@@ -3152,7 +3152,7 @@ bool internal_builtin_SetMat(
     _mid+I2("Wrong set format: all elements should "
             "be sets with the same number of reals ",
             "Fallo en formato de conjunto: todos sus elementos "
-            "deberían ser conjuntos con el mismo número de reales");
+            "deberï¿½an ser conjuntos con el mismo nï¿½mero de reales");
   if(!set.Card() || (set[1]->Grammar()->Name()!="Set"))
   {
     Error(_wrongFormat);
@@ -3164,7 +3164,7 @@ bool internal_builtin_SetMat(
   if(!numRow)
   {
     Warning(_mid+I2("Emty set is converted in empty matrix",
-             "El conjunto vacío se convierte en la matriz vacía"));
+             "El conjunto vacï¿½o se convierte en la matriz vacï¿½a"));
     mat = BMat::Unknown();
   }
   else if(!numCol)
@@ -3295,7 +3295,7 @@ bool Pol2Mat(const BPol& pol, int r, int c, BMat& contens_)
       assert(y<y1);
       if(y>=y1) 
       {
-        Error(I2("Invalid access in","Acesso inválido en")+ " PolMat " +
+        Error(I2("Invalid access in","Acesso invï¿½lido en")+ " PolMat " +
               " r="+r+
               " c="+c+
               " r*c="+(r*c)+
@@ -3319,12 +3319,12 @@ DefExtOpr(1, BMatPolMat,   "PolMat", 3, 3, "Polyn Real Real",
      "(Polyn pol,Real filas, Real columnas)"),
   I2("Returns the matrix representation of a backshift polynomial.",
      "Devuelve la representacion matricial de un polinomio de retardos."
-     "Si el polinomio no contiene términos en F, entonces "
+     "Si el polinomio no contiene tï¿½rminos en F, entonces "
      "se trata de una matriz triangular inferior que tiene todos los "
      "valores de la diagonal principal iguales al coeficiente de grado 0 "
      "del polinomio, y los de las diagonales inferiores iguales al "
      "coeficiente del grado correspondiente. "
-     "Si tiene térmnos en F, ocurre de forma análoga con las diagonales "
+     "Si tiene tï¿½rmnos en F, ocurre de forma anï¿½loga con las diagonales "
      "superiores"),
     BOperClassify::Conversion_);
 //--------------------------------------------------------------------
@@ -3490,9 +3490,9 @@ DefExtOpr(1, BDatAppendRows,  "AppendRows", 2, 2, "Matrix Matrix",
      "If both matrices have not the same number of columns then "
      "does nothing and returns 0, else returns the total number of "
      "rows.",
-     "Modifica la primera matriz añadiéndole todas las filas de la"
-     "segunda. En caso de éxito, devuelve el número total de filas,"
-     "pero si las dos matrices no tienen el mismo número de columnas "
+     "Modifica la primera matriz aï¿½adiï¿½ndole todas las filas de la"
+     "segunda. En caso de ï¿½xito, devuelve el nï¿½mero total de filas,"
+     "pero si las dos matrices no tienen el mismo nï¿½mero de columnas "
      "no hace nada y devuelve 0."),
       BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -3596,7 +3596,7 @@ DefExtOpr(1, BMatSubTriang,    "SubTriang", 2, 2, "Matrix Text",
      "  la parte triangular inferior si <UPLO>==\"L\" \n"
      "Si la matriz no es cuadrada silo se tendra en cuenta la submatriz "
      "menor principal.\n"
-     "Si el tamaño de <m> es n entonces el tamaño del vector devuelto "
+     "Si el tamaï¿½o de <m> es n entonces el tamaï¿½o del vector devuelto "
      "sera k=n*(n+1)/2\n" 
      "Para restaurar la matriz triangular use SetTriang"),
     BOperClassify::MatrixAlgebra_);
@@ -3650,8 +3650,8 @@ DefExtOpr(1, BMatSetTriang, "SetTriang", 2, 2, "Matrix Text",
      "  una matriz triangular superior si <UPLOSI>==\"U\" \n"
      "  una matriz triangular inferior si <UPLOSI>==\"L\" \n"
      "  una matriz simetrica si <UPLOSI>==\"S\" \n"
-     "El tamaño del vector <v> debe ser un entero k tal que "
-     "k=n*(n+1)/2, siendo n el tamaño de la matriz cuadrada "
+     "El tamaï¿½o del vector <v> debe ser un entero k tal que "
+     "k=n*(n+1)/2, siendo n el tamaï¿½o de la matriz cuadrada "
      "resultante"),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -3707,7 +3707,7 @@ DefExtOpr(1, BMatOrthonormalCompletion, "OrthonormalCompletion", 2, 2, "Matrix R
   "(Matrix mat, Real m)",
   I2("Adds right columns to a orthonormal matrix in order to obtain a "
      "orthonormal matrix of m columns",
-     "Añade columnas a una matriz ortonormal para obtener una matriz "
+     "Aï¿½ade columnas a una matriz ortonormal para obtener una matriz "
      "ortonormal de m columnas."),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
@@ -3810,7 +3810,7 @@ void BMatPostProdDiag::CalcContens()
   if(s!=n)
   {
     Error(I2("Wrong dimensions for ",
-               "Dimensiones erróneas para ")+
+               "Dimensiones errï¿½neas para ")+
             "PostProdDiag({"+m+"x"+n+"},{"+s+"x"+s+"})");
     return;
   }
@@ -3856,7 +3856,7 @@ void BMatPreProdDiag::CalcContens()
   if(s!=m)
   {
     Error(I2("Wrong dimensions for ",
-               "Dimensiones erróneas para ")+
+               "Dimensiones errï¿½neas para ")+
             "PreProdDiag({"+s+"x"+s+"},{"+m+"x"+n+"})");
     return;
   }
@@ -5195,7 +5195,7 @@ void BMatCokeBoots::CalcContens()
   if (!dat_B.IsKnown() || dat_B.Value() <= 0) {
     Warning(I2("Boostrap size should be a positive value, "
                "assuming BSize = 1000",
-               "El tamaño del boostrap debe ser positivo, "
+               "El tamaï¿½o del boostrap debe ser positivo, "
                "asumiremos BSize = 1000"));
     B = 1000;
   } else {
@@ -5496,7 +5496,7 @@ void BMatBootsSample::CalcContens()
   if (!dat_B.IsKnown() || dat_B.Value() <= 0) {
     Warning(I2("Boostrap size should be a positive value, "
                "assuming BSize = 1000",
-               "El tamaño del boostrap debe ser positivo, "
+               "El tamaï¿½o del boostrap debe ser positivo, "
                "asumiremos BSize = 1000"));
     B = 1000;
   } else {
@@ -6140,7 +6140,7 @@ DefExtOpr(1, BMatGibbsCMN, "GibbsConstrainedMNormal", 4, 8,
        "     mu: parametro media de la distribucion N_R.\n"
        "   s2,A: s2*A es parametro covarianza de la distribucion N_R. Ver debajo la descripcion del parametro A.\n"
        "    B,b: B*X<=b define la region R asociada a las restricciones lineales.\n"
-       "   size: tamaño de la cadena de markov solicitado.\n"
+       "   size: tamaï¿½o de la cadena de markov solicitado.\n"
        "burning: numero de muestras descartadas.\n"
        "     X0: punto inicial de la cadena. Debe pertencer a R, es decir B*X0<=b.\n\n"
        "Descripcion de la matriz de covarianza:\n\n"
@@ -6338,7 +6338,7 @@ DefExtOpr(1, BMatRandCMN, "RandConstrainedMNormal", 4, 8,
              "    Matrix B = ((-1.0, 1.0), (0.0, -1.0));\n"
              "    Matrix b = Col(0.0, 0.0);\n"
              "    Matrix sample = RandConstrainedMNormal(mu, COV, B, b, 1, 100);",
-       "Realiza una muestra a partir de una multinormal truncada donde la zona de muestreo viene dada por un sistema de desigualdades lineales Bx <= b. El parametro 'size' indica el tamaño de la cadena de markov a generar para obtener la muestra.\n"
+       "Realiza una muestra a partir de una multinormal truncada donde la zona de muestreo viene dada por un sistema de desigualdades lineales Bx <= b. El parametro 'size' indica el tamaï¿½o de la cadena de markov a generar para obtener la muestra.\n"
        "La matriz de covarianza COV puede especificarse en diversas formas:\n"
        "  Matrix COV : iternamente se usa cholesky para descomponer la matrix\n"
        "  [[Text \"FULL_CHOL\" Matrix COV]] : iternamente se usa cholesky para descomponer la matrix, es similar a dar solo Matrix COV\n"
@@ -6407,7 +6407,7 @@ DefExtOpr(1, BMatGibbsRMN, "GibbsRectangleMNormal", 4, 6,
              "    Matrix c1 = Col(-1.0, 0.5);\n"
              "    Matrix c2 = Col(1.0, 1.5);\n"
              "    Matrix MCsample = GibbsRectangleMNormal(mu, COV, c1, c2, 1, 100);",
-       "Genera una cadena de markov para una multinormal truncada donde la zona de muestreo es el rectangulo multidimensional definido por las esquinas c1,c2. El parametro 'size' indica el tamaño de la cadena.\n"
+       "Genera una cadena de markov para una multinormal truncada donde la zona de muestreo es el rectangulo multidimensional definido por las esquinas c1,c2. El parametro 'size' indica el tamaï¿½o de la cadena.\n"
        "La matriz de covarianza COV puede especificarse en diversas formas:\n"
        "  Matrix COV : iternamente se usa cholesky para descomponer la matrix\n"
        "  [[Text \"FULL_CHOL\" Matrix COV]] : iternamente se usa cholesky para descomponer la matrix, es similar a dar solo Matrix COV\n"
@@ -6474,7 +6474,7 @@ DefExtOpr(1, BMatRandRMN, "RandRectangleMNormal", 4, 6,
              "    Matrix c1 = Col(-1.0, 0.5);\n"
              "    Matrix c2 = Col(1.0, 1.5);\n"
              "    Matrix MCsample = RandRectangleMNormal(mu, COV, c1, c2, 1, 100);",
-       "Realiza una muestra a partir de una multinormal truncada donde la zona de muestreo es el rectangulo multidimensional definido por las esquinas c1,c2. El parametro 'size' indica el tamaño de la cadena.\n"
+       "Realiza una muestra a partir de una multinormal truncada donde la zona de muestreo es el rectangulo multidimensional definido por las esquinas c1,c2. El parametro 'size' indica el tamaï¿½o de la cadena.\n"
        "La matriz de covarianza COV puede especificarse en diversas formas:\n"
        "  Matrix COV : iternamente se usa cholesky para descomponer la matrix\n"
        "  [[Text \"FULL_CHOL\" Matrix COV]] : iternamente se usa cholesky para descomponer la matrix, es similar a dar solo Matrix COV\n"
@@ -6543,7 +6543,7 @@ DefExtOpr(1, BMatRandTruncatedMultNormal, "RandTruncatedMultNormal", 4, 7,
              "Realiza una muestra a partir de una multinormal truncada donde la zona de muestreo "
              "es el rectangulo multidimensional definido por las esquinas c1,c2.\n"
              "Por razones de eficiencia la matriz de covarianzas viene dada por la descomposicion triangular cov=L*Tra(L)\n"
-             "El parametro 'size' indica el tamaño de la cadena.\n"
+             "El parametro 'size' indica el tamaï¿½o de la cadena.\n"
              "Si L es la matriz 1x1 con el elemento 1 entonces la matriz de covarianzas se asumira unitaria.\n"
              "Si test==Cierto la funcion chequeara que todos los valores devueltos cumplen las restricciones\n."
              "Ejemplo:\n\n"
@@ -6684,7 +6684,7 @@ void BDatLogDensTruncatedMultNormal::CalcContens()
      "which is an entirely different operation."
      ,
      "En matematicas, el producto de Kronecker, denotado por una x dentro "
-     "de un circulo, es una operacion de dos matrices de tamaño arbitrario "
+     "de un circulo, es una operacion de dos matrices de tamaï¿½o arbitrario "
      "dando por resultado la matriz del bloque (aij*B).  "
      "Es un caso especial de un producto del tensor. El producto de "
      "Kronecker no se debe confundir con la multiplicacion usual de matrices, "
@@ -6874,7 +6874,7 @@ void BMatSliceSampler1D::CalcContens()
 
   if (L >= U) {
     english += "invalid interval: upper must be greater than lower";
-    spanish += "intervalo inválido: sup debe ser mayor que inf";
+    spanish += "intervalo invï¿½lido: sup debe ser mayor que inf";
     Error(I2(english,spanish));
     return;
   }
@@ -6885,7 +6885,7 @@ void BMatSliceSampler1D::CalcContens()
     x0 =dat_x0->Value();
     if (!dat_x0->IsFinite() || x0<L || x0>U) {
       english += "invalid x0 argument value: must be finite and included in [L,U]";
-      spanish += "valor de argumento x0 inválido: debe ser finito e incluido en [L,U]";
+      spanish += "valor de argumento x0 invï¿½lido: debe ser finito e incluido en [L,U]";
       Error(I2(english,spanish));
       return;
     }
@@ -6896,7 +6896,7 @@ void BMatSliceSampler1D::CalcContens()
       size = dat_size->Value();
       if (!dat_size->IsFinite()) {
         english += "invalid size argument value: must be finite";
-        spanish += "valor de argumento size inválido";
+        spanish += "valor de argumento size invï¿½lido";
         Error(I2(english,spanish));
         return;
       }
@@ -6906,7 +6906,7 @@ void BMatSliceSampler1D::CalcContens()
         dat_burn = &Dat(Arg(6));
         if (!dat_burn->IsFinite()) {
           english += "invalid size argument value: must be finite";
-          spanish += "valor de argumento size inválido";
+          spanish += "valor de argumento size invï¿½lido";
           Error(I2(english,spanish));
           return;
         }
@@ -6919,7 +6919,7 @@ void BMatSliceSampler1D::CalcContens()
             if (cod->Operator()->MinArg()!=2 && 
                 cod->Operator()->MaxArg()!=2) {
               english += "invalid argument number for logf argument: should be 2";
-              spanish += "número de argumentos inválidos para argumento logf: debe ser 2";
+              spanish += "nï¿½mero de argumentos invï¿½lidos para argumento logf: debe ser 2";
               Error(I2(english,spanish));  
               return;
             }
@@ -6928,7 +6928,7 @@ void BMatSliceSampler1D::CalcContens()
               english += "invalid type ";
               english += cod->Operator()->GrammarForArg(2)->Name();
               english += " for second argument of logf argument: should be Set";
-              spanish += "tipo inválido ";
+              spanish += "tipo invï¿½lido ";
               spanish += cod->Operator()->GrammarForArg(2)->Name();
               spanish += " en el segundo argumento del argumento logf: debe ser Set";
               Error(I2(english,spanish));
@@ -6943,7 +6943,7 @@ void BMatSliceSampler1D::CalcContens()
             w = dat_w->Value();
             if (!dat_w->IsFinite()) {
               english += "invalid w argument value: must be finite";
-              spanish += "valor de argumento w inválido";
+              spanish += "valor de argumento w invï¿½lido";
               Error(I2(english,spanish));
               return;
             }
@@ -6951,7 +6951,7 @@ void BMatSliceSampler1D::CalcContens()
               dat_m = &Dat(Arg(9));
               if (!dat_m->IsKnown()) {
                 english += "invalid m argument value: must be known";
-                spanish += "valor de argumento m inválido: debe ser conocido";
+                spanish += "valor de argumento m invï¿½lido: debe ser conocido";
                 Error(I2(english,spanish));
                 return;
               }
@@ -6971,7 +6971,7 @@ void BMatSliceSampler1D::CalcContens()
           if (cod->Operator()->MinArg()!=1 && 
               cod->Operator()->MaxArg()!=1) {
             english += "invalid argument number for logf argument: should be 1";
-            spanish += "número de argumentos inválidos para argumento logf: debe ser 1";
+            spanish += "nï¿½mero de argumentos invï¿½lidos para argumento logf: debe ser 1";
             Error(I2(english,spanish));  
             return;
           }  
@@ -6992,7 +6992,7 @@ void BMatSliceSampler1D::CalcContens()
   /* check user function */
   if (!cod->Operator()) {
     english += "invalid code argument";
-    spanish += "argumento código inválido";
+    spanish += "argumento cï¿½digo invï¿½lido";
     Error(I2(english,spanish));
     return;
   }
@@ -7002,7 +7002,7 @@ void BMatSliceSampler1D::CalcContens()
     english += "invalid type ";
     english += cod->Grammar()->Name();
     english += " for logf argument: should be Real";
-    spanish += " tipo inválido ";
+    spanish += " tipo invï¿½lido ";
     spanish += cod->Grammar()->Name();
     spanish += " para argumento logf: debe ser Real";
     Error(I2(english,spanish));
@@ -7014,7 +7014,7 @@ void BMatSliceSampler1D::CalcContens()
     english += "invalid type ";
     english += cod->Operator()->GrammarForArg(1)->Name();
     english += " for first argument of logf argument: should be Real";
-    spanish += "tipo inválido ";
+    spanish += "tipo invï¿½lido ";
     spanish += cod->Operator()->GrammarForArg(1)->Name();
     spanish += " en el primer argumento del argumento logf: debe ser Real";
     Error(I2(english,spanish));
@@ -7137,7 +7137,7 @@ const BArray<int>*   BMatOrder::criterium_ = NULL;
      "columnas ascendentes y descendentes. Por ejemplo, criterium="
      "[[-2,3]] ordena por la segunda columna descendente y por la "
      "tercera ascendente en caso de empate."
-     "Devuelve la matriz de permutación tal que PivotByRows(mat,p) "
+     "Devuelve la matriz de permutaciï¿½n tal que PivotByRows(mat,p) "
      "es la matriz ordenada."),
      BOperClassify::Statistic_);
   void BMatSort::CalcContens()
@@ -7212,9 +7212,9 @@ const BArray<int>*   BMatOrder::criterium_ = NULL;
   I2("For each row returns two columns: first one has the index of the "
      "column with the maximum value inside these row, and second one "
      "the maximum value. Unknown values are skipped.",
-     "Devuelve dos columnas para cada fila: la primera con el índice "
-     "de la columna de máximo valor dentro de esa fila, y la segunda "
-     "con dicho valor máximo. Los valores omitidos no se tienen en "
+     "Devuelve dos columnas para cada fila: la primera con el ï¿½ndice "
+     "de la columna de mï¿½ximo valor dentro de esa fila, y la segunda "
+     "con dicho valor mï¿½ximo. Los valores omitidos no se tienen en "
      "cuenta."),
      BOperClassify::Statistic_);
   void BMatMaxColByRow::CalcContens()
@@ -7270,7 +7270,7 @@ void BMatForMat::CalcContens()
   if(!opr) 
   {
     Error(I2("<fun> argument of function ForMat has no operator",
-             "El argumento <fun> de la función ForMat no tiene operador"));
+             "El argumento <fun> de la funciï¿½n ForMat no tiene operador"));
     return;
   }
   if((opr->Grammar()!= GraReal()) ||
@@ -7279,10 +7279,10 @@ void BMatForMat::CalcContens()
      (opr->GrammarForArg(2)!=GraReal())) 
   {
     Error(I2("<fun> argument of function ForMat ",
-             "El argumento <fun> de la función ForMat ")+"\n"+
+             "El argumento <fun> de la funciï¿½n ForMat ")+"\n"+
           opr->Grammar()->Name()+" "+code.Name()+opr->Arguments()+"\n"+
           I2("should be declared as ",
-             "debería estar declarada como ")+"\n"+
+             "deberï¿½a estar declarada como ")+"\n"+
           "Real "+code.Name()+"(Real i, Real j) \n");
     return;
   }
@@ -7315,7 +7315,7 @@ DefExtOpr(1, BMatEvalMat, "EvalMat", 2, 2, "Matrix Code",
      "function in each cell of specified matrix.\n"
   "Example : \n"
   ,
-  "Devuelve una matriz con las evaluaciones de una función dada de "
+  "Devuelve una matriz con las evaluaciones de una funciï¿½n dada de "
   "Real a Real en cada celda de la matriz especificada.\n"
   "Ejemplo : \n")+
   "Matrix EvalMat(X, gsl_sf_log_erfc );",
@@ -7332,7 +7332,7 @@ void BMatEvalMat::CalcContens()
   if(!opr) 
   {
     Error(I2("<fun> argument of function EvalMat has no operator",
-             "El argumento <fun> de la función EvalMat no tiene operador"));
+             "El argumento <fun> de la funciï¿½n EvalMat no tiene operador"));
     return;
   }
   if((opr->Grammar()!= GraReal()) ||
@@ -7340,10 +7340,10 @@ void BMatEvalMat::CalcContens()
      (opr->GrammarForArg(1)!=GraReal())) 
   {
     Error(I2("<fun> argument of function EvalMat ",
-             "El argumento <fun> de la función EvalMat ")+"\n"+
+             "El argumento <fun> de la funciï¿½n EvalMat ")+"\n"+
           opr->Grammar()->Name()+" "+code.Name()+opr->Arguments()+"\n"+
           I2("should be declared as ",
-             "debería estar declarada como ")+"\n"+
+             "deberï¿½a estar declarada como ")+"\n"+
           "Real "+code.Name()+"(Real x) \n");
     return;
   }
@@ -7374,7 +7374,7 @@ DefExtOpr(1, BMatEvalMatRows, "EvalMatRows", 2, 2, "Matrix Code",
      "function in each row of matrix M(m x n) returning a column marix.\n"
   "Example : \n"
   ,
-  "Devuelve una matriz con las evaluaciones de una función dada de "
+  "Devuelve una matriz con las evaluaciones de una funciï¿½n dada de "
   "Real^n a Real en cada fila de una matriz M(m x n) devolviendo una matriz "
   "columna.\n"
   "Ejemplo : \n")+
@@ -7393,7 +7393,7 @@ void BMatEvalMatRows::CalcContens()
   if(!opr) 
   {
     Error(I2("<fun> argument of function Vectorize has no operator",
-             "El argumento <fun> de la función Vectorize no tiene operador"));
+             "El argumento <fun> de la funciï¿½n Vectorize no tiene operador"));
     return;
   }
   bool okArgs = (opr->MaxArg() >= n) && (opr->Grammar() == GraReal());
@@ -7404,10 +7404,10 @@ void BMatEvalMatRows::CalcContens()
   if(!okArgs) 
   {
     Error(I2("<fun> argument of function EvalMatRows ",
-             "El argumento <fun> de la función EvalMatRows ")+"\n"+
+             "El argumento <fun> de la funciï¿½n EvalMatRows ")+"\n"+
           opr->Grammar()->Name()+" "+code.Name()+opr->Arguments()+"\n"+
           I2("should be declared as ",
-             "debería estar declarada como ")+"\n"+
+             "deberï¿½a estar declarada como ")+"\n"+
           "Real "+code.Name()+"(Real x1, ..., Real x"+n+") \n");
     return;
   }
@@ -7442,9 +7442,9 @@ DefExtOpr(1, BMatReplace, "MatReplace", 3, 3, "Matrix Matrix Matrix",
   "CAUTION!: 'old' cannot have repeated cells\n",
   "Reemplaza en la matriz arbitraria 'data' todas las ocurrencias "
   "de las celdas de la matriz columna 'old' por la celda "
-  "correspondiente de la matriz columna 'new', que lógicamente "
+  "correspondiente de la matriz columna 'new', que lï¿½gicamente "
   "debe tener las mismas dimensiones que 'old'.\n"
-  "¡CUIDADO!: 'old' no debe tener celdas repetidas\n"),
+  "ï¿½CUIDADO!: 'old' no debe tener celdas repetidas\n"),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------
 void BMatReplace::CalcContens()
@@ -7516,12 +7516,12 @@ DefExtOpr(1, BMat_fftw_dft_1d, "fftw_dft_1d", 2, 2,
   "respectively.\n"
   "Argument <sign> can be 1 for direct transform or -1 for inverse transform\n"
   "See more on:\n",
-  "API para las rutinas de la librería GSL para la transformada rápida de "
-  "Fourier sobre datos reales de cualquier tamaño.\n" 
+  "API para las rutinas de la librerï¿½a GSL para la transformada rï¿½pida de "
+  "Fourier sobre datos reales de cualquier tamaï¿½o.\n" 
   "El argumento <data> tiene dos columnas que almacenan la parte real y la "
   "imaginaria respectivamente.\n"
-  "El argumento <sign> puede ser 1 para la transformación directa ó -1 para la inversa \n"
-  "Ver más en:\n")+
+  "El argumento <sign> puede ser 1 para la transformaciï¿½n directa ï¿½ -1 para la inversa \n"
+  "Ver mï¿½s en:\n")+
   "http://www.gnu.org/software/gsl/manual/html_node/"
      "Mixed-radix FFT routines for complex data.html",
   BOperClassify::MatrixAlgebra_);
@@ -7581,7 +7581,7 @@ DefExtOpr(1, BMat_gsl_poly_complex_solve, "gsl_poly_complex_solve", 1, 1,
   I2(
   "Returns complex roots of given polynomial in a real matrix with "
   "two columns",
-  "Devuelve las raíces complejas de un polinomio en una matriz real "
+  "Devuelve las raï¿½ces complejas de un polinomio en una matriz real "
   "de dos columnas"),
   BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------

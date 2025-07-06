@@ -76,8 +76,8 @@ public:	\
   } \
   static void* operator new(size_t size) \
   { \
-    register unsigned short pageNum; \
-    register ANY_* obj = (ANY_*)BFSMSingleton<sizeof(ANY_)>::Handler()->New(size, pageNum); \
+    unsigned short pageNum; \
+    ANY_* obj = (ANY_*)BFSMSingleton<sizeof(ANY_)>::Handler()->New(size, pageNum); \
     obj->_bfsm_PageNum__ = pageNum; \
     return(obj); \
   } \

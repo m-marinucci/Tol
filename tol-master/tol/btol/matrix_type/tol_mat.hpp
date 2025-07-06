@@ -27,6 +27,7 @@
 
 #if GCC_VERSION >= 40300
 #include <limits>
+#include <climits>
 #endif
 
 //--------------------------------------------------------------------
@@ -129,7 +130,7 @@ void BMatrix<Any>::Alloc(BInt r, BInt c)
  */
 //--------------------------------------------------------------------
 {
-  static int max_size = LONG_MAX;
+  static int max_size = INT_MAX;
   int i,j;
  
   if (rows_ == r && columns_ == c)

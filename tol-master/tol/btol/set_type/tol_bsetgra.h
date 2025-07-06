@@ -58,9 +58,9 @@ typedef int (*Tcl_EvalExPtr)(const BSet&, const char ** result);
 TOL_API Tcl_EvalPtr InstallTclEval(Tcl_EvalPtr);
 TOL_API Tcl_EvalExPtr InstallTclEvalEx(Tcl_EvalExPtr);
 
-#ifdef UNIX
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__GNUC__)
   typedef BInt (*BTerminator)();
-#else
+#elif defined(_WIN32) || defined(WIN32)
   extern "C"
   {
 #ifdef _MSC_VER
@@ -69,6 +69,8 @@ TOL_API Tcl_EvalExPtr InstallTclEvalEx(Tcl_EvalExPtr);
     typedef BInt _stdcall (*BTerminator)();
 #endif
   }
+#else
+  typedef BInt (*BTerminator)();
 #endif
 
 

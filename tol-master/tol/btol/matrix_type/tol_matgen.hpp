@@ -19,6 +19,7 @@
    USA.
  */
 
+#include <climits>
 
 //--------------------------------------------------------------------
 template <class Any>
@@ -120,7 +121,7 @@ void BMatrixGen<Any>::Alloc(BInt r, BInt c)
  */
 //--------------------------------------------------------------------
 {
-  static int max_size = LONG_MAX;
+  static int max_size = INT_MAX;
   int i,j;
  
   if (rows_ == r && columns_ == c)

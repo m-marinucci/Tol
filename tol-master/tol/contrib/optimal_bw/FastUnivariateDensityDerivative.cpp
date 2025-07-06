@@ -35,6 +35,7 @@
 
 #include <tol/tol_bcommon.h>
 #include <tol/tol_brealfun.h>
+#include <tol/tol_bfsmem.h>
 
 #define  min(a,b) (((a)<(b))?(a):(b)) 
 #define  max(a,b) (((a)>(b))?(a):(b)) 

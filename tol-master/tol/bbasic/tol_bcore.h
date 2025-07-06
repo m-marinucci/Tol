@@ -29,6 +29,9 @@
 
 #include <tol/tol_bcommon.h>
 
+// Forward declaration for memory management
+class BFixedSizeMemoryBase;
+
 //--------------------------------------------------------------------
 class TOL_API BCore
 

@@ -547,7 +547,7 @@ protected:
   BBool Includes    (const BDate& dte) const;
   BDate CalcInf() const;
   BDate CalcSup() const { return(BDate::End  ()); }
-  void throwBadCreationExc() throw(TimeSetException) 
+  void throwBadCreationExc()
   {
     std::string enMsg, esMsg;
     std::stringstream ss;
@@ -596,14 +596,14 @@ protected:
   BDate CalcInf() const;
   BDate CalcSup() const { return(BDate::End  ()); }
 
-  void throwBadCreationExc() throw(TimeSetException) 
+  void throwBadCreationExc()
   {
     std::string enMsg, esMsg;
     std::stringstream ss;
     ss << monthDay_;
     enMsg = "Bad argument used to create a TimeSet variable: D(";
     enMsg += ss.str() + ").";
-    esMsg = "Argumento erróneo al crear una variable TimeSet: D(";
+    esMsg = "Argumento errï¿½neo al crear una variable TimeSet: D(";
     esMsg += ss.str() + ").";
     throw TimeSetException(enMsg, esMsg);  
   }
@@ -644,14 +644,14 @@ protected:
   BDate CalcInf() const;
   BDate CalcSup() const { return(BDate::End  ()); }
 
-  void throwBadCreationExc() throw(TimeSetException) 
+  void throwBadCreationExc()
   {
     std::string enMsg, esMsg;
     std::stringstream ss;
     ss << month_;
     enMsg = "Bad argument used to create a TimeSet variable: M(";
     enMsg += ss.str() + ").";
-    esMsg = "Argumento erróneo al crear una variable TimeSet: M(";
+    esMsg = "Argumento errï¿½neo al crear una variable TimeSet: M(";
     esMsg += ss.str() + ").";
     throw TimeSetException(enMsg, esMsg);  
   }
@@ -687,14 +687,14 @@ public:
   BInt  Difference  (const BDate& dte1, const BDate& dte2) const;
 protected:
   BBool Includes    (const BDate& dte) const;
-  void throwBadCreationExc() throw(TimeSetException) 
+  void throwBadCreationExc()
   {
     std::string enMsg, esMsg;
     std::stringstream ss;
     ss << hour_;
     enMsg = "Bad argument used to create a TimeSet variable: H(";
     enMsg += ss.str() + ").";
-    esMsg = "Argumento erróneo al crear una variable TimeSet: H(";
+    esMsg = "Argumento errï¿½neo al crear una variable TimeSet: H(";
     esMsg += ss.str() + ").";
     throw TimeSetException(enMsg, esMsg);  
   }
@@ -729,14 +729,14 @@ public:
   BInt  Difference  (const BDate& dte1, const BDate& dte2) const;
 protected:
   BBool Includes    (const BDate& dte) const;
-  void throwBadCreationExc() throw(TimeSetException) 
+  void throwBadCreationExc()
   {
     std::string enMsg, esMsg;
     std::stringstream ss;
     ss << minute_;
     enMsg = "Bad argument used to create a TimeSet variable: Mi(";
     enMsg += ss.str() + ").";
-    esMsg = "Argumento erróneo al crear una variable TimeSet: Mi(";
+    esMsg = "Argumento errï¿½neo al crear una variable TimeSet: Mi(";
     esMsg += ss.str() + ").";
     throw TimeSetException(enMsg, esMsg);  
   }
@@ -770,14 +770,14 @@ public:
   BInt  Difference  (const BDate& dte1, const BDate& dte2) const;
 protected:
   BBool Includes    (const BDate& dte) const;
-  void throwBadCreationExc() throw(TimeSetException) 
+  void throwBadCreationExc()
   {
     std::string enMsg, esMsg;
     std::stringstream ss;
     ss << second_;
     enMsg = "Bad argument used to create a TimeSet variable: S(";
     enMsg += ss.str() + ").";
-    esMsg = "Argumento erróneo al crear una variable TimeSet: S(";
+    esMsg = "Argumento errï¿½neo al crear una variable TimeSet: S(";
     esMsg += ss.str() + ").";
     throw TimeSetException(enMsg, esMsg);  
   }

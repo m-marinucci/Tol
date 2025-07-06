@@ -28,6 +28,7 @@
 #define TOL_BTEXT_H 1
 
 #include <tol/tol_bcommon.h>
+#include <cstring>
 
 
 //--------------------------------------------------------------------
@@ -430,7 +431,7 @@ class TOL_API BText
   friend BText Compact (const BText& txt);
 
 
-	friend BText TmpFileName(const BText& path=BText::None(), const BText& prefix=BText::None());
+	friend BText TmpFileName(const BText& path, const BText& prefix);
 
 
   /* Operator overloading: */

@@ -33,7 +33,7 @@
 
 #define DB_MODULES_SONAME 0
 
-#ifdef UNIX
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__GNUC__)
 #  include <dlfcn.h>
 #  define GET_FUNC dlsym
 #  define UNLOAD_MODULE dlclose
@@ -41,8 +41,8 @@
 #  define LOAD_MODULE(f) dlopen(file,RTLD_NOW|RTLD_GLOBAL)
 #  define EXTENSION ".so"
    typedef void* hdl_type;
-#else // Windows
-const char *checkF(void *f) 
+#elif defined(_WIN32) || defined(WIN32)
+const char *checkF(void *f)
 {
   static const char *msg = "Could not find call.";
   if (f==NULL)
@@ -56,7 +56,16 @@ const char *checkF(void *f)
 #  define LOAD_MODULE(f) LoadLibrary(f)
 #  define EXTENSION ".dll"
    typedef HINSTANCE hdl_type;
-#endif // UNIX
+#else
+// Default to Linux behavior
+#  include <dlfcn.h>
+#  define GET_FUNC dlsym
+#  define UNLOAD_MODULE dlclose
+#  define CHECK_ERROR(f) dlerror()
+#  define LOAD_MODULE(f) dlopen(file,RTLD_NOW|RTLD_GLOBAL)
+#  define EXTENSION ".so"
+   typedef void* hdl_type;
+#endif
 
 #ifdef __USE_DBTIME_MONITOR__
 static BDat dbTotalCPU_ = 0;
@@ -183,7 +192,7 @@ void loadFunctionsError(int index, const char* fname, const char* error)
   module_error = strdup(error);
   sprintf(file, dbm_modules_[index], DB_MODULES_SONAME, EXTENSION);
   Error(I2("Function " + fname + " not available in " + file + " module file\n",
-	   "La función " + fname + " no esta disponible en el módulo " + file + ".\n"));
+	   "La funciï¿½n " + fname + " no esta disponible en el mï¿½dulo " + file + ".\n"));
   Dump(module_error);
   free(module_error);
 }
@@ -242,7 +251,7 @@ int loadModule(int index)
   if(module_error) {
     //module_error = strdup(module_error);
     Error(I2("Module "+file+" for " + dbm_names_[index] + " DB access is not available.\n",
-	   "El módulo "+file+" de acceso a " + dbm_names_[index] + " no está disponible.\n"));
+	   "El mï¿½dulo "+file+" de acceso a " + dbm_names_[index] + " no estï¿½ disponible.\n"));
     Dump(module_error);
     //free(module_error);
     return 0;
@@ -421,7 +430,7 @@ int dbClose(const char* alias)
 
   if(!opened_db_) { // there are no more connections
     Std(I2("DBConns is empty. No more DB connections.\n",
-	   "DBConns esta vacío. No quedan conexiones a BB.DD.\n"));
+	   "DBConns esta vacï¿½o. No quedan conexiones a BB.DD.\n"));
     return 0;
   }
 
@@ -446,7 +455,7 @@ int dbClose(const char* alias)
   rc = dbm_hdl->dbClose_fp(entry->dbd);
   if(!rc) {
     Error(I2("Cannot close '" + alias + "' db connection.\n",
-	     "No se pudo cerrar la conexión '" + alias + "'\n"));
+	     "No se pudo cerrar la conexiï¿½n '" + alias + "'\n"));
   }
   entry->dbd = NULL;
   free(entry->alias);
@@ -466,10 +475,10 @@ int dbClose(const char* alias)
 
   if(active_db_) {
     Std(I2("Active DB Connection: '" + active_db_->alias + "'.\n",
-	   "Conexión con BB.DD. activa: '" + active_db_->alias + "'.\n"));
+	   "Conexiï¿½n con BB.DD. activa: '" + active_db_->alias + "'.\n"));
   } else {
     Std(I2("DBConns is empty. No more DB connections.\n",
-	   "DBConns esta vacío. No quedan conexiones a BB.DD.\n"));
+	   "DBConns esta vacï¿½o. No quedan conexiones a BB.DD.\n"));
   }
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -482,7 +491,7 @@ int dbGetDBMSName(char *dbms, size_t size)
 {
   if(!active_db_) {
     Error(I2("There is no database connection.\n",
-	     "No existe una conexión activa a BB.DD.\n"));
+	     "No existe una conexiï¿½n activa a BB.DD.\n"));
     return 0;
   }
   DBM_hdl *dbm_hdl = NULL;
@@ -495,7 +504,7 @@ int dbGetDBMSVersion(char *version, size_t size)
 {
   if(!active_db_) {
     Error(I2("There is no database connection.\n",
-	     "No existe una conexión activa a BB.DD.\n"));
+	     "No existe una conexiï¿½n activa a BB.DD.\n"));
     return 0;
   }
   DBM_hdl *dbm_hdl = NULL;
@@ -508,7 +517,7 @@ int dbGetDataBaseName(char *database, size_t size)
 {
   if(!active_db_) {
     Error(I2("There is no database connection.\n",
-	     "No existe una conexión activa a BB.DD.\n"));
+	     "No existe una conexiï¿½n activa a BB.DD.\n"));
     return 0;
   }
   DBM_hdl *dbm_hdl = NULL;
@@ -530,7 +539,7 @@ int dbActivate(const char *alias)
   if(!opened_db_)
   {
     Std(I2("DBConns is empty. No more DB connections.\n",
-	   "DBConns esta vacío. No quedan conexiones a BB.DD.\n"));
+	   "DBConns esta vacï¿½o. No quedan conexiones a BB.DD.\n"));
     return 0;
   }
   else
@@ -622,8 +631,8 @@ int dbOpenQuery(const char* query)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_OpenQuery' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_OpenQuery' en el módulo "+ 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_OpenQuery' en el mï¿½dulo "+ 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 #endif
     Error(I2("SQL query failed:\n" + query,
@@ -663,8 +672,8 @@ int dbExecQuery(const char *query)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_ExecQuery' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_ExecQuery' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_ExecQuery' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 #endif
     Error(I2("SQL query failed:\n" + query,
@@ -698,8 +707,8 @@ int dbCloseQuery(void)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_CloseQuery' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_CloseQuery' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_CloseQuery' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
   
 #ifdef __USE_DBTIME_MONITOR__
@@ -734,8 +743,8 @@ int dbGetFirst(void)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetFirst' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetFirst' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetFirst' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -765,8 +774,8 @@ int dbGetNext(void)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetNext' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetNext' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetNext' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -796,8 +805,8 @@ int dbGetFieldsNumber(void)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetFieldsNumber' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetFieldsNumber' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetFieldsNumber' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -828,8 +837,8 @@ int dbGetFieldType(int nfield)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetFieldType' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetFieldType' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetFieldType' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));  
   
 #ifdef __USE_DBTIME_MONITOR__
@@ -859,8 +868,8 @@ int dbGetFieldName(int nfield, char *fieldName)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetFieldName' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetFieldName' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetFieldName' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -890,8 +899,8 @@ int dbGetAsReal(int nfield, long double &value)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetAsReal' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetAsReal' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetAsReal' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -930,8 +939,8 @@ int dbGetAsText(int nfield, unsigned char **value)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetAsText' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetAsText' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetAsText' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -961,8 +970,8 @@ int dbFreeText(unsigned char **value)
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_FreeText' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_FreeText' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_FreeText' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
 
 #ifdef __USE_DBTIME_MONITOR__
@@ -1007,8 +1016,8 @@ int dbGetAsDate(int nfield,
     Error(I2("function '" + dbm_aliases_[active_db_->hdl_idx] + 
 	     "_GetAsDate' from " + dbm_names_[active_db_->hdl_idx] + 
 	     " DB module failed.\n", 
-	     "la función '" + dbm_aliases_[active_db_->hdl_idx] + 
-	     "_GetAsDate' en el módulo " + 
+	     "la funciï¿½n '" + dbm_aliases_[active_db_->hdl_idx] + 
+	     "_GetAsDate' en el mï¿½dulo " + 
 	     dbm_names_[active_db_->hdl_idx] + " ha fallado.\n"));
   } else {
     year    = result->year;
