@@ -82,6 +82,10 @@ create_source_package() {
     mkdir -p "$source_dir"
     rsync -av \
         --exclude='build/' \
+        --exclude='CMakeFiles/' \
+        --exclude='CMakeCache.txt' \
+        --exclude='coverage_html/' \
+        --exclude='.DS_Store' \
         --exclude='*.o' \
         --exclude='*.so' \
         --exclude='*.a' \
