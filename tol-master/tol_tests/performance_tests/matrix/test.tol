@@ -1,0 +1,278 @@
+//////////////////////////////////////////////////////////////////////////////
+// FILE   : test.tol
+// PURPOSE: Performance benchmarks for matrix operations
+// AUTHOR : Massimiliano Marinucci
+// DATE   : 2025-07-06
+// ISSUE  : NUM-11 - P0: Comprehensive Cross-Platform Testing Framework
+//////////////////////////////////////////////////////////////////////////////
+
+Text email_   = "mmarinucci@numinate.com"; 
+Text link_    = "https://linear.app/numinate/issue/NUM-11";
+Text summary_ = "Matrix operations performance benchmarks";
+
+Real numErr0 = Copy(NError);
+
+//////////////////////////////////////////////////////////////////////////////
+// Performance Benchmark Configuration
+//////////////////////////////////////////////////////////////////////////////
+
+Real smallSize = 50;
+Real mediumSize = 100;
+Real largeSize = 200;
+Real iterations = 5;
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 1: Matrix Creation Performance
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking matrix creation performance...");
+
+Real startTime1 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Matrix m1 = MatRand(mediumSize, mediumSize);
+  Matrix m2 = MatZero(mediumSize, mediumSize);
+  Matrix m3 = MatIdent(mediumSize);
+});
+
+Real endTime1 = Time();
+Real creationTime = endTime1 - startTime1;
+
+WriteLn("Matrix creation time: " + Text(creationTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 2: Matrix Addition Performance
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking matrix addition performance...");
+
+Matrix a = MatRand(mediumSize, mediumSize);
+Matrix b = MatRand(mediumSize, mediumSize);
+
+Real startTime2 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Matrix sum = a + b;
+});
+
+Real endTime2 = Time();
+Real additionTime = endTime2 - startTime2;
+
+WriteLn("Matrix addition time: " + Text(additionTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 3: Matrix Multiplication Performance
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking matrix multiplication performance...");
+
+Matrix x = MatRand(mediumSize, mediumSize);
+Matrix y = MatRand(mediumSize, mediumSize);
+
+Real startTime3 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Matrix product = x * y;
+});
+
+Real endTime3 = Time();
+Real multiplicationTime = endTime3 - startTime3;
+
+WriteLn("Matrix multiplication time: " + Text(multiplicationTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 4: Matrix Transpose Performance
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking matrix transpose performance...");
+
+Matrix original = MatRand(mediumSize, mediumSize);
+
+Real startTime4 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Matrix transposed = Tra(original);
+});
+
+Real endTime4 = Time();
+Real transposeTime = endTime4 - startTime4;
+
+WriteLn("Matrix transpose time: " + Text(transposeTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 5: Matrix Inverse Performance
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking matrix inverse performance...");
+
+// Create a well-conditioned matrix for inversion
+Matrix invertible = MatIdent(smallSize) + MatRand(smallSize, smallSize) * 0.1;
+
+Real startTime5 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Matrix inverse = MatInv(invertible);
+});
+
+Real endTime5 = Time();
+Real inverseTime = endTime5 - startTime5;
+
+WriteLn("Matrix inverse time: " + Text(inverseTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 6: Matrix Determinant Performance
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking matrix determinant performance...");
+
+Matrix detMatrix = MatRand(smallSize, smallSize);
+
+Real startTime6 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Real det = MatDet(detMatrix);
+});
+
+Real endTime6 = Time();
+Real determinantTime = endTime6 - startTime6;
+
+WriteLn("Matrix determinant time: " + Text(determinantTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 7: Large Matrix Operations
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking large matrix operations...");
+
+Matrix large1 = MatRand(largeSize, largeSize);
+Matrix large2 = MatRand(largeSize, largeSize);
+
+Real startTime7 = Time();
+
+Matrix largeSum = large1 + large2;
+Matrix largeProduct = large1 * large2;
+
+Real endTime7 = Time();
+Real largeOperationsTime = endTime7 - startTime7;
+
+WriteLn("Large matrix operations time: " + Text(largeOperationsTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Benchmark 8: Memory Intensive Operations
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Benchmarking memory intensive operations...");
+
+Real startTime8 = Time();
+
+For(1, iterations, Real(Real i)
+{
+  Matrix temp1 = MatRand(mediumSize, mediumSize);
+  Matrix temp2 = MatRand(mediumSize, mediumSize);
+  Matrix temp3 = temp1 * temp2;
+  Matrix temp4 = Tra(temp3);
+});
+
+Real endTime8 = Time();
+Real memoryIntensiveTime = endTime8 - startTime8;
+
+WriteLn("Memory intensive operations time: " + Text(memoryIntensiveTime) + " seconds");
+
+//////////////////////////////////////////////////////////////////////////////
+// Performance Analysis and Baseline Establishment
+//////////////////////////////////////////////////////////////////////////////
+
+Real totalTime = creationTime + additionTime + multiplicationTime + 
+                transposeTime + inverseTime + determinantTime + 
+                largeOperationsTime + memoryIntensiveTime;
+
+Real avgTimePerOperation = totalTime / 8;
+
+// Performance thresholds (baseline values)
+Real creationThreshold = 2.0;      // seconds
+Real additionThreshold = 1.0;      // seconds  
+Real multiplicationThreshold = 5.0; // seconds
+Real transposeThreshold = 1.0;     // seconds
+Real inverseThreshold = 3.0;       // seconds
+Real determinantThreshold = 2.0;   // seconds
+Real largeOpsThreshold = 10.0;     // seconds
+Real memoryThreshold = 8.0;        // seconds
+
+// Performance quality assessment
+Real perfQuality1 = If(creationTime <= creationThreshold, 1, 0);
+Real perfQuality2 = If(additionTime <= additionThreshold, 1, 0);
+Real perfQuality3 = If(multiplicationTime <= multiplicationThreshold, 1, 0);
+Real perfQuality4 = If(transposeTime <= transposeThreshold, 1, 0);
+Real perfQuality5 = If(inverseTime <= inverseThreshold, 1, 0);
+Real perfQuality6 = If(determinantTime <= determinantThreshold, 1, 0);
+Real perfQuality7 = If(largeOperationsTime <= largeOpsThreshold, 1, 0);
+Real perfQuality8 = If(memoryIntensiveTime <= memoryThreshold, 1, 0);
+
+Real overallPerfQuality = (perfQuality1 + perfQuality2 + perfQuality3 + perfQuality4 + 
+                          perfQuality5 + perfQuality6 + perfQuality7 + perfQuality8) / 8;
+
+//////////////////////////////////////////////////////////////////////////////
+// Test Results Compilation
+//////////////////////////////////////////////////////////////////////////////
+
+Real numErr1 = Copy(NError);
+
+Set partialResults_ = 
+[[
+  Real numErr0,
+  Real numErr1,
+  Real creationTime,
+  Real additionTime,
+  Real multiplicationTime,
+  Real transposeTime,
+  Real inverseTime,
+  Real determinantTime,
+  Real largeOperationsTime,
+  Real memoryIntensiveTime,
+  Real totalTime,
+  Real avgTimePerOperation,
+  Real overallPerfQuality
+]];
+
+// Overall test quality (performance within acceptable bounds)
+Real quality_ = And(numErr0 == numErr1, overallPerfQuality >= 0.7);
+
+// Enhanced performance report
+Text platform = "Linux"; // Would use DetectPlatform() in full implementation
+
+Text resultStr_ = "========================================\n" +
+  "MATRIX OPERATIONS PERFORMANCE REPORT\n" +
+  "========================================\n" +
+  "Test: " + summary_ + "\n" +
+  "Status: " + If(quality_ > 0.5, "PASS", "FAIL") + "\n" +
+  "Overall Performance Quality: " + Text(overallPerfQuality * 100) + "%\n" +
+  "Platform: " + platform + "\n" +
+  "Matrix Size (Medium): " + Text(mediumSize) + "x" + Text(mediumSize) + "\n" +
+  "Iterations: " + Text(iterations) + "\n" +
+  "----------------------------------------\n" +
+  "BENCHMARK RESULTS:\n" +
+  "Matrix Creation: " + Text(creationTime) + "s (threshold: " + Text(creationThreshold) + "s)\n" +
+  "Matrix Addition: " + Text(additionTime) + "s (threshold: " + Text(additionThreshold) + "s)\n" +
+  "Matrix Multiplication: " + Text(multiplicationTime) + "s (threshold: " + Text(multiplicationThreshold) + "s)\n" +
+  "Matrix Transpose: " + Text(transposeTime) + "s (threshold: " + Text(transposeThreshold) + "s)\n" +
+  "Matrix Inverse: " + Text(inverseTime) + "s (threshold: " + Text(inverseThreshold) + "s)\n" +
+  "Matrix Determinant: " + Text(determinantTime) + "s (threshold: " + Text(determinantThreshold) + "s)\n" +
+  "Large Operations: " + Text(largeOperationsTime) + "s (threshold: " + Text(largeOpsThreshold) + "s)\n" +
+  "Memory Intensive: " + Text(memoryIntensiveTime) + "s (threshold: " + Text(memoryThreshold) + "s)\n" +
+  "----------------------------------------\n" +
+  "Total Execution Time: " + Text(totalTime) + " seconds\n" +
+  "Average Time per Operation: " + Text(avgTimePerOperation) + " seconds\n" +
+  "Link: " + link_ + "\n" +
+  "Contact: " + email_ + "\n" +
+  "========================================\n";
+
+WriteLn("" << resultStr_);
+
+// Return result for framework
+resultStr_
