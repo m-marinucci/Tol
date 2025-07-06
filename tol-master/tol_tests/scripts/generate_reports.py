@@ -56,7 +56,7 @@ class TOLTestReportGenerator:
         # Parse Test.xml if it exists
         test_xml = latest_dir / "Test.xml"
         if test_xml.exists():
-            results.update(self.parse_test_xml(test_xml))
+            results = results | self.parse_test_xml(test_xml)
             
         return results
     
