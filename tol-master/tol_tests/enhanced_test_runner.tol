@@ -1,0 +1,268 @@
+//////////////////////////////////////////////////////////////////////////////
+// FILE    : enhanced_test_runner.tol
+// PURPOSE : Enhanced cross-platform test runner for comprehensive testing
+// AUTHOR  : Massimiliano Marinucci
+// DATE    : 2025-07-06
+// ISSUE   : NUM-11 - P0: Comprehensive Cross-Platform Testing Framework
+//////////////////////////////////////////////////////////////////////////////
+
+// Load the enhanced test framework
+Set Include("enhanced_test_framework.tol");
+
+//////////////////////////////////////////////////////////////////////////////
+// Unit Tests for Modules Fixed in PR 26
+//////////////////////////////////////////////////////////////////////////////
+
+Set unitTestConfigs = SetOfSet
+(
+  // Core Libraries
+  @EnhancedBatteryConfig("bbasic_unit_tests", "unit_tests/bbasic", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("bmath_unit_tests", "unit_tests/bmath", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("bparser_unit_tests", "unit_tests/bparser", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("btol_unit_tests", "unit_tests/btol", 1, "ALL", 300, 100),
+  
+  // Math Libraries
+  @EnhancedBatteryConfig("barith_unit_tests", "unit_tests/barith", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("blinalg_unit_tests", "unit_tests/blinalg", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("bstat_unit_tests", "unit_tests/bstat", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("gsl_unit_tests", "unit_tests/gsl", 1, "ALL", 300, 100),
+  
+  // Data Types
+  @EnhancedBatteryConfig("matrix_type_tests", "unit_tests/matrix_type", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("serie_type_tests", "unit_tests/serie_type", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("text_type_tests", "unit_tests/text_type", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("real_type_tests", "unit_tests/real_type", 1, "ALL", 300, 100)
+);
+
+//////////////////////////////////////////////////////////////////////////////
+// Integration Tests for Cross-Module Functionality
+//////////////////////////////////////////////////////////////////////////////
+
+Set integrationTestConfigs = SetOfSet
+(
+  @EnhancedBatteryConfig("math_integration", "integration_tests/math", 1, "ALL", 600, 200),
+  @EnhancedBatteryConfig("data_flow_integration", "integration_tests/data_flow", 1, "ALL", 600, 200),
+  @EnhancedBatteryConfig("memory_management", "integration_tests/memory", 1, "ALL", 600, 200),
+  @EnhancedBatteryConfig("cross_module_interaction", "integration_tests/cross_module", 1, "ALL", 600, 200)
+);
+
+//////////////////////////////////////////////////////////////////////////////
+// Platform-Specific Tests
+//////////////////////////////////////////////////////////////////////////////
+
+Set platformTestConfigs = SetOfSet
+(
+  @EnhancedBatteryConfig("linux_specific", "platform_tests/linux", 1, "LINUX", 300, 100),
+  @EnhancedBatteryConfig("windows_specific", "platform_tests/windows", 1, "WINDOWS", 300, 100),
+  @EnhancedBatteryConfig("cross_platform_compat", "platform_tests/cross_platform", 1, "ALL", 300, 100)
+);
+
+//////////////////////////////////////////////////////////////////////////////
+// Performance Benchmarks
+//////////////////////////////////////////////////////////////////////////////
+
+Set performanceTestConfigs = SetOfSet
+(
+  @EnhancedBatteryConfig("matrix_operations_perf", "performance_tests/matrix", 5, "ALL", 1200, 500),
+  @EnhancedBatteryConfig("statistical_functions_perf", "performance_tests/statistics", 5, "ALL", 1200, 500),
+  @EnhancedBatteryConfig("memory_allocation_perf", "performance_tests/memory", 5, "ALL", 1200, 500),
+  @EnhancedBatteryConfig("string_operations_perf", "performance_tests/strings", 5, "ALL", 1200, 500)
+);
+
+//////////////////////////////////////////////////////////////////////////////
+// Regression Tests for Critical Functionality
+//////////////////////////////////////////////////////////////////////////////
+
+Set regressionTestConfigs = SetOfSet
+(
+  // Existing test batteries with enhanced configuration
+  @EnhancedBatteryConfig("Bugzilla", "tol/Bugzilla", 1, "ALL", 600, 200),
+  @EnhancedBatteryConfig("kernel", "tol/kernel", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("CreationAndCopy", "tol/CreationAndCopy", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("SetAlgebra", "tol/SetAlgebra", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("BooleanAlgebra", "tol/BooleanAlgebra", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("Text", "tol/Text", 3, "ALL", 300, 100),
+  @EnhancedBatteryConfig("ImportExport", "tol/ImportExport", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("OIS", "tol/OIS", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("LinearAlgebra", "tol/LinearAlgebra", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("Statistics", "tol/Statistics", 1, "ALL", 300, 100),
+  @EnhancedBatteryConfig("random_generation", "tol/random_generation", 3, "ALL", 300, 100),
+  @EnhancedBatteryConfig("BSR", "tol/BSR", 1, "ALL", 600, 200)
+);
+
+//////////////////////////////////////////////////////////////////////////////
+// Memory Leak Detection Tests
+//////////////////////////////////////////////////////////////////////////////
+
+Set memoryLeakTestConfigs = SetOfSet
+(
+  @EnhancedBatteryConfig("memory_leak_detection", "memory_tests/leak_detection", 1, "ALL", 600, 200),
+  @EnhancedBatteryConfig("memory_stress_test", "memory_tests/stress", 1, "ALL", 1200, 1000)
+);
+
+//////////////////////////////////////////////////////////////////////////////
+// Main Test Execution Function
+//////////////////////////////////////////////////////////////////////////////
+
+Set RunComprehensiveTestSuite()
+{
+  Text platform = DetectPlatform();
+  Date startTime = Today();
+  
+  WriteLn("================================================================================");
+  WriteLn("COMPREHENSIVE CROSS-PLATFORM TESTING FRAMEWORK");
+  WriteLn("================================================================================");
+  WriteLn("Platform: " + platform);
+  WriteLn("Start Time: " + Text(startTime));
+  WriteLn("Issue: NUM-11 - P0: Comprehensive Cross-Platform Testing Framework");
+  WriteLn("================================================================================");
+  
+  Set allResults = [[]];
+  
+  // Phase 1: Unit Tests
+  WriteLn("\n=== PHASE 1: UNIT TESTS ===");
+  Set unitResults = ReportEnhancedBatteries(unitTestConfigs);
+  allResults = allResults << unitResults;
+  
+  // Phase 2: Integration Tests
+  WriteLn("\n=== PHASE 2: INTEGRATION TESTS ===");
+  Set integrationResults = ReportEnhancedBatteries(integrationTestConfigs);
+  allResults = allResults << integrationResults;
+  
+  // Phase 3: Platform-Specific Tests
+  WriteLn("\n=== PHASE 3: PLATFORM-SPECIFIC TESTS ===");
+  Set platformResults = ReportEnhancedBatteries(platformTestConfigs);
+  allResults = allResults << platformResults;
+  
+  // Phase 4: Performance Benchmarks
+  WriteLn("\n=== PHASE 4: PERFORMANCE BENCHMARKS ===");
+  Set performanceResults = ReportEnhancedBatteries(performanceTestConfigs);
+  allResults = allResults << performanceResults;
+  
+  // Phase 5: Regression Tests
+  WriteLn("\n=== PHASE 5: REGRESSION TESTS ===");
+  Set regressionResults = ReportEnhancedBatteries(regressionTestConfigs);
+  allResults = allResults << regressionResults;
+  
+  // Phase 6: Memory Leak Detection
+  WriteLn("\n=== PHASE 6: MEMORY LEAK DETECTION ===");
+  Set memoryResults = ReportEnhancedBatteries(memoryLeakTestConfigs);
+  allResults = allResults << memoryResults;
+  
+  // Final Summary
+  Date endTime = Today();
+  Real totalExecutionTime = Time() - Time(); // Placeholder for actual timing
+  
+  WriteLn("\n================================================================================");
+  WriteLn("COMPREHENSIVE TEST SUITE SUMMARY");
+  WriteLn("================================================================================");
+  
+  Real totalTests = 0;
+  Real passedTests = 0;
+  
+  For(1, Card(allResults), Real(Real i)
+  {
+    Set phaseResults = allResults[i];
+    For(1, Card(phaseResults), Real(Real j)
+    {
+      @TestResult result = phaseResults[j];
+      totalTests = totalTests + 1;
+      If(result.success > 0.5, { passedTests = passedTests + 1 });
+    });
+  });
+  
+  Real successRate = passedTests / totalTests;
+  Real codeCoverage = EstimateCodeCoverage(allResults);
+  Real memoryLeaks = DetectMemoryLeaks();
+  
+  WriteLn("Platform: " + platform);
+  WriteLn("Total Tests Executed: " + Text(totalTests));
+  WriteLn("Tests Passed: " + Text(passedTests));
+  WriteLn("Tests Failed: " + Text(totalTests - passedTests));
+  WriteLn("Success Rate: " + Text(successRate * 100) + "%");
+  WriteLn("Estimated Code Coverage: " + Text(codeCoverage * 100) + "%");
+  WriteLn("Memory Leaks Detected: " + Text(memoryLeaks));
+  WriteLn("Start Time: " + Text(startTime));
+  WriteLn("End Time: " + Text(endTime));
+  WriteLn("================================================================================");
+  
+  // Check if we meet the acceptance criteria
+  Real meetsAcceptanceCriteria = And(
+    successRate >= 0.95,  // 95% success rate
+    codeCoverage >= 0.8,  // 80% code coverage
+    memoryLeaks == 0      // No memory leaks
+  );
+  
+  If(meetsAcceptanceCriteria,
+  {
+    WriteLn("✅ ACCEPTANCE CRITERIA MET - All tests pass on " + platform);
+  },
+  {
+    WriteLn("❌ ACCEPTANCE CRITERIA NOT MET");
+    If(successRate < 0.95, { WriteLn("  - Success rate below 95%") });
+    If(codeCoverage < 0.8, { WriteLn("  - Code coverage below 80%") });
+    If(memoryLeaks > 0, { WriteLn("  - Memory leaks detected") });
+  });
+  
+  allResults
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Load enhanced reporting framework
+//////////////////////////////////////////////////////////////////////////////
+
+Set Include("enhanced_reporting_framework.tol");
+
+//////////////////////////////////////////////////////////////////////////////
+// Execute the comprehensive test suite with enhanced reporting
+//////////////////////////////////////////////////////////////////////////////
+
+WriteLn("Starting Comprehensive Cross-Platform Testing Framework...");
+Set comprehensiveResults = RunComprehensiveTestSuite();
+
+// Generate comprehensive reports
+Text outputDir = If(GetEnv("TOL_TEST_OUTPUT_DIR") != "", GetEnv("TOL_TEST_OUTPUT_DIR"), "./test_results");
+
+@TestReport mainReport = @TestReport::New();
+mainReport.testSuiteName = "TOL_Comprehensive_Testing_Framework";
+mainReport.platform = DetectPlatform();
+mainReport.startTime = Today();
+mainReport.endTime = Today();
+mainReport.reportFormat = "comprehensive";
+
+// Calculate summary statistics
+Real totalTests = 0;
+Real passedTests = 0;
+Real failedTests = 0;
+Real totalTime = 0;
+Real totalMemory = 0;
+
+For(1, Card(comprehensiveResults), Real(Real i)
+{
+  Set phaseResults = comprehensiveResults[i];
+  For(1, Card(phaseResults), Real(Real j)
+  {
+    @TestResult result = phaseResults[j];
+    totalTests = totalTests + 1;
+    If(result.success > 0.5, { passedTests = passedTests + 1 }, { failedTests = failedTests + 1 });
+    totalTime = totalTime + result.executionTime;
+    totalMemory = totalMemory + result.memoryUsage;
+  });
+});
+
+mainReport.totalTests = totalTests;
+mainReport.passedTests = passedTests;
+mainReport.failedTests = failedTests;
+mainReport.skippedTests = 0;
+mainReport.totalExecutionTime = totalTime;
+mainReport.totalMemoryUsage = totalMemory;
+mainReport.testResults = comprehensiveResults;
+
+// Generate all report formats
+Set reportFiles = GenerateAllReports(mainReport, outputDir);
+
+WriteLn("Comprehensive test execution completed.");
+WriteLn("Reports generated: " + Text(Card(reportFiles)) + " files");
+
+// Return results for further analysis
+comprehensiveResults

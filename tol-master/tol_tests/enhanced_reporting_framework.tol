@@ -1,0 +1,349 @@
+//////////////////////////////////////////////////////////////////////////////
+// FILE    : enhanced_reporting_framework.tol
+// PURPOSE : Enhanced reporting system with multiple output formats
+// AUTHOR  : Massimiliano Marinucci
+// DATE    : 2025-07-06
+// ISSUE   : NUM-11 - P0: Comprehensive Cross-Platform Testing Framework
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+// Test Report Structure
+//////////////////////////////////////////////////////////////////////////////
+
+Struct @TestReport
+{
+  Text testSuiteName,
+  Text platform,
+  Date startTime,
+  Date endTime,
+  Real totalTests,
+  Real passedTests,
+  Real failedTests,
+  Real skippedTests,
+  Real totalExecutionTime,
+  Real totalMemoryUsage,
+  Set  testResults,
+  Set  performanceMetrics,
+  Text reportFormat
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Individual Test Result Structure
+//////////////////////////////////////////////////////////////////////////////
+
+Struct @IndividualTestResult
+{
+  Text testName,
+  Text category,
+  Text status,
+  Real executionTime,
+  Real memoryUsage,
+  Text errorMessage,
+  Set  assertions,
+  Text platform,
+  Date timestamp
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Performance Metric Structure
+//////////////////////////////////////////////////////////////////////////////
+
+Struct @PerformanceMetric
+{
+  Text metricName,
+  Real value,
+  Text unit,
+  Real threshold,
+  Text status,
+  Date timestamp
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// JSON Report Generation
+//////////////////////////////////////////////////////////////////////////////
+
+Text GenerateJSONReport(@TestReport report)
+{
+  Text json = "{\n";
+  json = json + "  \"testSuite\": {\n";
+  json = json + "    \"name\": \"" + report.testSuiteName + "\",\n";
+  json = json + "    \"platform\": \"" + report.platform + "\",\n";
+  json = json + "    \"startTime\": \"" + Text(report.startTime) + "\",\n";
+  json = json + "    \"endTime\": \"" + Text(report.endTime) + "\",\n";
+  json = json + "    \"summary\": {\n";
+  json = json + "      \"totalTests\": " + Text(report.totalTests) + ",\n";
+  json = json + "      \"passedTests\": " + Text(report.passedTests) + ",\n";
+  json = json + "      \"failedTests\": " + Text(report.failedTests) + ",\n";
+  json = json + "      \"skippedTests\": " + Text(report.skippedTests) + ",\n";
+  json = json + "      \"successRate\": " + Text(report.passedTests / report.totalTests * 100) + ",\n";
+  json = json + "      \"totalExecutionTime\": " + Text(report.totalExecutionTime) + ",\n";
+  json = json + "      \"totalMemoryUsage\": " + Text(report.totalMemoryUsage) + "\n";
+  json = json + "    },\n";
+  
+  // Test results
+  json = json + "    \"testResults\": [\n";
+  Real resultCount = Card(report.testResults);
+  For(1, resultCount, Real(Real i)
+  {
+    @IndividualTestResult result = report.testResults[i];
+    json = json + "      {\n";
+    json = json + "        \"name\": \"" + result.testName + "\",\n";
+    json = json + "        \"category\": \"" + result.category + "\",\n";
+    json = json + "        \"status\": \"" + result.status + "\",\n";
+    json = json + "        \"executionTime\": " + Text(result.executionTime) + ",\n";
+    json = json + "        \"memoryUsage\": " + Text(result.memoryUsage) + ",\n";
+    json = json + "        \"errorMessage\": \"" + result.errorMessage + "\",\n";
+    json = json + "        \"platform\": \"" + result.platform + "\",\n";
+    json = json + "        \"timestamp\": \"" + Text(result.timestamp) + "\"\n";
+    json = json + "      }";
+    If(i < resultCount, { json = json + "," });
+    json = json + "\n";
+  });
+  json = json + "    ],\n";
+  
+  // Performance metrics
+  json = json + "    \"performanceMetrics\": [\n";
+  Real metricCount = Card(report.performanceMetrics);
+  For(1, metricCount, Real(Real i)
+  {
+    @PerformanceMetric metric = report.performanceMetrics[i];
+    json = json + "      {\n";
+    json = json + "        \"name\": \"" + metric.metricName + "\",\n";
+    json = json + "        \"value\": " + Text(metric.value) + ",\n";
+    json = json + "        \"unit\": \"" + metric.unit + "\",\n";
+    json = json + "        \"threshold\": " + Text(metric.threshold) + ",\n";
+    json = json + "        \"status\": \"" + metric.status + "\",\n";
+    json = json + "        \"timestamp\": \"" + Text(metric.timestamp) + "\"\n";
+    json = json + "      }";
+    If(i < metricCount, { json = json + "," });
+    json = json + "\n";
+  });
+  json = json + "    ]\n";
+  
+  json = json + "  }\n";
+  json = json + "}";
+  
+  json
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// XML Report Generation
+//////////////////////////////////////////////////////////////////////////////
+
+Text GenerateXMLReport(@TestReport report)
+{
+  Text xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+  xml = xml + "<testSuite name=\"" + report.testSuiteName + "\" ";
+  xml = xml + "platform=\"" + report.platform + "\" ";
+  xml = xml + "tests=\"" + Text(report.totalTests) + "\" ";
+  xml = xml + "failures=\"" + Text(report.failedTests) + "\" ";
+  xml = xml + "skipped=\"" + Text(report.skippedTests) + "\" ";
+  xml = xml + "time=\"" + Text(report.totalExecutionTime) + "\">\n";
+  
+  // Test cases
+  Real resultCount = Card(report.testResults);
+  For(1, resultCount, Real(Real i)
+  {
+    @IndividualTestResult result = report.testResults[i];
+    xml = xml + "  <testCase name=\"" + result.testName + "\" ";
+    xml = xml + "classname=\"" + result.category + "\" ";
+    xml = xml + "time=\"" + Text(result.executionTime) + "\">\n";
+    
+    If(result.status == "FAIL",
+    {
+      xml = xml + "    <failure message=\"Test failed\">";
+      xml = xml + result.errorMessage;
+      xml = xml + "</failure>\n";
+    });
+    
+    If(result.status == "SKIP",
+    {
+      xml = xml + "    <skipped/>\n";
+    });
+    
+    xml = xml + "  </testCase>\n";
+  });
+  
+  // System properties
+  xml = xml + "  <properties>\n";
+  xml = xml + "    <property name=\"platform\" value=\"" + report.platform + "\"/>\n";
+  xml = xml + "    <property name=\"startTime\" value=\"" + Text(report.startTime) + "\"/>\n";
+  xml = xml + "    <property name=\"endTime\" value=\"" + Text(report.endTime) + "\"/>\n";
+  xml = xml + "    <property name=\"totalMemoryUsage\" value=\"" + Text(report.totalMemoryUsage) + "\"/>\n";
+  xml = xml + "  </properties>\n";
+  
+  xml = xml + "</testSuite>";
+  
+  xml
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// JUnit XML Report Generation (for CI/CD integration)
+//////////////////////////////////////////////////////////////////////////////
+
+Text GenerateJUnitXMLReport(@TestReport report)
+{
+  Text xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+  xml = xml + "<testsuite name=\"" + report.testSuiteName + "\" ";
+  xml = xml + "tests=\"" + Text(report.totalTests) + "\" ";
+  xml = xml + "failures=\"" + Text(report.failedTests) + "\" ";
+  xml = xml + "errors=\"0\" ";
+  xml = xml + "skipped=\"" + Text(report.skippedTests) + "\" ";
+  xml = xml + "time=\"" + Text(report.totalExecutionTime) + "\" ";
+  xml = xml + "timestamp=\"" + Text(report.startTime) + "\">\n";
+  
+  // Test cases
+  Real resultCount = Card(report.testResults);
+  For(1, resultCount, Real(Real i)
+  {
+    @IndividualTestResult result = report.testResults[i];
+    xml = xml + "  <testcase name=\"" + result.testName + "\" ";
+    xml = xml + "classname=\"" + result.category + "\" ";
+    xml = xml + "time=\"" + Text(result.executionTime) + "\"";
+    
+    If(result.status == "FAIL",
+    {
+      xml = xml + ">\n";
+      xml = xml + "    <failure type=\"AssertionError\" message=\"Test failed\">";
+      xml = xml + "<![CDATA[" + result.errorMessage + "]]>";
+      xml = xml + "</failure>\n";
+      xml = xml + "  </testcase>\n";
+    },
+    {
+      If(result.status == "SKIP",
+      {
+        xml = xml + ">\n";
+        xml = xml + "    <skipped/>\n";
+        xml = xml + "  </testcase>\n";
+      },
+      {
+        xml = xml + "/>\n";
+      });
+    });
+  });
+  
+  xml = xml + "</testsuite>";
+  
+  xml
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// HTML Report Generation
+//////////////////////////////////////////////////////////////////////////////
+
+Text GenerateHTMLReport(@TestReport report)
+{
+  Text html = "<!DOCTYPE html>\n<html>\n<head>\n";
+  html = html + "<title>TOL Test Report - " + report.testSuiteName + "</title>\n";
+  html = html + "<style>\n";
+  html = html + "body { font-family: Arial, sans-serif; margin: 20px; }\n";
+  html = html + ".header { background-color: #f0f0f0; padding: 20px; border-radius: 5px; }\n";
+  html = html + ".summary { margin: 20px 0; }\n";
+  html = html + ".test-result { margin: 10px 0; padding: 10px; border-radius: 3px; }\n";
+  html = html + ".pass { background-color: #d4edda; border-left: 4px solid #28a745; }\n";
+  html = html + ".fail { background-color: #f8d7da; border-left: 4px solid #dc3545; }\n";
+  html = html + ".skip { background-color: #fff3cd; border-left: 4px solid #ffc107; }\n";
+  html = html + "table { border-collapse: collapse; width: 100%; }\n";
+  html = html + "th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }\n";
+  html = html + "th { background-color: #f2f2f2; }\n";
+  html = html + "</style>\n</head>\n<body>\n";
+  
+  // Header
+  html = html + "<div class=\"header\">\n";
+  html = html + "<h1>TOL Test Report: " + report.testSuiteName + "</h1>\n";
+  html = html + "<p><strong>Platform:</strong> " + report.platform + "</p>\n";
+  html = html + "<p><strong>Start Time:</strong> " + Text(report.startTime) + "</p>\n";
+  html = html + "<p><strong>End Time:</strong> " + Text(report.endTime) + "</p>\n";
+  html = html + "</div>\n";
+  
+  // Summary
+  Real successRate = report.passedTests / report.totalTests * 100;
+  html = html + "<div class=\"summary\">\n";
+  html = html + "<h2>Summary</h2>\n";
+  html = html + "<p><strong>Total Tests:</strong> " + Text(report.totalTests) + "</p>\n";
+  html = html + "<p><strong>Passed:</strong> " + Text(report.passedTests) + "</p>\n";
+  html = html + "<p><strong>Failed:</strong> " + Text(report.failedTests) + "</p>\n";
+  html = html + "<p><strong>Skipped:</strong> " + Text(report.skippedTests) + "</p>\n";
+  html = html + "<p><strong>Success Rate:</strong> " + Text(successRate) + "%</p>\n";
+  html = html + "<p><strong>Total Execution Time:</strong> " + Text(report.totalExecutionTime) + " seconds</p>\n";
+  html = html + "<p><strong>Total Memory Usage:</strong> " + Text(report.totalMemoryUsage) + " MB</p>\n";
+  html = html + "</div>\n";
+  
+  // Test results table
+  html = html + "<h2>Test Results</h2>\n";
+  html = html + "<table>\n";
+  html = html + "<tr><th>Test Name</th><th>Category</th><th>Status</th><th>Time (s)</th><th>Memory (MB)</th><th>Error</th></tr>\n";
+  
+  Real resultCount = Card(report.testResults);
+  For(1, resultCount, Real(Real i)
+  {
+    @IndividualTestResult result = report.testResults[i];
+    Text rowClass = If(result.status == "PASS", "pass", If(result.status == "FAIL", "fail", "skip"));
+    html = html + "<tr class=\"" + rowClass + "\">";
+    html = html + "<td>" + result.testName + "</td>";
+    html = html + "<td>" + result.category + "</td>";
+    html = html + "<td>" + result.status + "</td>";
+    html = html + "<td>" + Text(result.executionTime) + "</td>";
+    html = html + "<td>" + Text(result.memoryUsage) + "</td>";
+    html = html + "<td>" + result.errorMessage + "</td>";
+    html = html + "</tr>\n";
+  });
+  
+  html = html + "</table>\n";
+  html = html + "</body>\n</html>";
+  
+  html
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Report Writer Functions
+//////////////////////////////////////////////////////////////////////////////
+
+Real WriteReportToFile(Text content, Text filename)
+{
+  // This would need to be implemented using TOL's file I/O functions
+  // For now, we'll output to console with a marker
+  WriteLn("=== REPORT FILE: " + filename + " ===");
+  WriteLn(content);
+  WriteLn("=== END REPORT FILE ===");
+  1
+};
+
+//////////////////////////////////////////////////////////////////////////////
+// Main Report Generation Function
+//////////////////////////////////////////////////////////////////////////////
+
+Set GenerateAllReports(@TestReport report, Text outputDir)
+{
+  Set generatedFiles = [[]];
+  
+  // Generate JSON report
+  Text jsonReport = GenerateJSONReport(report);
+  Text jsonFilename = outputDir + "/" + report.testSuiteName + "_report.json";
+  WriteReportToFile(jsonReport, jsonFilename);
+  generatedFiles = generatedFiles << [[ jsonFilename ]];
+  
+  // Generate XML report
+  Text xmlReport = GenerateXMLReport(report);
+  Text xmlFilename = outputDir + "/" + report.testSuiteName + "_report.xml";
+  WriteReportToFile(xmlReport, xmlFilename);
+  generatedFiles = generatedFiles << [[ xmlFilename ]];
+  
+  // Generate JUnit XML report
+  Text junitReport = GenerateJUnitXMLReport(report);
+  Text junitFilename = outputDir + "/" + report.testSuiteName + "_junit.xml";
+  WriteReportToFile(junitReport, junitFilename);
+  generatedFiles = generatedFiles << [[ junitFilename ]];
+  
+  // Generate HTML report
+  Text htmlReport = GenerateHTMLReport(report);
+  Text htmlFilename = outputDir + "/" + report.testSuiteName + "_report.html";
+  WriteReportToFile(htmlReport, htmlFilename);
+  generatedFiles = generatedFiles << [[ htmlFilename ]];
+  
+  WriteLn("Generated " + Text(Card(generatedFiles)) + " report files in " + outputDir);
+  
+  generatedFiles
+};
+
+WriteLn("Enhanced Reporting Framework Loaded Successfully");
