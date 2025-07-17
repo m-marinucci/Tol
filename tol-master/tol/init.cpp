@@ -65,7 +65,11 @@
 #include <tol/tol_bsymboltable.h>
 #include <tol/tol_ois.h>
 #include <tol/tol_gsl.h>
+#if defined(__APPLE__)
+#include <stdlib.h>
+#else
 #include <malloc.h>
+#endif
 #include <locale.h>
 #include <signal.h>
 #include <errno.h>
@@ -212,7 +216,7 @@ static void signal_error_SIGINT(int sig)
 //--------------------------------------------------------------------
 {
   Error(I2("An unexpected error has made TOL unstable and session must be closed",
-           "Un error inesperado ha hecho TOL inestable y la sesión debe ser cerrada"));
+           "Un error inesperado ha hecho TOL inestable y la sesiï¿½n debe ser cerrada"));
 }
 
 //--------------------------------------------------------------------
@@ -247,7 +251,7 @@ static void signal_error_SIGFPE(int sig)
 static void signal_error_SIGILL(int sig) 
 //--------------------------------------------------------------------
 {
-  Error("SIGNAL: An ‘invalid object program’ has been detected. This usually means that there is an illegal instruction in the program. (Illegal instruction.)");
+  Error("SIGNAL: An ï¿½invalid object programï¿½ has been detected. This usually means that there is an illegal instruction in the program. (Illegal instruction.)");
   Error_UnexpectedTolEnd();
   exit(sig);
 };
@@ -308,10 +312,12 @@ static void signal_assign()
   signal(SIGFPE,   signal_error_SIGFPE);
   signal(SIGSEGV,  signal_error_SIGSEGV);
   signal(SIGTERM,  signal_error_SIGTERM);
+#ifdef _WIN32
   signal(SIGBREAK, signal_error_SIGBREAK);
+#endif
   signal(SIGABRT,  signal_error_SIGABRT);
 /*
-//VBR: Hay señales con nombre propio y otras desconocidas que si se activan 
+//VBR: Hay seï¿½ales con nombre propio y otras desconocidas que si se activan 
 //TOL no arranca y otras que no dan problemas en windows y luego en unix 
 //pueden darlo.
 //signal(       0, signal_error_SIGUNK);
@@ -556,8 +562,8 @@ BBool InitGrammars(const char* calledProgram)
      "The separating decimal is the point.\n\n"
      "Example :\nReal x = 192.3\n",
 
-     "El tipo real se implementa como un número de doble precisión. "
-     "También se incluye el valor desconocido (?) para valores omitidos, "
+     "El tipo real se implementa como un nï¿½mero de doble precisiï¿½n. "
+     "Tambiï¿½n se incluye el valor desconocido (?) para valores omitidos, "
      "infinitos, imaginarios o indeterminados."
      "El separador decimal es el punto.\n\n"
      "Ejemplo :\nReal x = 192.3\n"),
@@ -589,9 +595,9 @@ BBool InitGrammars(const char* calledProgram)
       "by a year, a month and a day of mondth.\n\n"
       "Example :\nDate dte =y1995m2d11\n",
       
-      "El tipo fecha representa una unidad de tiempo mínima en el "
-      "sistema que en la presente versión se refiere al día. Una fecha "
-      "viene definida por un año, un mes y un día del mes.\n\n"
+      "El tipo fecha representa una unidad de tiempo mï¿½nima en el "
+      "sistema que en la presente versiï¿½n se refiere al dï¿½a. Una fecha "
+      "viene definida por un aï¿½o, un mes y un dï¿½a del mes.\n\n"
       "Ejemplo :\nDate dte =y1995m2d11\n"),
             BCopyContens<BDate>::New,
             BFunArgContens<BDate>::NewLocal);
@@ -624,14 +630,14 @@ BBool InitGrammars(const char* calledProgram)
      "Example :\nSet s = SetOfSet(SetOfText(\"Hello\",\"Good-bye\"),"
      "SetOfReal(1,2,3,4,5,6))\n",
      
-     "Un conjunto es una colección de objetos de cualquier tipo "
+     "Un conjunto es una colecciï¿½n de objetos de cualquier tipo "
      "incluyendo otros conjuntos, lo cual permite construir estructuras "
-     "como vectores, tablas, árboles, etc."
+     "como vectores, tablas, ï¿½rboles, etc."
      "Los conjuntos son la base estructural del lenguaje pues las series "
      "temporales primarias contenidas en ficheros de datos constituyen "
      "conjuntos de objetos, al igual que las sentencias de un fichero "
      "TOL que pueden a su vez incluir a otros ficheros o directorios.\n\n"
-     "Ejemplo :\nSet s = SetOfSet(SetOfText(\"Hola\",\"Adiós\"),"
+     "Ejemplo :\nSet s = SetOfSet(SetOfText(\"Hola\",\"Adiï¿½s\"),"
      "SetOfReal(1,2,3,4,5,6))\n"),
            BRenContens<BSet>::New,
            BFunArgContens<BSet>::NewLocal);
@@ -647,10 +653,10 @@ BBool InitGrammars(const char* calledProgram)
      "and statistics.\n\n"
      "Example :\nMatrix x = ConcatRows(Row(1,3),Row(2,-1))\n",
      
-     "Tipo matriz de números reales. "
-     "Está disponible un conjunto de funciones de resolución de sistemas "
-     "lineales, inversión de matrices y otras funciones de álgebra "
-     "lineal y estadística.\n\n"
+     "Tipo matriz de nï¿½meros reales. "
+     "Estï¿½ disponible un conjunto de funciones de resoluciï¿½n de sistemas "
+     "lineales, inversiï¿½n de matrices y otras funciones de ï¿½lgebra "
+     "lineal y estadï¿½stica.\n\n"
      "Ejemplo :\nMatrix x = ConcatRows(Row(1,3),Row(2,-1))\n"),
             BCopyContens<BMat>::New,
             BFunArgContens<BMat>::NewLocal);
@@ -675,11 +681,11 @@ BBool InitGrammars(const char* calledProgram)
          "Un conjunto temporal es cualquier subconjunto, finito o "
          "infinito, del conjunto de todas las fechas desde el comienzo "
          "hasta el final del tiempo. Un conjunto temporal infinito "
-         "podría ser, por ejemplo, todos los lunes que caen en primero "
+         "podrï¿½a ser, por ejemplo, todos los lunes que caen en primero "
          "de mes, todos los viernes y trece, todos los domingos de "
          "Pascua, ... "
-         "Se incluyen funciones para construir prácticamente cualquier "
-         "conjunto temporal imaginable, lo cual es muy útil para manejar "
+         "Se incluyen funciones para construir prï¿½cticamente cualquier "
+         "conjunto temporal imaginable, lo cual es muy ï¿½til para manejar "
          "series temporales, sobre todo cuando se trata de series "
          "diarias, pues la complejidad del tiempo social conlleva a "
          "menudo graves problemas para el analista de datos.\n\n"
@@ -705,15 +711,15 @@ BBool InitGrammars(const char* calledProgram)
            "series does not has final date.\n\n"
            "Example :\nSerie SundayIndicator = CalInd(WD(7), Daily)\n",
 
-           "Una serie temporal es una aplicación de un conjunto temporal "
-           "infinito (fechado) en los números reales, es decir,  una "
-           "serie devuelve, para cada fecha del fechado, un número "
+           "Una serie temporal es una aplicaciï¿½n de un conjunto temporal "
+           "infinito (fechado) en los nï¿½meros reales, es decir,  una "
+           "serie devuelve, para cada fecha del fechado, un nï¿½mero "
            "real, el cual puede ser desconocido. Si todos los valores "
            "de una serie son desconocidos antes de una fecha dada se "
-           "dice que ésta es la fecha inicial de dicha serie. En otro "
+           "dice que ï¿½sta es la fecha inicial de dicha serie. En otro "
            "caso la serie carece de fecha inicial. Del mismo modo si "
            "todos los valores de la serie son desconocidos a partir de "
-           "una fecha dada, ésta será la fecha final de la serie. "
+           "una fecha dada, ï¿½sta serï¿½ la fecha final de la serie. "
            "Si esto no ocurriera para ninguna fecha diremos que la "
            "serie no tiene fecha final.\n\nEjemplo :\n\nSerie "
            "IndicadorDomingo = CalInd(WD(7), Daily)\n"),
@@ -736,7 +742,7 @@ BBool InitGrammars(const char* calledProgram)
      "Un polinomio de retardos es un polinomio en los operadores de "
      "retardo y adelanto (B y F) que aplicados a una serie devuelven "
      "para cada fecha el valor de la serie para la fecha anterior o "
-     "posterior respectivamente. Estos objetos son muy útiles para "
+     "posterior respectivamente. Estos objetos son muy ï¿½tiles para "
      "construir modelos ARIMA de series temporales.\n\n"
      "Ejemplo :\nPolyn pol = F^2 +1 -B^2\n"),
            BCopyContens<BPol>::New,
@@ -752,7 +758,7 @@ BBool InitGrammars(const char* calledProgram)
      "differences of the type P(B)Zt = Q(B)At.\n\n"
      "Example :\nRatio rat = (F^2 +1 -B^2) / (1 - B)\n",
      
-     "Una función racional de retardos se define como un cociente de "
+     "Una funciï¿½n racional de retardos se define como un cociente de "
      "polinomios de retardo. Su principal utilidad es resolver "
      "ecuaciones en diferencias del tipo P(B)Zt = Q(B)At.\n\n"
      "Ejemplo :\n\nRatio rat = (F^2 +1 -B^2) / (1 - B)\n"),
@@ -775,8 +781,8 @@ BBool InitGrammars(const char* calledProgram)
       "  summ/2\n"
       "}\n\n",
       
-      "Cualquier función puede ser usada como un objeto de tipo Code "
-      "para pasarla como argumento de otra función. El usuario puede "
+      "Cualquier funciï¿½n puede ser usada como un objeto de tipo Code "
+      "para pasarla como argumento de otra funciï¿½n. El usuario puede "
       "definir nuevas funciones.\n\n"
       "Ejemplo :\n"
       "Real SemiSumm(Real x1, Real x2)\n"
@@ -836,13 +842,13 @@ BBool InitGrammars(const char* calledProgram)
      "with no need to specify the keys  {...}.\n",
      "Un espacio de nombres o NameBlock es un tipo de datos especial que se "
      "crea partiendo de un conjunto al que llamaremos base del NameBlock, y "
-     "que implica un ámbito de localización de objetos.\n"
+     "que implica un ï¿½mbito de localizaciï¿½n de objetos.\n"
      "A sus elementos les llamaremos miembros y pueden ser tanto variables "
      "como funciones o estructuras.\n"
-     "Los habrá que permanezcan ocultos fuera del ámbito y les llamaremos "
+     "Los habrï¿½ que permanezcan ocultos fuera del ï¿½mbito y les llamaremos "
      "miembros privados.\n"
-     "El resto, llamados miembros públicos, podrán ser accesibles desde el "
-     "exterior, a pesar de ser siempre todos locales por construcción, sin "
+     "El resto, llamados miembros pï¿½blicos, podrï¿½n ser accesibles desde el "
+     "exterior, a pesar de ser siempre todos locales por construcciï¿½n, sin "
      "necesidad de explicitar las llaves {...}. ")+
   I2("Read more at ","Leer mas en ")+"http://www.tol-project.org/es/node/40",
   BRenContens<BNameBlock>::New,
@@ -854,7 +860,7 @@ BBool InitGrammars(const char* calledProgram)
   BVMat::InitializeClass();
   BUserVMat::InitGrammar(13, "VMatrix", I2(
   "Type virtual matrix is usefull to handle with special matrices :\n",
-  "El tipo matriz virtual es útil para manejar matrices especiales:\n")+
+  "El tipo matriz virtual es ï¿½til para manejar matrices especiales:\n")+
   " - Cholmod Real Sparse : \n"
   " - Cholmod Real Factor \n"
   " - Cholmod Real Triplet \n"
@@ -928,6 +934,8 @@ BBool InitGrammars(const char* calledProgram)
 #   if defined(USE_DELAY_INIT)
     TrcIG("Delayed static objects");
       __delay_init(NULL,NULL);
+      // Register any operators that were deferred during initialization
+      BOperator::RegisterPendingOperators();
 #   endif
 
     TrcIGS("Methods");
@@ -942,19 +950,19 @@ BBool InitGrammars(const char* calledProgram)
     new BSystemText
 	  ("SvnInfo", svnInfo,
 	   I2("Contains the information on the SVN URL and revision number from which TOL was compiled",
-	      "Contiene la información sobre la URL y el número de revisión del "
-        "SVN desde el que se ha generado la presente versión de TOL."));
+	      "Contiene la informaciï¿½n sobre la URL y el nï¿½mero de revisiï¿½n del "
+        "SVN desde el que se ha generado la presente versiï¿½n de TOL."));
 
 //Cint_initialize_tol_variables();
 
     int BTolOprProfiler_Init();
     BTolOprProfiler_Init();
 
-  // se anticipa la asignación:
+  // se anticipa la asignaciï¿½n:
   // _tolVersion_ = TOLVersion();
   version_=new BSystemText("Version", _tolVersion_,
   I2("Time Oriented Language Version full identifier.",
-     "Identificador completo de la versión de Time Oriented Language."));
+     "Identificador completo de la versiï¿½n de Time Oriented Language."));
   _tolSessionPath_ = Replace(TolFindExecutable(calledProgram),"\\","/");
   tolSessionPath_ = new BSystemText("TOLSessionPath", _tolSessionPath_,
     I2("The path of the TOL program that is being executed in this session."
@@ -968,12 +976,12 @@ BBool InitGrammars(const char* calledProgram)
   new BSystemText("TolReleaseId", 
                   BText(_tolVersion_,0,blnk_pos_2-1),
                   I2("Time Oriented Language release identifier.",
-                     "Identificador de la publicación de la versión Time Oriented Language."));
+                     "Identificador de la publicaciï¿½n de la versiï¿½n Time Oriented Language."));
 
   new BSystemText("TolVersionId", 
                   BText(_tolVersion_,0,blnk_pos_1-1),
                   I2("Time Oriented Language version identifier.",
-                     "Identificador de la versión Time Oriented Language."));
+                     "Identificador de la versiï¿½n Time Oriented Language."));
 
   BText TOLAppName = ToLower(GetFilePrefix(_tolSessionPath_));
   new BSystemText("TOLAppName", 
@@ -989,7 +997,7 @@ BBool InitGrammars(const char* calledProgram)
   new BSystemText("TOLSH_PATH", 
                   TOLSH_PATH,
                   I2("The path of the TOL executable",
-                     "Ubicación del ejecutable TOL."));
+                     "Ubicaciï¿½n del ejecutable TOL."));
 
   #ifdef UNIX
   // OJO: si tol se ejecuta desde el raiz del fuente entonces el
@@ -1173,11 +1181,11 @@ const char * TOLCredits()
     _tolCredits_ = 
     I2("TOL is an open source project developed by Bayes (http://www.bayesforecast.com/) "
        "and distributed under public GNU license from http://www.tol-project.org",
-       "TOL es un proyecto de código abierto desarrollado por la empresa Bayes "
-       "(http://www.bayesforecast.com/) y distribuido bajo licencia pública GNU "
+       "TOL es un proyecto de cï¿½digo abierto desarrollado por la empresa Bayes "
+       "(http://www.bayesforecast.com/) y distribuido bajo licencia pï¿½blica GNU "
        "en http://www.tol-project.org")+"\n"
     "TOL (Time Oriented Language) - "
-    "Copyright © 2003-"+DteToday().Year()+ " by Bayes Decision, SA";
+    "Copyright ï¿½ 2003-"+DteToday().Year()+ " by Bayes Decision, SA";
   }
   return(_tolCredits_);
 }
@@ -1192,7 +1200,7 @@ const char * TOLContribAcknowledgements()
     I2("Acknowledgements.\n"
       "TOL was not possible without the contribution of next open source projects:\n",
       "Agradecimientos.\n"
-      "TOL no sería posible sin la contribución de los siguientes proyectos de código abierto:")+"\n\n"+
+      "TOL no serï¿½a posible sin la contribuciï¿½n de los siguientes proyectos de cï¿½digo abierto:")+"\n\n"+
     " * ALGLIB: \n"
     "     Efficient multilingual scientific software library \n"
     "     (http://www.alglib.net)\n\n"
@@ -1359,40 +1367,40 @@ static BText HelpVerboseMode()
   "If no verbose/mode argument is passed to TOL, then default values will be used:"+
   "  -vEU    : Enables just error and user messages and disables the rest\n";
   BText helpSpa = BText("")+
-  "Es posible especificar a TOL qué tipos de mensajes se quieren mostrar y cuáles no "+
-  "mediante el argumento de verbosidad cuya sintaxis se puede expresar así:\n"+
+  "Es posible especificar a TOL quï¿½ tipos de mensajes se quieren mostrar y cuï¿½les no "+
+  "mediante el argumento de verbosidad cuya sintaxis se puede expresar asï¿½:\n"+
   "    {v/m}[X...X] -> X={A,E,W,S,U,T} \n"+
-  "El indicador en minúsculas 'v' implica habilitación de mensajes y 'm' deshabilitación.\n"+
-  "El indicador en mayúsculas X={E,W,S,U,T} especifica el tipo de mensaje al que modifica el indicador anterior:\n"+
+  "El indicador en minï¿½sculas 'v' implica habilitaciï¿½n de mensajes y 'm' deshabilitaciï¿½n.\n"+
+  "El indicador en mayï¿½sculas X={E,W,S,U,T} especifica el tipo de mensaje al que modifica el indicador anterior:\n"+
   "  A: Todos los mensajes (All)\n"+
   "  E: Mensajes de Error\n"+
   "  W: Mensajes de aviso (Warning)\n"+
   "  S: Mensajes normales del Sistema como 'Ha sido incluido el fichero ...'\n"+
   "  U: Mensajes de Usuario, es decir, los lanzados por las funciones Write/WriteLn/View \n"+
-  "  T: Mensajes de Trazado para la depuración de problemas\n\n"+
-  "Obsérvese que el usuario puede enviar mensajes de todo tipo añadiendo un segundo arguemnto a las funciones "+
+  "  T: Mensajes de Trazado para la depuraciï¿½n de problemas\n\n"+
+  "Obsï¿½rvese que el usuario puede enviar mensajes de todo tipo aï¿½adiendo un segundo arguemnto a las funciones "+
   "Write/WriteLn, pero el sistema nunca puede mandar mensajes de usuario.\n\n"+
-  "He aquí algunos ejemplos de uso: \n"+
+  "He aquï¿½ algunos ejemplos de uso: \n"+
   "  -vA     : Habilita todos los mensajes\n"+
-  "  -vE     : Habilita sólo los mensajes de error y deshabilita el resto\n"+
-  "  -vW     : Habilita sólo los mensajes de aviso y deshabilita el resto\n"+
-  "  -vS     : Habilita sólo los mensajes normales del sistema y deshabilita el resto\n"+
-  "  -vU     : Habilita sólo los mensajes de usuario y deshabilita el resto\n"+
-  "  -vT     : Habilita sólo los mensajes de trazado y deshabilita el resto\n"+
-  "  -vEW    : Habilita sólo los mensajes de error y aviso y deshabilita el resto. Es lo mismo que mUST\n"+
+  "  -vE     : Habilita sï¿½lo los mensajes de error y deshabilita el resto\n"+
+  "  -vW     : Habilita sï¿½lo los mensajes de aviso y deshabilita el resto\n"+
+  "  -vS     : Habilita sï¿½lo los mensajes normales del sistema y deshabilita el resto\n"+
+  "  -vU     : Habilita sï¿½lo los mensajes de usuario y deshabilita el resto\n"+
+  "  -vT     : Habilita sï¿½lo los mensajes de trazado y deshabilita el resto\n"+
+  "  -vEW    : Habilita sï¿½lo los mensajes de error y aviso y deshabilita el resto. Es lo mismo que mUST\n"+
   "  -mA     : Deshabilita todos los mensajes \n"+
-  "  -mE     : Deshabilita sólo los mensajes de error y habilita el resto\n"+
-  "  -mW     : Deshabilita sólo los mensajes de aviso y habilita el resto\n"+
-  "  -mS     : Deshabilita sólo los mensajes normales del sistema y habilita el resto\n"+
-  "  -mU     : Deshabilita sólo los mensajes de usuario y habilita el resto\n"+
-  "  -mT     : Deshabilita sólo los mensajes de trazado y habilita el resto\n"+
-  "  -mST    : Deshabilita sólo los mensajes normales del sistema y de trazado y habilita el resto. Es lo mismo que vEWU\n"+
-  "Nótese que cualquier combinación se puede expresar con tres caracteres o menos. Por ejemplo vEWU=mST.\n"+
-  "Por razones de compatibilidad hacia atrás se permiten las siguientes formas simplificadas:"+
+  "  -mE     : Deshabilita sï¿½lo los mensajes de error y habilita el resto\n"+
+  "  -mW     : Deshabilita sï¿½lo los mensajes de aviso y habilita el resto\n"+
+  "  -mS     : Deshabilita sï¿½lo los mensajes normales del sistema y habilita el resto\n"+
+  "  -mU     : Deshabilita sï¿½lo los mensajes de usuario y habilita el resto\n"+
+  "  -mT     : Deshabilita sï¿½lo los mensajes de trazado y habilita el resto\n"+
+  "  -mST    : Deshabilita sï¿½lo los mensajes normales del sistema y de trazado y habilita el resto. Es lo mismo que vEWU\n"+
+  "Nï¿½tese que cualquier combinaciï¿½n se puede expresar con tres caracteres o menos. Por ejemplo vEWU=mST.\n"+
+  "Por razones de compatibilidad hacia atrï¿½s se permiten las siguientes formas simplificadas:"+
   "  -v      : Habilita todos los mensajes salvo los de trazado. Es lo mismo que mT\n"+
   "  -m      : Deshabilita todos los mensajes salvo los errores. Es lo mismo que vE\n\n"+
-  "Si no se pasa ningún argumento de verbosidad a TOL se usarán los valores por defecto:\n"
-  "  -vEU    : Habilita sólo los mensajes de error y de usuario y deshabilita el resto\n"
+  "Si no se pasa ningï¿½n argumento de verbosidad a TOL se usarï¿½n los valores por defecto:\n"
+  "  -vEU    : Habilita sï¿½lo los mensajes de error y de usuario y deshabilita el resto\n"
   "\n"
   ;
   return(I2(helpEng,helpSpa));
@@ -1509,13 +1517,13 @@ static void ChangeVerboseMode(const char* vmode)
       "Wrong formatted verbose/mute argument\n"
       "Default values will be used.\n"
       "Unexpected character '",
-      "Formato inválido del argumento verbose/mute\n"
-      "Se usarán los valores por defecto.\n" 
+      "Formato invï¿½lido del argumento verbose/mute\n"
+      "Se usarï¿½n los valores por defecto.\n" 
       "Caracter inesperado '"
     )+vmode[i]+"' "+I2
     (
       "at position",
-      "en la posición"
+      "en la posiciï¿½n"
     )+" "+int(i+1)+I2
     (
       " of argument ",
@@ -1637,7 +1645,7 @@ void InitializeFromMainArgs(int argc, char *argv[], char *env[])
           InitGrammars( argv0 );
           if(initTOL) { LoadInitLibrary(loadInitProject,loadDefaultPackages); }
           Trace(I2("\nCompiling command line argument -c :\n",
-                   "\nCompilando argumento -c de la línea de comandos :\n  ") + par+"\n");
+                   "\nCompilando argumento -c de la lï¿½nea de comandos :\n  ") + par+"\n");
           BList* result = MultyEvaluate(par);
           if(result)
           {
@@ -1755,10 +1763,10 @@ void InitializeFromMainArgs(int argc, char *argv[], char *env[])
       "     "+exeName+" -v -c\"Real n=1\"  \n"
       "Tambien puede usarse el analizador de expresiones simples"
       " mediante \n"
-      "la opción de diálogo -d. En este caso el programa pedirá"
+      "la opciï¿½n de diï¿½logo -d. En este caso el programa pedirï¿½"
       " expresiones\n"
-      "por el estándar input y mostrará el resultado por el"
-      " estándar output\n"
+      "por el estï¿½ndar input y mostrarï¿½ el resultado por el"
+      " estï¿½ndar output\n"
       "hasta que la expresion sea la orden de salida $END.\n\n"
       )+"\n\n"+
       TOLContribAcknowledgements()+"\n\n"+
@@ -1805,5 +1813,12 @@ tgsl_error_handler *
 Tol_gsl_set_error_handler (tgsl_error_handler * new_handler)
 {
     return gsl_set_error_handler(new_handler);
+}
+
+//--------------------------------------------------------------------
+BBool InitGrammars()
+//--------------------------------------------------------------------
+{
+  return InitGrammars(NULL);
 }
 

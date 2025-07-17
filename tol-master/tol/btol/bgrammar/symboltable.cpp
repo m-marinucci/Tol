@@ -57,11 +57,25 @@ BInt BSymbolTable::Add(BSyntaxObject* obj)
 //! Adds a new symbol
 //--------------------------------------------------------------------
 {
+  if (!obj) {
+    Error("BSymbolTable::Add called with NULL object");
+    return -1;
+  }
+  
   int result = 1;
   BGrammar* gra = obj->Grammar();
+  if (!gra) {
+    Error("BSymbolTable::Add: object has NULL grammar");
+    return -1;
+  }
+  
   int mode = obj->Mode();
   BObjClassify oc(gra,mode);
   const char* name = obj->String();
+  if (!name || !name[0]) {
+    Error("BSymbolTable::Add: object has NULL or empty name");
+    return -1;
+  }
 #ifndef NDEBUG
   /*
   assert(BParser::DefaultParser()->Filter()->IsIdentifier(name) || 
@@ -82,8 +96,8 @@ BInt BSymbolTable::Add(BSyntaxObject* obj)
     Error(old->LexInfo()+
           I2(" is already in use as global. "
              "So cannot add ",
-             " ya se está usando como global. "
-             "Por lo tanto no se puede añadir ")+
+             " ya se estï¿½ usando como global. "
+             "Por lo tanto no se puede aï¿½adir ")+
           obj->LexInfo());
     return(-1);
   }

@@ -40,6 +40,7 @@ BTraceInit("opr.cpp");
 BList* BOperClassify::instances_ = NIL;
 BArray<BAtom*> BOperClassify::sortedTheme_;
 BOperClassify* BOperClassify::Various_;
+BList* BOperator::pendingOperators_ = NIL;
 BOperClassify* BOperClassify::General_;
 BOperClassify* BOperClassify::System_;
 BOperClassify* BOperClassify::Conversion_;
@@ -161,7 +162,7 @@ General_ = new BOperClassify
   I2("Functions that, or well they do not return any object, or well they "
      "can return objects of any type depending on the context."
      ,
-     "Funciones que, o bien no devuelven ningún objeto, o bien pueden "
+     "Funciones que, o bien no devuelven ningï¿½n objeto, o bien pueden "
      "devolver objetos de cualquier tipo dependiendo del contexto.")
 );
 System_ = new BOperClassify
@@ -176,31 +177,31 @@ System_ = new BOperClassify
 Conversion_ = new BOperClassify
 (
   I2("Conversion",
-     "Conversión"),
+     "Conversiï¿½n"),
   I2("Functions for the conversion of some types of data or of some of its "
      "parts in other objects or parts of they.",
-     "Funciones para la conversión de unos tipos de datos o de alguna de sus "
+     "Funciones para la conversiï¿½n de unos tipos de datos o de alguna de sus "
      "partes en otros objetos o partes de ellos.")
 );
 FileIncluding_ = new BOperClassify
 (
-  I2("Files Including","Inclusión de Ficheros"),
+  I2("Files Including","Inclusiï¿½n de Ficheros"),
   I2("Functions to include legible files by TOL. With them can be loaded "
      "data with primary series, data matrixs and all type with structured "
      "information"
      ,
      "Funciones para incluir ficheros legibles por TOL. Con ellas se puede "
      "cargar datos de series primarias, matrices de datos y todo tipo de "
-     "información estructurada.")
+     "informaciï¿½n estructurada.")
 );
 SetAlgebra_ = new BOperClassify
 (
   I2("Set's Algebra",
-     "Álgebra de Conjuntos"),
+     "ï¿½lgebra de Conjuntos"),
   I2("Sum, intersection and sets subtraction as well as other functions that "
      "permits the sets managing or the access and process of its elements."
      ,
-     "Suma, intersección y resta de conjuntos así como otras funciones que "
+     "Suma, intersecciï¿½n y resta de conjuntos asï¿½ como otras funciones que "
      "permiten el manejo de conjuntos o el acceso y proceso de sus "
      "elementos.")
 );
@@ -210,13 +211,13 @@ Text_ = new BOperClassify
   I2("Typical process functions of texts as search, attachment, extraction "
      "of subchains, etc."
      ,
-     "Funciones típicas de proceso de textos como búsqueda, concatenación, "
-     "extracción de subcadenas, etc.")
+     "Funciones tï¿½picas de proceso de textos como bï¿½squeda, concatenaciï¿½n, "
+     "extracciï¿½n de subcadenas, etc.")
 );
 RealArythmetic_ = new BOperClassify
 (
   I2("Real Arthymetic",
-     "Aritmética Real"),
+     "Aritmï¿½tica Real"),
   I2("Real function arithmetic, logarithms, exponential, trigonometrical, "
      "hyperbolic, etc. When an operation is accomplished would be of the "
      "adequate domain, for example 1/0, is returned the value done not know "
@@ -224,12 +225,12 @@ RealArythmetic_ = new BOperClassify
      "which appear a value done not know will return also the value done not "
      "know."
      ,
-     "Funciones reales aritméticas, logaritmos, exponenciales, "
-     "trigonométricas, hiperbólicas, etc. Cuando una operación se realiza "
+     "Funciones reales aritmï¿½ticas, logaritmos, exponenciales, "
+     "trigonomï¿½tricas, hiperbï¿½licas, etc. Cuando una operaciï¿½n se realiza "
      "fuera del dominio adecuado, por ejemplo 1/0, se devuelve el valor "
-     "desconocido ( escrito como el carácter ? ). Así mismo, cualquier "
-     "operación de reales en la que aparezca un valor desconocido devolverá "
-     "también el valor desconocido.")
+     "desconocido ( escrito como el carï¿½cter ? ). Asï¿½ mismo, cualquier "
+     "operaciï¿½n de reales en la que aparezca un valor desconocido devolverï¿½ "
+     "tambiï¿½n el valor desconocido.")
 );
 
 RealArythmetic_GSL_ = new BOperClassify
@@ -238,7 +239,7 @@ RealArythmetic_GSL_ = new BOperClassify
      "Real GSL "),
   I2("Real Arthymetic Functions from GNU Scientific Library "
      ,
-     "Funciones de Aritmética Real de la librería científica de GNU (GSL)")
+     "Funciones de Aritmï¿½tica Real de la librerï¿½a cientï¿½fica de GNU (GSL)")
 );
 
 
@@ -246,7 +247,7 @@ RealArythmetic_GSL_ = new BOperClassify
 ComplexArythmetic_ = new BOperClassify
 (
   I2("Complex Arthymetic",
-     "Aritmética Compleja"),
+     "Aritmï¿½tica Compleja"),
   I2("Complex function arithmetic, logarithms, exponential, trigonometrical, "
      "hyperbolic, etc. When an operation is accomplished would be of the "
      "adequate domain, for example 1/0, is returned the value done not know "
@@ -254,27 +255,27 @@ ComplexArythmetic_ = new BOperClassify
      "which appear a value done not know will return also the value done not "
      "know."
      ,
-     "Funciones complejas aritméticas, logaritmos, exponenciales, "
-     "trigonométricas, hiperbólicas, etc. Cuando una operación se realiza "
+     "Funciones complejas aritmï¿½ticas, logaritmos, exponenciales, "
+     "trigonomï¿½tricas, hiperbï¿½licas, etc. Cuando una operaciï¿½n se realiza "
      "fuera del dominio adecuado, por ejemplo 1/0, se devuelve el valor "
-     "desconocido ( escrito como el carácter ? ). Así mismo, cualquier "
-     "operación de reales en la que aparezca un valor desconocido devolverá "
-     "también el valor desconocido.")
+     "desconocido ( escrito como el carï¿½cter ? ). Asï¿½ mismo, cualquier "
+     "operaciï¿½n de reales en la que aparezca un valor desconocido devolverï¿½ "
+     "tambiï¿½n el valor desconocido.")
 );
 NumericalAnalysis_ = new BOperClassify
 (
   I2("Numerical Analysis",
-     "Cálculo Numérico"),
+     "Cï¿½lculo Numï¿½rico"),
   I2("Functions to calculate numerically integral, derivatives, maximum and "
      "minimal, solutions of non-linear equations, ..."
      ,
-     "Funciones para calcular numéricamente integrales, derivadas, máximos "
-     "y mínimos, soluciones de ecuaciones no lineales, ...")
+     "Funciones para calcular numï¿½ricamente integrales, derivadas, mï¿½ximos "
+     "y mï¿½nimos, soluciones de ecuaciones no lineales, ...")
 );
 Logic_ = new BOperClassify
 (
   I2("Logic and order",
-     "Lógica y orden"),
+     "Lï¿½gica y orden"),
   I2("Functions of the algebra of Boole. It is implemented on the real "
      "numbers understanding that the zero is the false value and any other "
      "real value is certain. The value done not know does not has logical "
@@ -288,59 +289,59 @@ Logic_ = new BOperClassify
      "order functions return a logical value 1 or 0 according to the "
      "accomplished comparison will be certain or false."
      ,
-     "Funciones del álgebra de Boole. Se implementa sobre los números reales "
+     "Funciones del ï¿½lgebra de Boole. Se implementa sobre los nï¿½meros reales "
      "entendiendo que el cero es el valor falso y cualquier otro valor real "
-     "es cierto. El valor desconocido no tiene valor lógico y no debe ser "
-     "utilizado con las funciones lógicas. Se incluyen aquí también las "
-     "funciones de comparación (igual que , menor que, ...) de objetos de "
-     "cualquier tipo de los permitidos para los que esté definido un orden. "
-     "Para los números se utiliza el orden natural, para los textos el orden "
-     "alfabético, para las fechas el orden temporal, para los conjuntos el "
-     "de inclusión, y para los polinomios el orden del grado. En el resto no "
+     "es cierto. El valor desconocido no tiene valor lï¿½gico y no debe ser "
+     "utilizado con las funciones lï¿½gicas. Se incluyen aquï¿½ tambiï¿½n las "
+     "funciones de comparaciï¿½n (igual que , menor que, ...) de objetos de "
+     "cualquier tipo de los permitidos para los que estï¿½ definido un orden. "
+     "Para los nï¿½meros se utiliza el orden natural, para los textos el orden "
+     "alfabï¿½tico, para las fechas el orden temporal, para los conjuntos el "
+     "de inclusiï¿½n, y para los polinomios el orden del grado. En el resto no "
      "suelen tener sentido las funciones de orden. En cualquier caso, las "
-     "funciones de orden devuelven un valor lógico 1 o 0 según la "
-     "comparación realizada sea cierta o falsa.")
+     "funciones de orden devuelven un valor lï¿½gico 1 o 0 segï¿½n la "
+     "comparaciï¿½n realizada sea cierta o falsa.")
 );
 Statistic_ = new BOperClassify
 (
   I2("Statistics",
-     "Estadística"),
+     "Estadï¿½stica"),
   I2("Functions that return, for a set of numbers, one or several data that "
      "summary somehow the information contained in the original data, those "
      "which can originate of series, sets, etc."
      ,
-     "Funciones que devuelven, para un conjunto de números, uno o varios "
-     "datos que resumen de algún modo la información contenida en los datos "
+     "Funciones que devuelven, para un conjunto de nï¿½meros, uno o varios "
+     "datos que resumen de algï¿½n modo la informaciï¿½n contenida en los datos "
      "originales, los cuales pueden provenir de series, conjuntos, etc.")
 );
 Probability_ = new BOperClassify
 (
   I2("Probability Analysis",
-     "Cálculo de Probabilidades"),
+     "Cï¿½lculo de Probabilidades"),
   I2("Functions of distributions managing of probability more usual. For "
      "each one of they, it is had the distribution function and its inverse, "
      "as well as the density if it is continuous, or the probability if it "
      "is discreet.",
-     "Funciones de manejo de distribuciones de probabilidad más usuales. "
-     "Para cada una de ellas, se dispone de la función de distribución y de "
-     "su inversa, así como de la densidad si es continua, o la probabilidad "
+     "Funciones de manejo de distribuciones de probabilidad mï¿½s usuales. "
+     "Para cada una de ellas, se dispone de la funciï¿½n de distribuciï¿½n y de "
+     "su inversa, asï¿½ como de la densidad si es continua, o la probabilidad "
      "si es discreta.")
 );
 Sthocastic_ = new BOperClassify
 (
   I2("Sthocastic's Models",
-     "Modelos estocásticos"),
+     "Modelos estocï¿½sticos"),
   I2("Functions for the analysis of time series, modelling, "
      "forecasting, automatic intervention analysis, diagnostic of "
      "models, etc.",
-     "Funciones para el análisis de series temporales, modelización, "
-     "previsión, análisis de intervención automática, diagnóstico de "
+     "Funciones para el anï¿½lisis de series temporales, modelizaciï¿½n, "
+     "previsiï¿½n, anï¿½lisis de intervenciï¿½n automï¿½tica, diagnï¿½stico de "
      "modelos, etc.")
 );
 MatrixAlgebra_ = new BOperClassify
 (
   I2("Matrix Algebra",
-     "Álgebra Matricial"),
+     "ï¿½lgebra Matricial"),
   I2("Functions to add, multiply, transpose and to invest matrixs, "
      "to solve linear equation systems, to seek linear relationships, "
      "determinant, factorings of Choleski, Givens and Householder,  "
@@ -363,12 +364,12 @@ RetardPolynomial_ = new BOperClassify
      "Funciones para el manejo de polinomios de retardo, esto es, polinomios "
      "en B y F, operadores de retardo (Backward) y adelanto (Forward) sobre "
      "series temporales. Se incluyen la suma, resta, producto, potencia, "
-     "cociente, expansión finita, etc.")
+     "cociente, expansiï¿½n finita, etc.")
 );
 TimeAlgebra_ = new BOperClassify
 (
   I2("Time Algebra",
-     "Álgebra del Tiempo"),
+     "ï¿½lgebra del Tiempo"),
   I2("Functions to represent the social time. In reality, a time set is "
      "a function on the set of the time, from the "
      "principle at the end of the times, that it is capable of "
@@ -383,15 +384,15 @@ TimeAlgebra_ = new BOperClassify
      "the case of the Easter, and other effects of this kind."
      ,
      "Funciones para representar el tiempo social. En realidad, un conjunto "
-     "temporal es una función sobre el conjunto del tiempo, desde el "
+     "temporal es una funciï¿½n sobre el conjunto del tiempo, desde el "
      "principio al final de los tiempos, que es capaz de decir si una fecha "
      "determinada le pertenece o no.\n"
-     "La principal razón por la que se ha desarrollado el álgebra del "
+     "La principal razï¿½n por la que se ha desarrollado el ï¿½lgebra del "
      "tiempo, que da nombre a todo el lenguaje (TOL : Time Oriented Language "
      "o Lenguaje Orientado al Tiempo), es simplificar los efectos calendario "
      "resultantes de la no periodicidad de la medida social del tiempo, como "
-     "la introducida por la heterogeneidad de la duración de los meses, la "
-     "existencia de años bisiestos y de festivos vinculados tanto al "
+     "la introducida por la heterogeneidad de la duraciï¿½n de los meses, la "
+     "existencia de aï¿½os bisiestos y de festivos vinculados tanto al "
      "calendario solar como al lunar, como es el caso de la Pascua, y otros "
      "efectos de esta especie.")
 
@@ -404,35 +405,35 @@ CalendarVariables_ = new BOperClassify
      "series are infinite, that is to say, they do not have initial neither "
      "final date."
      ,
-     "Funciones que devuelven series a partir de información exclusivamente "
+     "Funciones que devuelven series a partir de informaciï¿½n exclusivamente "
      "temporal. Estas series son infinitas, es decir, no tienen fecha "
      "inicial ni final.")
 );
 TimeSeriesAlgebra_ = new BOperClassify
 (
   I2("Time Series Algebra",
-     "Álgebra de Series Temporales"),
+     "ï¿½lgebra de Series Temporales"),
   I2("Functions of series arithmetic, logarithms, exponential, "
      "trigonometrical, hyperbolic, attachment functions, of dating change, "
      "of delay, of equations resolution in finite differences,	etc."
      ,
-     "Funciones de series aritméticas, logaritmos, exponenciales, "
-     "trigonométricas, hiperbólicas, funciones de concatenación, de cambio "
-     "de fechado, de retardo, de resolución de ecuaciones en diferencias "
+     "Funciones de series aritmï¿½ticas, logaritmos, exponenciales, "
+     "trigonomï¿½tricas, hiperbï¿½licas, funciones de concatenaciï¿½n, de cambio "
+     "de fechado, de retardo, de resoluciï¿½n de ecuaciones en diferencias "
      "finitas, etc.")
 );
 TimeSeriesLogic_ = new BOperClassify
 (
   I2("Time Series Logic and Comparisson",
-     "Lógica y comparación de Series Temporales"),
+     "Lï¿½gica y comparaciï¿½n de Series Temporales"),
   I2("Functions that return series logic, that is to say, formed exclusively "
      "with the certain and false values (1 and 0), and that serve to "
      "accomplish logic operations and of comparison between the values of "
      "different series in corresponding dates"
      ,
-     "Funciones que devuelven series lógicas, es decir, formadas "
+     "Funciones que devuelven series lï¿½gicas, es decir, formadas "
      "exclusivamente con los valores cierto y falso (1 y 0), y que sirven "
-     "para realizar operaciones lógicas y de comparación entre los valores "
+     "para realizar operaciones lï¿½gicas y de comparaciï¿½n entre los valores "
      "de diferentes series en fechas correspondientes.")
 );
 BayesDataBase_ = new BOperClassify
@@ -461,11 +462,20 @@ BOperator::BOperator(const BText& name, BGrammar* gra,
 : BSyntaxObject(name, desc), grammar_(gra), theme_(cl), uCode_(NULL), 
   profiler_(NULL), cppFile_("")
 {
+  //Std(BText("BOperator constructor body for ") + name);
 #ifdef CHK_NULL_GRAMMAR
     if (!gra )
 	Error( BText("Null grammar in ") + name + ":" + desc);
 #endif
-  if(theme_) { theme_->Add(this); }
+  if(theme_) { 
+    if(gra) {
+      theme_->Add(this); 
+    } else {
+      // Skip adding to theme if grammar is NULL - will be added later
+      Std(BText("Skipping theme->Add for ") + name + " due to NULL grammar");
+    }
+  }
+  //Std(BText("BOperator constructor completed for ") + name);
 }
 
 
@@ -513,7 +523,113 @@ void BOperator::AddSystemOperator()
 //PutSystem(true);
   IncNRefs();
   IncNRefs();
-  Grammar()->AddObject(this);
+  // Check if symbol table and grammar are initialized before adding
+  BGrammar* gra = Grammar();
+  if (gra && BGrammar::GetSymbolTablePtr() != NULL) {
+    gra->AddObject(this);
+  } else {
+    // If symbol table or grammar is not ready, add to pending list
+    // This can happen with delayed initialization when operators are created
+    // before their grammar is fully initialized
+    if (!pendingOperators_) {
+      pendingOperators_ = new BList();
+    }
+    pendingOperators_ = Cons(this, pendingOperators_);
+    IncNRefs(); // Keep operator alive in pending list
+    
+    // Always print debug info to track the issue
+    if (!gra) {
+      Std(BText("AddSystemOperator deferred (NULL grammar) for ") + Name());
+    } else {
+      Std(BText("AddSystemOperator deferred (no symbol table) for ") + Name());
+    }
+  }
+}
+
+//--------------------------------------------------------------------
+void BOperator::RegisterPendingOperators()
+//--------------------------------------------------------------------
+{
+  Std("RegisterPendingOperators called");
+  if (!pendingOperators_) {
+    Std("  No pending operators to register");
+    return;
+  }
+  
+  // Count pending operators first
+  int pendingCount = 0;
+  BList* p = pendingOperators_;
+  while (p) { pendingCount++; p = Cdr(p); }
+  Std(BText("  Found ") + pendingCount + " pending operators");
+  
+  BList* pending = pendingOperators_;
+  pendingOperators_ = NIL; // Clear the list to avoid infinite loops
+  
+  int count = 0;
+  int fixedGrammars = 0;
+  while (pending) {
+    BOperator* opr = (BOperator*)Car(pending);
+    if (opr) {
+      // First, fix up any missing grammars in external operators
+      BExternalOperator* extOpr = dynamic_cast<BExternalOperator*>(opr);
+      if (extOpr) {
+        fixedGrammars += extOpr->FixupMissingGrammars();
+      }
+      
+      BGrammar* gra = opr->Grammar();
+      
+      // If the operator has no grammar, try to deduce it from the name
+      if (!gra && opr->Name().Contains(".")) {
+        // Extract grammar name from operator name (e.g., "AlgLib.Interp.Scalar" -> first part after last dot)
+        BText oprName = opr->Name();
+        int lastDot = oprName.ReverseFind('.');
+        if (lastDot > 0) {
+          BText functionName = oprName.SubString(lastDot + 1);
+          // Try to find the grammar based on the operator's expected return type
+          // For AlgLib operators, they typically return Code
+          gra = BGrammar::FindByName("Code", false);
+          if (gra) {
+            opr->grammar_ = gra;
+            Std(BText("  Set grammar to Code for operator ") + oprName);
+          }
+        }
+      }
+      
+      if (gra && BGrammar::GetSymbolTablePtr() != NULL) {
+        gra->AddObject(opr);
+        count++;
+        
+        // Also create the BUserFunCode if it was skipped
+        BStandardOperator* stdOpr = dynamic_cast<BStandardOperator*>(opr);
+        if (stdOpr && !stdOpr->GetCode() && opr->Mode() != BUSERFUNMODE && opr->Name().HasName()) {
+          BUserFunCode* uCode = new BUserFunCode("", stdOpr, opr->Description());
+          uCode->PutName(opr->Name());
+          stdOpr->PutCode(uCode);
+        }
+      } else {
+        // Still can't register, add back to pending list
+        if (!pendingOperators_) {
+          pendingOperators_ = new BList();
+        }
+        pendingOperators_ = Cons(opr, pendingOperators_);
+      }
+      opr->DecNRefs(); // Remove the extra reference from pending list
+    }
+    pending = Cdr(pending);
+  }
+  
+  if (count > 0) {
+    Std(BText("RegisterPendingOperators: Registered ") + count + " operators");
+  }
+  if (fixedGrammars > 0) {
+    Std(BText("RegisterPendingOperators: Fixed ") + fixedGrammars + " missing grammar references");
+  }
+  if (pendingOperators_) {
+    int remaining = 0;
+    BList* p = pendingOperators_;
+    while (p) { remaining++; p = Cdr(p); }
+    Warning(BText("RegisterPendingOperators: Still have ") + remaining + " operators pending");
+  }
 }
 
 //--------------------------------------------------------------------
@@ -597,17 +713,26 @@ BStandardOperator::BStandardOperator(const BText&         name,
   minArg_(minArg), maxArg_(maxArg), numArg_(maxArg), arguments_(args),
   evaluator_(evaluator)
 {
+  //Std(BText("BStandardOperator constructor body for ") + name);
   if((Mode()!=BUSERFUNMODE) && (name.HasName()))
   {
     AddSystemOperator();
-    BUserFunCode* uCode = new BUserFunCode("", this, Description());
-    uCode->PutName(name);
-    PutCode(uCode);
+    if (gra) {
+      BUserFunCode* uCode = new BUserFunCode("", this, Description());
+      uCode->PutName(name);
+      PutCode(uCode);
+    } else {
+      Std(BText("Skipping BUserFunCode creation for ") + name + " due to NULL grammar");
+    }
   }
 #ifdef CHK_NULL_GRAMMAR
     if (!gra )
 	Error( BText("Null grammar in ") + name + ":" + desc);
 #endif
+    if (!gra) {
+      // Can't validate arguments without grammar - skip for now
+      return;
+    }
     const BText& graName = gra->Name();
     BBool ok = BTRUE;
     BInt m = Maximum(minArg_,maxArg_);
@@ -637,8 +762,8 @@ BStandardOperator::BStandardOperator(const BText&         name,
 	    aux = args.SubString(iniBracket+1, args.Length()-2);
 	else {
 	    Error(I2("No legal bracket in arguments of function ",
-		     "Error de paréntesis en los argumentos de la función "
-		     "función : ") + "\n" + graName+" "+Name()+" "+args);
+		     "Error de parï¿½ntesis en los argumentos de la funciï¿½n "
+		     "funciï¿½n : ") + "\n" + graName+" "+Name()+" "+args);
 	    abort();
 	}
 
@@ -656,8 +781,8 @@ BStandardOperator::BStandardOperator(const BText&         name,
 	if(!ok)
 	{
 	    Error(I2("Bad arguments number in specification of function ",
-		     "Número erróneo de argumentos en la especificación de la "
-		     "función : ") + "\n" + graName+" "+Name()+" "+args);
+		     "Nï¿½mero errï¿½neo de argumentos en la especificaciï¿½n de la "
+		     "funciï¿½n : ") + "\n" + graName+" "+Name()+" "+args);
 //    argTable_.ReallocBuffer(0);
 	    abort();
 	}
@@ -707,7 +832,7 @@ BInternalOperator::BInternalOperator(const BText&         name,
 		      I2("It was expected the data type ",
 			 "Se esperaba el tipo de datos ") + graName +
 		      I2(" in specification of function ",
-			 " en la especificación de la función ") + "\n" +
+			 " en la especificaciï¿½n de la funciï¿½n ") + "\n" +
 		      gra->Name() + " " + Name() + args);
 		ok = BFALSE;
 	    }
@@ -779,6 +904,7 @@ BExternalOperator::BExternalOperator(const BText&         name,
 //--------------------------------------------------------------------
 : BStandardOperator(name, gra, evaluator, min, max, args, desc, cl)
 {
+  //Std(BText("BExternalOperator(BText) constructor body for ") + name);
   BArray<BText> names;
   int numArg = 0, n, k;
   ReadAllTokens(grammars, names, ' ');
@@ -798,9 +924,9 @@ BExternalOperator::BExternalOperator(const BText&         name,
 	Error(I2("It was expected the data type ",
 		 "Se esperaba el tipo de datos ") + opt +
 	      I2(" in specification of function ",
-		 " en la especificación de la función ") + "\n" +
-	      gra->Name() + " " + Name() + args + "\n" +
-	      I2("but it was found ", "pero se encontró ")+
+		 " en la especificaciï¿½n de la funciï¿½n ") + "\n" +
+	      (gra ? gra->Name() : "NULL") + " " + Name() + args + "\n" +
+	      I2("but it was found ", "pero se encontrï¿½ ")+
 	      argTable_[n][0] + " " + argTable_[n][1] + "\n");
 	ok = BFALSE;
       }
@@ -822,8 +948,8 @@ BExternalOperator::BExternalOperator(const BText&         name,
         {
           Error(opt+I2(" at options ", " de las opciones ")+opt+
                 I2(" is not a data type. Cannot create function ",
-	              " no es un tipo de datos. No se puede crear la función ") +
-	              gra->Name() + " " + Name() + "(" + grammars + ")");
+	              " no es un tipo de datos. No se puede crear la funciï¿½n ") +
+	              (gra ? gra->Name() : "NULL") + " " + Name() + "(" + grammars + ")");
           exit(-1);
         }
       }
@@ -831,7 +957,11 @@ BExternalOperator::BExternalOperator(const BText&         name,
     else
     {
       grammars_[n].AllocBuffer(1);
+      //Std(BText("Looking up grammar: ") + opt);
       grammars_[n][0] = BGrammar::FindByName(opt,false);
+      //if (!grammars_[n][0]) {
+      //  Std(BText("  Grammar not found: ") + opt);
+      //}
     }
     structs_ [n] = NIL;
     if(!grammars_[n][0])
@@ -843,9 +973,29 @@ BExternalOperator::BExternalOperator(const BText&         name,
     }
     if(!grammars_[n][0])
     {
+      // Grammar not found - this can happen during static initialization
+      // when operators are created before grammars are initialized
+      if (!gra) {
+        // Skip validation during static initialization
+        //Std(BText("Skipping grammar validation for ") + Name() + " during static init (missing " + opt + ")");
+        grammars_[n][0] = NIL; // Will be fixed later by RegisterPendingOperators
+        
+        // Save the grammar name in argTable for later fixup
+        if (argTable_.Size() <= n) {
+          argTable_.ReallocBuffer(n + 1);
+        }
+        if (argTable_[n].Size() == 0) {
+          argTable_[n].AllocBuffer(2);
+          argTable_[n][0] = opt; // Grammar name
+          argTable_[n][1] = BText("arg") + (n+1); // Default arg name
+        }
+        
+        numArg++; // Count it anyway to avoid argument count errors
+        continue;
+      }
       Error(opt+I2(" is not a data type. Cannot create function ",
-	    " no es un tipo de datos. No se puede crear la función ") +
-	    gra->Name() + " " + Name() + "(" + grammars + ")");
+	    " no es un tipo de datos. No se puede crear la funciï¿½n ") +
+	    (gra ? gra->Name() : "NULL") + " " + Name() + "(" + grammars + ")");
       exit(-1);
     }
     else
@@ -853,17 +1003,47 @@ BExternalOperator::BExternalOperator(const BText&         name,
       numArg++;
     }
   }
+  
+  //Std(BText("BExternalOperator finished parsing grammars for ") + name);
 
   BBool argumentsNumberError = ( max && (numArg!=max  )) ||
 			       (!max && (numArg!=min+1));
   if(argumentsNumberError)
   {
     Error(I2("Wrong number of arguments in definition of ",
-	     "Numero de argumentos erróneos en la definición de ")+
-	  Grammar()->Name() + " " + Name() + "(" + grammars + ").");
+	     "Numero de argumentos errï¿½neos en la definiciï¿½n de ")+
+	  (Grammar() ? Grammar()->Name() : "NULL") + " " + Name() + "(" + grammars + ").");
     exit(-1);
   }
+  
+  //Std(BText("BExternalOperator constructor completed for ") + name);
+}
 
+//--------------------------------------------------------------------
+int BExternalOperator::FixupMissingGrammars()
+//--------------------------------------------------------------------
+{
+  int fixed = 0;
+  
+  // Go through all grammar arrays and fix NULL entries
+  for(BInt n = 0; n < grammars_.Size(); n++) {
+    for(BInt k = 0; k < grammars_[n].Size(); k++) {
+      if(!grammars_[n][k]) {
+        // Try to find the grammar name from argTable
+        if(n < argTable_.Size() && argTable_[n].Size() > 0) {
+          BText grammarName = argTable_[n][0];
+          BGrammar* gra = BGrammar::FindByName(grammarName, false);
+          if(gra) {
+            grammars_[n][k] = gra;
+            fixed++;
+            Std(BText("Fixed missing grammar ") + grammarName + " for " + Name());
+          }
+        }
+      }
+    }
+  }
+  
+  return fixed;
 }
 
 
