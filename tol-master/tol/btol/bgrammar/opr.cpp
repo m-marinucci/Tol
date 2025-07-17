@@ -550,9 +550,13 @@ void BOperator::AddSystemOperator()
 void BOperator::RegisterPendingOperators()
 //--------------------------------------------------------------------
 {
+  #ifdef DEBUG_OPERATOR_REGISTRATION
   Std("RegisterPendingOperators called");
+  #endif
   if (!pendingOperators_) {
+    #ifdef DEBUG_OPERATOR_REGISTRATION
     Std("  No pending operators to register");
+    #endif
     return;
   }
   
@@ -560,7 +564,9 @@ void BOperator::RegisterPendingOperators()
   int pendingCount = 0;
   BList* p = pendingOperators_;
   while (p) { pendingCount++; p = Cdr(p); }
+  #ifdef DEBUG_OPERATOR_REGISTRATION
   Std(BText("  Found ") + pendingCount + " pending operators");
+  #endif
   
   BList* pending = pendingOperators_;
   pendingOperators_ = NIL; // Clear the list to avoid infinite loops
@@ -613,17 +619,22 @@ void BOperator::RegisterPendingOperators()
         }
         pendingOperators_ = Cons(opr, pendingOperators_);
       }
+      // Don't DecNRefs here - will be done when removed from pending list
+    } else {
+      // Only DecNRefs when successfully registered (removed from pending)
       opr->DecNRefs(); // Remove the extra reference from pending list
     }
     pending = Cdr(pending);
   }
   
+  #ifdef DEBUG_OPERATOR_REGISTRATION
   if (count > 0) {
     Std(BText("RegisterPendingOperators: Registered ") + count + " operators");
   }
   if (fixedGrammars > 0) {
     Std(BText("RegisterPendingOperators: Fixed ") + fixedGrammars + " missing grammar references");
   }
+  #endif
   if (pendingOperators_) {
     int remaining = 0;
     BList* p = pendingOperators_;
@@ -1032,12 +1043,22 @@ int BExternalOperator::FixupMissingGrammars()
         // Try to find the grammar name from argTable
         if(n < argTable_.Size() && argTable_[n].Size() > 0) {
           BText grammarName = argTable_[n][0];
-          BGrammar* gra = BGrammar::FindByName(grammarName, false);
-          if(gra) {
-            grammars_[n][k] = gra;
-            fixed++;
+          if(grammarName.IsEmpty()) {
+            Warning(BText("Empty grammar name in argTable for operator '") + Name() + "'");
+          } else {
+            BGrammar* gra = BGrammar::FindByName(grammarName, false);
+            if(gra) {
+              grammars_[n][k] = gra;
+              fixed++;
+              #ifdef DEBUG_OPERATOR_REGISTRATION
             Std(BText("Fixed missing grammar ") + grammarName + " for " + Name());
+            #endif
+            } else {
+              Warning(BText("Could not find grammar '") + grammarName + "' for operator '" + Name() + "'");
+            }
           }
+        } else {
+          Warning(BText("No grammar name available in argTable for operator '") + Name() + "'");
         }
       }
     }
