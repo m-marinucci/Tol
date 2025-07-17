@@ -1,9 +1,26 @@
-.archive
+# Build directories
+build/
+build-*/
+cmake-build-*/
+docker-build/
+
+# IDE files
+.vscode/
+.idea/
+*.xcodeproj
+*.xcworkspace
+
+# macOS
 .DS_Store
-.idea
-.vscode
-.venv
-.pytest_cache
-.history
-.mypy_cache
-.ruff_cache
+
+# Temporary
+*.tmp
+*.log
+*.o
+*.so
+*.dylib
+*.a
+
+# TOL specific
+tolcon
+libtol.*

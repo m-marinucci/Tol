@@ -190,6 +190,13 @@ private:
 //Gramatical items
 //--------------------------------------------------------------------
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BNameBlock>::ownGrammar_;
+template<> void BGraContensBase<BNameBlock>::Do();
+template<> void BGraContensBase<BNameBlock>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BNameBlock>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BNameBlock>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase < BNameBlock >;
 template class TOL_API BGraContens     < BNameBlock >;
 template class TOL_API BTmpObject      < BUserNameBlock >;

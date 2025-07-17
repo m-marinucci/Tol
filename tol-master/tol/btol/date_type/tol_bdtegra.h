@@ -35,6 +35,12 @@
 #define BParamDate    BGraParameter    < BDate >
 #define BDteTemporary BTmpContens      < BDate >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BDate>::ownGrammar_;
+template<> void BGraContensBase<BDate>::Do();
+template<> void BGraContensBase<BDate>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BDate>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BDate>::Casting(BSyntaxObject* obj);
 
 template class TOL_API BGraContensBase < BDate >;
 template class TOL_API BGraContens     < BDate >;

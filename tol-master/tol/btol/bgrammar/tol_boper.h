@@ -134,6 +134,7 @@ class TOL_API BOperator: public BSyntaxObject
 {
 private:
   BUserFunCode* uCode_;
+  static BList* pendingOperators_; // Operators waiting for grammar initialization
 protected:
   //! Grammar of the result of evaluation
   BGrammar*	grammar_;   
@@ -158,6 +159,9 @@ public:
   BInt Mode() const { return BBUILTINFUNMODE; };
   void* GetProfiler()          { return(profiler_); }
   void  PutProfiler(void* prf) { profiler_=prf; }
+  
+  // Register operators that were skipped during initialization
+  static void RegisterPendingOperators();
 
   const BText& CppFile() const;
   void PutCppFile(const BText& cppFile);
@@ -372,6 +376,9 @@ public:
   BGrammar* GrammarForArg(BInt n) const;
   BInt       NumOptForArg  (BInt n) const;
   BGrammar*	 GrammarForArg (BInt n, BInt k) const;
+  
+  // Fix missing grammars after initialization
+  int FixupMissingGrammars();
 
   DeclareClassNewDelete(BExternalOperator);
 };
@@ -490,12 +497,12 @@ class BUserFunction: public BExternalOperator
     } catch(TimeSetException& exc) {                                       \
 	Warning(I2(exc.enReason_.c_str(), exc.esReason_.c_str()));         \
         Std(I2("Object created as W (empty TimeSet)",                      \
-	       "Objeto creado como W (el TimeSet vacío)"));                \
+	       "Objeto creado como W (el TimeSet vacï¿½o)"));                \
 	return BGrammar::FindByGid(BGI_TimeSet)->FindVariable("W");                                               \
     } catch(...) {                                                         \
         Warning(I2("Wrong arguments. Object created as W (empty TimeSet)", \
-                   "Argumentos erróneos. Objeto creado como W (conjunto"   \
-                   " temporal vacío)"));                                   \
+                   "Argumentos errï¿½neos. Objeto creado como W (conjunto"   \
+                   " temporal vacï¿½o)"));                                   \
                    return BGrammar::FindByGid(BGI_TimeSet)->FindVariable("W");                                               \
     }                                                                      \
 }
@@ -601,7 +608,8 @@ class BUserFunction: public BExternalOperator
 #else
 #  define DefExtOpr(ORD,CLASS,NAME,MINARG,MAXARG,LISTGRA,LISTARGS,DES,CL)  \
     static void * clone##CLASS##Ext##ORD () {                              \
-      BExternalOperator* opr = new BExternalOperator	                     \
+      BGrammar* gra = CLASS::OwnGrammar();                                 \
+      BExternalOperator* opr = new BExternalOperator                       \
       ExtOprConstructor(CLASS,NAME,MINARG,MAXARG,LISTGRA,LISTARGS,DES,CL); \
       opr->PutCppFile(__FILE__);                                           \
       return opr;                                                          \

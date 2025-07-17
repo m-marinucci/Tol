@@ -36,6 +36,13 @@
 
 
 template class TOL_API BRational       < BDat >;
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BRat>::ownGrammar_;
+template<> void BGraContensBase<BRat>::Do();
+template<> void BGraContensBase<BRat>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BRat>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BRat>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase < BRat >;
 template class TOL_API BGraContens     < BRat >;
 

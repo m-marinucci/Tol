@@ -249,8 +249,22 @@ public:
     static bool Initialize();
     static BSymbolTable& SymbolTable()
     {
+      if (!symbolTable_) {
+        // This should never happen if initialization is correct
+        // Initialize() must be called to create the symbol table
+        Initialize();
+        if (!symbolTable_) {
+          Error("FATAL: BSymbolTable initialization failed");
+          abort();
+        }
+      }
       assert(symbolTable_);
       return(*symbolTable_);
+    }
+    
+    static BSymbolTable* GetSymbolTablePtr()
+    {
+      return symbolTable_;
     }
 
     static  BInt    Level    ();

@@ -37,6 +37,13 @@
 #define BSystemPolMat    BGraConstant    < BPolMat >
 #define BPolMatTemporary BTmpContens     < BPolMat >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BPolMat>::ownGrammar_;
+template<> void BGraContensBase<BPolMat>::Do();
+template<> void BGraContensBase<BPolMat>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BPolMat>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BPolMat>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BArray          < BPolyn<BDat> >;
 template class TOL_API BMatrixGen      < BPolyn<BDat> >;
 template class TOL_API BGraContensBase < BPolMat >;

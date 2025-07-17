@@ -1,6 +1,7 @@
 /* @(#)rtnorm.c
  */
 
+#include <math.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_cdf.h>
@@ -150,7 +151,7 @@ double gsl_rtbnorm_combo (const gsl_rng * r, double m, double s,
       z = runif(r)*exp(-1*pow((x-m),2)/(2*v));
       x = runif(r)*( (m + sqrt(-2*v*log(z))) - below) + below;
     }
-    if (! finite(x)) {
+    if (! isfinite(x)) {
       fprintf(stderr, "WARNING in %s, %s, %d: "
               "Mean extremely far from truncation point. "
               "Returning truncation point\n", __FILE__, __PRETTY_FUNCTION__,
@@ -194,7 +195,7 @@ double gsl_rtanorm_combo (const gsl_rng * r, double m, double s,
       z = runif(r)*exp(-1*pow((x-newmu),2)/(2*v));
       x = runif(r)*( (newmu + sqrt(-2*v*log(z))) - below) + below;
     }
-    if (! finite(x)) {
+    if (! isfinite(x)) {
       fprintf(stderr, "WARNING in %s, %s, %d: "
               "Mean extremely far from truncation point. "
               "Returning truncation point\n", __FILE__, __PRETTY_FUNCTION__,

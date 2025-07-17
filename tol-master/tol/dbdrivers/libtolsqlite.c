@@ -27,7 +27,7 @@
 
 #define SQLFLOAT double
 
-#ifdef UNIX
+#if defined(UNIX) || defined(__APPLE__)
 #  define DLLEXPORT(f) f
 #else
 #  include <windows.h>

@@ -34,6 +34,29 @@
 #define LAPACK_ORDER(Order) (int)(order)
 #define clapack_dpotrf LAPACKE_dpotrf
 #define clapack_dpotri LAPACKE_dpotri
+#elif defined(__APPLE__)
+// On macOS, LAPACK is in Accelerate framework
+#include <Accelerate/Accelerate.h>
+#define LAPACK_UPLO(UpLo) (UpLo==CblasLower?'L':'U')
+#define LAPACK_ORDER(Order) Order
+// Map CLAPACK function names to Accelerate LAPACK functions
+extern "C" {
+  int dpotrf_(char* uplo, int* n, double* a, int* lda, int* info);
+  int dpotri_(char* uplo, int* n, double* a, int* lda, int* info);
+}
+// Create wrapper functions
+inline int clapack_dpotrf(int Order, int UpLo, int n, double* a, int lda) {
+  char uplo = (UpLo == CblasLower) ? 'L' : 'U';
+  int info;
+  dpotrf_(&uplo, &n, a, &lda, &info);
+  return info;
+}
+inline int clapack_dpotri(int Order, int UpLo, int n, double* a, int lda) {
+  char uplo = (UpLo == CblasLower) ? 'L' : 'U';
+  int info;
+  dpotri_(&uplo, &n, a, &lda, &info);
+  return info;
+}
 #else
 BEGIN_DECLS
 // Prevent CBLAS redefinition conflicts

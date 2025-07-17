@@ -495,7 +495,7 @@ struct BTolOprProfiler
         sop = profilers[n];
         double timeAverage = sop->time / sop->calls;
         double timeStdDev  = sqrt(sop->time2 / sop->calls - timeAverage*timeAverage);
-        fprintf(dump,"%d\t%s\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t"SIZE_T_SPECIFIER"\n",
+        fprintf(dump,"%d\t%s\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t%.16lg\t" SIZE_T_SPECIFIER "\n",
           sop->index,
           sop->identify.String(),
           sop->calls,

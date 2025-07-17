@@ -51,17 +51,35 @@
 #include <tol/tol_bdir.h>
 #include <tol/tol_blist.h>
 
-#if defined(UNIX)
+#if defined(UNIX) || defined(__linux__)
 #  include <errno.h>
-#else
+#elif defined(_WIN32) || defined(WIN32)
 #  include <windows.h>
+#else
+#  include <errno.h>
 #endif
 
 #include <sys/types.h>
-#if HAVE_UTIME_H
+#include <sys/stat.h>
+
+/* Ensure utime.h is available on Linux */
+#if defined(UNIX) || defined(__linux__)
+#  include <utime.h>
+#elif HAVE_UTIME_H
 #  include <utime.h>
 #elif HAVE_SYS_UTIME_H
 #  include <sys/utime.h>
+#endif
+
+#if defined(UNIX) || defined(__linux__)
+#  include <dirent.h>
+#  include <unistd.h>
+#  ifndef MAXNAMLEN
+#    define MAXNAMLEN 255
+#  endif
+#  ifndef MAXPATH
+#    define MAXPATH 4096
+#  endif
 #endif
 
 #if defined( WIN32 ) && defined( __GNUC__ )
@@ -152,14 +170,14 @@ static BText GetEntryName(DIR* fpDir)
  */
 //--------------------------------------------------------------------
 {
-  static struct direct *dirEntry;
+  static struct dirent *dirEntry;
   BText	 fileName;
   BBool	 endCycle=BFALSE;
   BBool	 ok=BTRUE;
 
   while(! endCycle)
   {
-    if((dirEntry=readdir(fpDir))==(struct direct *)NULL)
+    if((dirEntry=readdir(fpDir))==(struct dirent *)NULL)
     {
       endCycle=BTRUE;
       ok=BFALSE; // There aren't more files
@@ -484,7 +502,7 @@ BText GetStandardAbsolutePath(const BText& path_)
   path.Replace("\\","/");
 #else
   //VBR: hay que buscar alguna forma de estandarizar el path en linux
-  //eliminando cosas inútiles como /./
+  //eliminando cosas inï¿½tiles como /./
 #endif
   if(endSlash && !IsSlash(path.Last()))
   {

@@ -47,6 +47,17 @@
 
 BTraceInit("alglib_interp.cpp");
 
+// Debug static initialization
+struct AlgLibInterpInit {
+  AlgLibInterpInit() {
+    Std("AlgLibInterpInit: Starting static initialization of alglib_interp.cpp");
+  }
+  ~AlgLibInterpInit() {
+    Std("AlgLibInterpInit: Completed static initialization of alglib_interp.cpp");
+  }
+};
+static AlgLibInterpInit algLibInterpInit;
+
 
 //--------------------------------------------------------------------
   enum AlgLibType
@@ -216,9 +227,9 @@ BTraceInit("alglib_interp.cpp");
             I2(" with less than ",
                " con menos de ") + AlgLib_Method_Info::algLibTypeName_[t].minPoints_ +
             I2(" evaluation points",
-               " puntos de evaluación")+".\n"+
+               " puntos de evaluaciï¿½n")+".\n"+
             I2("See more on ",
-               "Más información en ")+AlgLib_Method_Info::algLibTypeName_[t].url_);
+               "Mï¿½s informaciï¿½n en ")+AlgLib_Method_Info::algLibTypeName_[t].url_);
       type_ = ALT_None;
       return(false);
     }
@@ -347,7 +358,7 @@ BTraceInit("alglib_interp.cpp");
       default :
       { 
         Error(I2("Unimplimented or unknown AlgLib Interpolation method ",
-                 "Método AlgLib Interpolation no implementado o desconocido ")+
+                 "Mï¿½todo AlgLib Interpolation no implementado o desconocido ")+
               AlgLib_Method_Info::algLibTypeName_[t].name_);
         return(false); 
       }
@@ -404,7 +415,7 @@ BTraceInit("alglib_interp.cpp");
       default :
       {
         Error(I2("Unimplimented or unknown AlgLib Interpolation method ",
-                 "Método AlgLib Interpolation no implementado o desconocido ")+
+                 "Mï¿½todo AlgLib Interpolation no implementado o desconocido ")+
                  AlgLib_Method_Info::algLibTypeName_[t].name_);
         return(false); 
       }
@@ -449,7 +460,7 @@ BTraceInit("alglib_interp.cpp");
 
 static BText AlgLibMoreAbout = 
   I2("Valid interpolation types for argument <interpType> are:\n",
-     "Los tipos de interpolación admisibles para el argumento <interpType> son:\n")+
+     "Los tipos de interpolaciï¿½n admisibles para el argumento <interpType> son:\n")+
   "  \"BarycentricRational\"\n"+
   "  \"LinearSpline\"\n"+
   "  \"CubicSpline\"\n"+
@@ -457,7 +468,7 @@ static BText AlgLibMoreAbout =
   "  \"SplineLeastSquares\"\n"+
   "  \"ChebyshevLeastSquares\"\n"+
   "  \"PolynomialLeastSquares\"\n"+
-  I2("More details in","Más detalles en")+
+  I2("More details in","Mï¿½s detalles en")+
   " http://www.alglib.net/interpolation";
 
 static BText AlgLibEvalDescOptions_ = I2
@@ -466,10 +477,10 @@ static BText AlgLibEvalDescOptions_ = I2
   "If <mode> is  1 evaluates the derivative of the interpolation function in <a>.\n"
   "If <mode> is -1 evaluates the integral of the interpolation function between <a> and <b>.\n"
   "NOTE: At this moment just first option has been implemented.\n",
-  "Si <modo> es  0 evalúa la función de interpolación en <a>\n"
-  "Si <modo> es  1 evalúa la derivada de la función de interpolación en <a>\n"
-  "Si <modo> es -1 evalúa la integral de la función de interpolación entra <a> f <b>\n"
-  "NOTA: Por el momento sólo se ha implementado la primera opción.\n"
+  "Si <modo> es  0 evalï¿½a la funciï¿½n de interpolaciï¿½n en <a>\n"
+  "Si <modo> es  1 evalï¿½a la derivada de la funciï¿½n de interpolaciï¿½n en <a>\n"
+  "Si <modo> es -1 evalï¿½a la integral de la funciï¿½n de interpolaciï¿½n entra <a> f <b>\n"
+  "NOTA: Por el momento sï¿½lo se ha implementado la primera opciï¿½n.\n"
 )+AlgLibMoreAbout;
 
 //--------------------------------------------------------------------
@@ -492,7 +503,7 @@ public:
       I2("(Real a)",
          "(Real a)"),
 		  I2("AlgLib interpolation functions handler created with TOL function Alglib.Interp.Scalar(...).\n",
-         "Manejador de funciones de interpolación de AlgLib creado con la función TOL Alglib.Interp.Scalar(...)\n")+
+         "Manejador de funciones de interpolaciï¿½n de AlgLib creado con la funciï¿½n TOL Alglib.Interp.Scalar(...)\n")+
       AlgLibEvalDescOptions_,
 		  BOperClassify::NumericalAnalysis_
     ),
@@ -523,7 +534,7 @@ public:
       if(!lst)
       {
         Error(I2("Argument <b> of integration upper bound is mandatory when <mode> is -1",
-                 "El argumento <b> de límite superior de integración es obligatorio cuando <modo> es -1"));
+                 "El argumento <b> de lï¿½mite superior de integraciï¿½n es obligatorio cuando <modo> es -1"));
       }
       double b = Real(lst->Car());
       f = handler_.Integral(a,b); 
@@ -539,7 +550,7 @@ public:
 
 static BText  warning_non_ois_storable_function =
   I2("\nWARNING: This function is not storable in OIS!\n",
-     "\nCUIDADO: ¡Esta función no es almacenable en OIS!\n");
+     "\nCUIDADO: ï¿½Esta funciï¿½n no es almacenable en OIS!\n");
 
 static BText alglib_vector_interp_order_copy_description_ = I2
 (
@@ -556,18 +567,18 @@ static BText alglib_vector_interp_order_copy_description_ = I2
      "but must be used carefully.\n"
 
   ,
-  "Algunos métodos no son exáctamente de interpolación sino de aproximación "
-  "uniforme estimada por mínimos cuadrados sobre una familia específica de "
-  "funciones de dimensión igual al argumento opcional <order>. Si no se "
-  "pasa este argumento o no es positivo o el método no es de mínimos cuadrados "
-  "sino de interpolación exacta, entonces se usará el número de columnas de "
-  "las matrices <x> e <f> que ha de ser lógicamente el mismo.\n"
+  "Algunos mï¿½todos no son exï¿½ctamente de interpolaciï¿½n sino de aproximaciï¿½n "
+  "uniforme estimada por mï¿½nimos cuadrados sobre una familia especï¿½fica de "
+  "funciones de dimensiï¿½n igual al argumento opcional <order>. Si no se "
+  "pasa este argumento o no es positivo o el mï¿½todo no es de mï¿½nimos cuadrados "
+  "sino de interpolaciï¿½n exacta, entonces se usarï¿½ el nï¿½mero de columnas de "
+  "las matrices <x> e <f> que ha de ser lï¿½gicamente el mismo.\n"
 
-  "Si el argumento opcional <copy> es cierto entonces se usará internamente "
-     "una copia de las matrices <x> e <f> pero en caso contrario se usarán "
-     "directamente y será responsabilidad del usaurio asegurar que dichas "
+  "Si el argumento opcional <copy> es cierto entonces se usarï¿½ internamente "
+     "una copia de las matrices <x> e <f> pero en caso contrario se usarï¿½n "
+     "directamente y serï¿½ responsabilidad del usaurio asegurar que dichas "
      "matrices permanecen vivas mientras se usa el manejador. Esta "
-     "característica puede ser útil para ahorrar memoria cuando se manejan "
+     "caracterï¿½stica puede ser ï¿½til para ahorrar memoria cuando se manejan "
      "matrices muy grandes pero debe emplearse con sumo cuidado.\n"
 );
 
@@ -576,7 +587,7 @@ DeclareContensClass(BCode, BCodeTemporary, BCodeAlgLibInterp);
 DefExtOpr(1, BCodeAlgLibInterp, "AlgLib.Interp.Scalar", 3, 5, "Text Matrix Matrix Real Real",
 	  "(Text interpType, Matrix x, Matrix f [, Real order=0, Real copy=false])",
 	  I2("Creates a AlgLib interpolation function handler.\n",
-	   "Crea un manejador de funciones de interpolación de AlgLib.\n")+
+	   "Crea un manejador de funciones de interpolaciï¿½n de AlgLib.\n")+
     alglib_vector_interp_order_copy_description_+
     warning_non_ois_storable_function+
     AlgLibMoreAbout,
@@ -615,8 +626,8 @@ static BText AlgLibVInterpDesc(const BText& genFun)
 {
   return(I2("AlgLib interpolation vectorial functions handler "
             "created with TOL function ",
-            "Manejador de funciones vectoriales de interpolación "
-            "de AlgLib creado con la función TOL ")+
+            "Manejador de funciones vectoriales de interpolaciï¿½n "
+            "de AlgLib creado con la funciï¿½n TOL ")+
          genFun+"(...).\n"+AlgLibEvalDescOptions_);
 };
 
@@ -775,7 +786,7 @@ public:
       if(!lst)
       {
         Error(I2("Argument <b> of integration upper bound is mandatory when <mode> is -1",
-                 "El argumento <b> de límite superior de integración es obligatorio cuando <modo> es -1"));
+                 "El argumento <b> de lï¿½mite superior de integraciï¿½n es obligatorio cuando <modo> es -1"));
       }
       double b = Real(lst->Car());
       for(i=0; i<handler_.Size(); i++)
@@ -797,8 +808,8 @@ static BText alglib_vector_interp_description_ = I2
   "Each row of matrices <x> and <f> is referred to a real to real function.\n"
   "If <x> has just one row then it will be take for each row of <f>\n"
   ,
-	"Cada fila de las matrices <x> e <f> se refiere a una función de real a real.\n"
-  "Si <x> sólo tiene una fila se tomará la misma para todas las filas de <f>\n."
+	"Cada fila de las matrices <x> e <f> se refiere a una funciï¿½n de real a real.\n"
+  "Si <x> sï¿½lo tiene una fila se tomarï¿½ la misma para todas las filas de <f>\n."
 ) + alglib_vector_interp_order_copy_description_;
 
 static BText warning_ois_storement = I2
@@ -807,8 +818,8 @@ static BText warning_ois_storement = I2
   "AlgLib.Interp.Vector.CreateWorkSpace and then you can restore it "
   "and apply to AlgLib.Interp.Vector.LoadWorkSpace"
   ,
-  "Para poder almacenar toda la información necesaria use "
-  "AlgLib.Interp.Vector.CreateWorkSpace y entonces podrá restaurarla "
+  "Para poder almacenar toda la informaciï¿½n necesaria use "
+  "AlgLib.Interp.Vector.CreateWorkSpace y entonces podrï¿½ restaurarla "
   "posteriormente y aplicarla a AlgLib.Interp.Vector.LoadWorkSpace"
 );
 
@@ -818,12 +829,12 @@ DefExtOpr(1, BCodeAlgLibVectorInterp, "AlgLib.Interp.Vector", 3, 6,
   "Text Matrix Matrix Real Real Code",
 	"(Text interpType, Matrix x, Matrix f [, Real order=0, Real copy=false, Code interp=?])",
 	I2("Creates a AlgLib interpolation vectorial function handler",
-     "Crea un manejador de funciones vectoriales de interpolación de AlgLib")+".\n"+
+     "Crea un manejador de funciones vectoriales de interpolaciï¿½n de AlgLib")+".\n"+
   alglib_vector_interp_description_+
   I2("If an existent vectorial interpolator function is passed as the "
      "optional argument <interp> then it will be modified instead of create a new one",
-     "Si se pasa una función de interpolación vectorial en el argumento opcional "
-     "<interp>, entonces se modificará éste, en lugar de crear uno nuevo")+".\n"+
+     "Si se pasa una funciï¿½n de interpolaciï¿½n vectorial en el argumento opcional "
+     "<interp>, entonces se modificarï¿½ ï¿½ste, en lugar de crear uno nuevo")+".\n"+
   warning_non_ois_storable_function+"\n"+
   warning_ois_storement+
   AlgLibMoreAbout,
@@ -876,7 +887,7 @@ DefExtOpr(1, BSetAlgLibVectorInterpCreateWorkSpace,
 	I2("Creates the working space needed for evaluate a AlgLib "
      "interpolation vectorial function handler.\n",
      "Crea el espacio de trabajo necesario para evaluar un manejador "
-     "de funciones vectoriales de interpolación de AlgLib.\n")+
+     "de funciones vectoriales de interpolaciï¿½n de AlgLib.\n")+
   alglib_vector_interp_description_+
   AlgLibMoreAbout,
 	BOperClassify::NumericalAnalysis_);
@@ -948,8 +959,8 @@ DefExtOpr(1, BCodeAlgLibVectorInterpLoadWorkSpace,
 	"(Set workSpace)",
 	I2("Creates a AlgLib interpolation vectorial function handler "
      "from the set resulting of",
-     "Crea un manejador de funciones vectoriales de interpolación "
-     "de AlgLib a partir del conjunto resultado de la función ")+
+     "Crea un manejador de funciones vectoriales de interpolaciï¿½n "
+     "de AlgLib a partir del conjunto resultado de la funciï¿½n ")+
      "AlgLib.Interp.Vector.CreateWorkSpace.\n"+
   warning_non_ois_storable_function+"\n"+
   warning_ois_storement,

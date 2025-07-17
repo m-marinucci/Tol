@@ -23,6 +23,12 @@
 #include <win_tolinc.h>
 #endif
 
+// On macOS with C++, prevent GSL from including its own CBLAS since we use Accelerate
+#if defined(__APPLE__) && defined(__cplusplus)
+#define __GSL_CBLAS_H__
+#include <tol/tol_cblas_minimal.h>
+#endif
+
 #include <tol/tol_bdir.h>
 #include <tol/tol_gsl.h>
 #include <tol/tol_gslmat.h>

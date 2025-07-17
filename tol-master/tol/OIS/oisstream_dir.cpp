@@ -64,7 +64,7 @@ BTraceInit("oisstram_dir.cpp");
   offset_  = 0;
   entries_ = 0;
   isOk_    = false;
-  BText action = I2("'INVALID ACTION'", "'ACCIÓN INVÁLIDA'");
+  BText action = I2("'INVALID ACTION'", "'ACCIï¿½N INVï¿½LIDA'");
   if(read)
   {
     action = I2("open","abrir");
@@ -162,15 +162,17 @@ BTraceInit("oisstram_dir.cpp");
 const BINT64& BDirStream::GetPos()
 //--------------------------------------------------------------------
 {
-#if defined(UNIX)
-  offset_ = ftell(file_);
+#if defined(UNIX) || defined(__linux__)
+  offset_ = ftello(file_);
   if(offset_==-1) {
     Error(strerror(errno));
   }
 #else
-  if(fgetpos(file_, &offset_)) {
+  fpos_t pos;
+  if(fgetpos(file_, &pos)) {
     Error(strerror(errno));
   }
+  offset_ = pos;
 #endif
   entries_++; 
   return(offset_);
@@ -181,13 +183,14 @@ const BINT64& BDirStream::GetPos()
 //--------------------------------------------------------------------
 {
   offset_ = offset; 
-#if defined(UNIX)
-  if(fseek(file_, offset_, SEEK_SET) == -1) 
+#if defined(UNIX) || defined(__linux__)
+  if(fseeko(file_, offset_, SEEK_SET) == -1) 
   {
     Error(strerror(errno));
   }
 #else
-  if(fsetpos(file_, &offset)) 
+  fpos_t pos = offset;
+  if(fsetpos(file_, &pos)) 
   {
     Error(strerror(errno));
   }
@@ -236,7 +239,7 @@ const BINT64& BDirStream::GetPos()
   connection_.Replace('\\','/');
   connected_ = BDir::CheckIsDir(connection_)!=0;
   openMode_ = openMode;
-  BText action = I2("'INVALID ACTION'", "'ACCIÓN INVÁLIDA'");
+  BText action = I2("'INVALID ACTION'", "'ACCIï¿½N INVï¿½LIDA'");
   if(read)
   {
     action = I2("open","abrir");

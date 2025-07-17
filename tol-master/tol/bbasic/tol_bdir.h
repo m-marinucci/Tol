@@ -52,10 +52,15 @@
 #  define SLASH	 '/'
 #  define TSLASH "/"
 #  define DIRMAXNAMLEN MAX_PATH
-#elif UNIX
+#elif defined(UNIX) || defined(__APPLE__)
 #  define SLASH	 '/'
 #  define TSLASH "/"
-#  define DIRMAXNAMLEN MAXNAMLEN
+#  ifdef __APPLE__
+#    include <sys/param.h>
+#    define DIRMAXNAMLEN MAXPATHLEN
+#  else
+#    define DIRMAXNAMLEN MAXNAMLEN
+#  endif
 #else
 #  define SLASH	 '\\'
 #  define TSLASH "\\"

@@ -2,11 +2,11 @@
  */
 
 #include <string.h>
+#include "gsl_ext.h"
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_randist.h>
-#include "gsl_ext.h"
 
 #include <assert.h>
 
