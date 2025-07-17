@@ -5,6 +5,11 @@
 #define _GSL_EXT_H 1
 
 #include <stdio.h>
+// On macOS with C++, prevent GSL from including its own CBLAS since we use Accelerate
+#if defined(__APPLE__) && defined(__cplusplus)
+#define __GSL_CBLAS_H__
+#include <tol/tol_cblas_minimal.h>
+#endif
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_vector.h>

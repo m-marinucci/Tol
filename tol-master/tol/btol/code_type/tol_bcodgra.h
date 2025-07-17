@@ -33,6 +33,13 @@ class BCode;
 #define BContensCode    BGraContens      < BCode >
 #define BCodeTemporary	BTmpContens      < BCode >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BCode>::ownGrammar_;
+template<> void BGraContensBase<BCode>::Do();
+template<> void BGraContensBase<BCode>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BCode>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BCode>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase< BCode >;
 template class TOL_API BGraContens    < BCode >;
 

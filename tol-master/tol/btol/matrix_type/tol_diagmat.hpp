@@ -492,7 +492,7 @@ BDiagMatrix<Any>& BDiagMatrix<Any>::PutDiag(const BMatrix<Any>& M, BInt d)
     Alloc(k);
     for(j=0; j<k; j++)
     {
-	this->buffer_[j] = M(j+(d>=0)?0:D, j+(d<=0)?0:D);
+	this->buffer_[j] = M(j+((d>=0)?0:D), j+((d<=0)?0:D));
     }
     return(*this);
 }

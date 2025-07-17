@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.0 )
+cmake_minimum_required( VERSION 3.5 )
 project( TOL )
 
 #-----------------------------------------------------------------------------
@@ -568,8 +568,9 @@ if( WGET_EXECUTABLE )
     message( ${WGET_ERROR_MESSAGE} "WGET option 'content-disposition' not available. Install a newer version of WGET." )
   else( WGET_OK LESS 0 )
     # Download default packages
-    download_tol_package( StdLib 0 )
-    download_tol_package( TclCore 1 )
+    # Temporarily disabled for local build
+    # download_tol_package( StdLib 0 )
+    # download_tol_package( TclCore 1 )
 	# Obtain the list of the downloaded default packages
     file( GLOB default_zips "${CMAKE_CURRENT_BINARY_DIR}/*.zip" )	
     message( STATUS "default_zips = ${default_zips} " )

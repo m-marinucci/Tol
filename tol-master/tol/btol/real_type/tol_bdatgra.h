@@ -40,6 +40,12 @@
 #define BSystemDat   BGraConstant    < BDat >
 #define BParamDat    BGraParameter   < BDat >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BDat>::ownGrammar_;
+template<> void BGraContensBase<BDat>::Do();
+template<> void BGraContensBase<BDat>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BDat>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BDat>::Casting(BSyntaxObject* obj);
 
 template class TOL_API BGraContensBase< BDat >;
 template class TOL_API BGraContens    < BDat >;

@@ -34,6 +34,13 @@
 #define BSystemMat    BGraConstant    < BMat >
 #define BMatTemporary BTmpContens     < BMat >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BMat>::ownGrammar_;
+template<> void BGraContensBase<BMat>::Do();
+template<> void BGraContensBase<BMat>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BMat>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BMat>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase < BMat >;
 template class TOL_API BGraContens     < BMat >;
 

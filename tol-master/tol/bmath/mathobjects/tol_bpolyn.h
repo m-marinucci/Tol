@@ -69,7 +69,11 @@ public:
   BPolyn(const BPolyn<Any>& pol)
   : BArray< BMonome<Any> >(pol.Size(), pol.Buffer()) {}
 
-  static BPolyn<Any>& Unknown();
+  static BPolyn<Any>& Unknown()
+  {
+    static BPolyn<Any> unknown_(BMonome<Any>(Any(), 0));
+    return unknown_;
+  }
 
   //-----------------------------------------------------------------
   // Access & Manipulation: inline
@@ -740,7 +744,7 @@ BPolyn<Any> BPolyn<Any>::Integrate() const
     {
         Error(I2("Cannot integrate a polynomial with terms in x^-1 "
              "as another polynomial.",
-             "No se puede integrar un polinomio con téminos en "
+             "No se puede integrar un polinomio con tï¿½minos en "
              "x^-1 como otro polinomio"));
         p = Unknown();
     }

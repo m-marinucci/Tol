@@ -579,12 +579,12 @@ void BOperator::RegisterPendingOperators()
       BGrammar* gra = opr->Grammar();
       
       // If the operator has no grammar, try to deduce it from the name
-      if (!gra && opr->Name().Contains(".")) {
+      if (!gra && opr->Name().Find('.') >= 0) {
         // Extract grammar name from operator name (e.g., "AlgLib.Interp.Scalar" -> first part after last dot)
         BText oprName = opr->Name();
-        int lastDot = oprName.ReverseFind('.');
+        int lastDot = oprName.FindLast('.');
         if (lastDot > 0) {
-          BText functionName = oprName.SubString(lastDot + 1);
+          BText functionName = oprName.SubString(lastDot + 1, oprName.Length());
           // Try to find the grammar based on the operator's expected return type
           // For AlgLib operators, they typically return Code
           gra = BGrammar::FindByName("Code", false);

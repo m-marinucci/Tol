@@ -37,11 +37,25 @@
 #if defined( __MINGW32__ )
 extern template class TOL_API BArray          < BMonome < BDat > >;
 extern template class TOL_API BPolyn          < BDat >;
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BPolyn<BDat>>::ownGrammar_;
+template<> void BGraContensBase<BPolyn<BDat>>::Do();
+template<> void BGraContensBase<BPolyn<BDat>>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BPolyn<BDat>>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BPolyn<BDat>>::Casting(BSyntaxObject* obj);
+
 extern template class TOL_API BGraContensBase < BPol >;
 extern template class TOL_API BGraContens     < BPol >;
 #else
 template class TOL_API BArray          < BMonome < BDat > >;
 template class TOL_API BPolyn          < BDat >;
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BPolyn<BDat>>::ownGrammar_;
+template<> void BGraContensBase<BPolyn<BDat>>::Do();
+template<> void BGraContensBase<BPolyn<BDat>>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BPolyn<BDat>>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BPolyn<BDat>>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase < BPol >;
 template class TOL_API BGraContens     < BPol >;
 #endif

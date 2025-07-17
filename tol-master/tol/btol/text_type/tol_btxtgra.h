@@ -34,6 +34,13 @@
 #define BTxtTemporary  BTmpContens     < BText >
 
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BText>::ownGrammar_;
+template<> void BGraContensBase<BText>::Do();
+template<> void BGraContensBase<BText>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BText>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BText>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase < BText >;
 template class TOL_API BGraContens     < BText >;
 

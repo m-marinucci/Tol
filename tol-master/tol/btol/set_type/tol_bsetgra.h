@@ -34,6 +34,13 @@
 #define BSystemSet     BGraConstant     < BSet >
 #define BSetTemporary  BTmpContens      < BSet >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BSet>::ownGrammar_;
+template<> void BGraContensBase<BSet>::Do();
+template<> void BGraContensBase<BSet>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BSet>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BSet>::Casting(BSyntaxObject* obj);
+
 template class TOL_API BGraContensBase < BSet >;
 template class TOL_API BGraContens     < BSet >;
 template class TOL_API BTmpObject      < BUserSet >;

@@ -30,10 +30,10 @@
 #include <tol/tol_bfibonac.h>
 #include <tol/tol_blinalg.h>
 #include <tol/tol_bmfstpro.h>
+#include <tol/tol_lapack.h> 
 #include "gsl_ext.h"
 #include <gsl/gsl_randist.h>
-#include <gsl/gsl_math.h>
-#include <tol/tol_lapack.h> 
+#include <gsl/gsl_math.h> 
 
 BTraceInit("multvar.cpp");
 
@@ -84,7 +84,7 @@ void BMultivarDist::Build()
     if((component_.Size()!=N_)||(nu_.Rows()!=N_))
     {
 	Error(I2("Bad dimensions for building a multivariate distribution.",
-		 "Dimensiones erróneas para construir una distribución "
+		 "Dimensiones errï¿½neas para construir una distribuciï¿½n "
 		 "multivariante."));
 	
 	return;
@@ -99,7 +99,7 @@ void BMultivarDist::Build()
 	else
 	{
 	    Error(I2("Null comoponent in a multivariate distribution.",
-		     "Componente nula en distribución multivariante."));
+		     "Componente nula en distribuciï¿½n multivariante."));
 	    N_ = 0;
 	    component_.ReallocBuffer(0);
 	    cov_.Alloc(0);
@@ -170,7 +170,7 @@ public:
     BMaxProb(BInt m, BInt n) : BRRFunction(), m_(m), n_(n)
 	{
 	    if(m<n) {
-		Error(BText("En creación de BMaxProb(")+m_+","+n_+")"); 
+		Error(BText("En creaciï¿½n de BMaxProb(")+m_+","+n_+")"); 
 	    }
 	    cmn_ = LogFactorial(m_) - LogFactorial(m_-n_);
 	}
@@ -270,7 +270,7 @@ bool RandTruncatedMultNormal(         BMatrix<BDat>& tn,
      (n!=A   .Rows   ())||(n!=B   .Rows   ())  )
   {
     Error(I2("Invalid dimensions for RandTruncatedIdMultiNormal",
-             "Dimensiones no válidas para RandTruncatedIdMultiNormal")+
+             "Dimensiones no vï¿½lidas para RandTruncatedIdMultiNormal")+
           " A("+A.Rows()+"x"+A.Columns()+")"+
           " B("+B.Rows()+"x"+B.Columns()+")"+
           " nu("+nu.Rows()+"x"+nu.Columns()+")");
@@ -322,7 +322,7 @@ BDat LogDensTruncatedMultNormal(const BMatrix<BDat>& y,
      (n!=A   .Rows   ())||(n!=B   .Rows   ())  )
   {
     Error(I2("Invalid dimensions for RandTruncatedMultiNormal",
-             "Dimensiones no válidas para RandTruncatedMultiNormal")+
+             "Dimensiones no vï¿½lidas para RandTruncatedMultiNormal")+
           " A("+A.Rows()+"x"+A.Columns()+")"+
           " B("+B.Rows()+"x"+B.Columns()+")"+
           " nu("+nu.Rows()+"x"+nu.Columns()+")");
@@ -364,7 +364,7 @@ bool RandTruncatedMultNormal(      BMatrix<BDat>& tn,
      (n!=LCov.Rows   ())||(n!=LCov.Columns())  )
   {
     Error(I2("Invalid dimensions for RandTruncatedMultiNormal",
-             "Dimensiones no válidas para RandTruncatedMultiNormal")+
+             "Dimensiones no vï¿½lidas para RandTruncatedMultiNormal")+
           " A("+A.Rows()+"x"+A.Columns()+")"+
           " B("+B.Rows()+"x"+B.Columns()+")"+
           " nu("+nu.Rows()+"x"+nu.Columns()+")"+
@@ -452,7 +452,7 @@ BDat LogDensTruncatedMultNormal(const BMatrix<BDat>& x,
      (n!=LCov.Rows   ())||(n!=LCov.Columns())  )
   {
     Error(I2("Invalid dimensions for RandTruncatedMultiNormal",
-             "Dimensiones no válidas para RandTruncatedMultiNormal")+
+             "Dimensiones no vï¿½lidas para RandTruncatedMultiNormal")+
           " A("+A.Rows()+"x"+A.Columns()+")"+
           " B("+B.Rows()+"x"+B.Columns()+")"+
           " nu("+nu.Rows()+"x"+nu.Columns()+")"+

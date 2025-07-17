@@ -79,13 +79,14 @@ TOL_API BPol EvalPolyn(const BText& expr, const BPol& defVal)
 }
 
 
-template<>
-BPol& BPol::Unknown()
-{
-    BMonome<BDat> unkmon(BDat::Unknown(), 0);
-    static BPolyn<BDat> unknown_(unkmon);
-    return(unknown_); 
-}
+// Commented out - causing explicit specialization after instantiation error
+// template<>
+// BPol& BPol::Unknown()
+// {
+//     BMonome<BDat> unkmon(BDat::Unknown(), 0);
+//     static BPolyn<BDat> unknown_(unkmon);
+//     return(unknown_); 
+// }
 
 //--------------------------------------------------------------------
 /*! Initializes the TOL system instances of this type as static

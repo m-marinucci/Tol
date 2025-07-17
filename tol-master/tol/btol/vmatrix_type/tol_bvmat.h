@@ -271,6 +271,8 @@ public:
   void Delete();
 //Copy operator
   const BVMat& operator = (const BVMat& v);  
+  // Binary write (not implemented for virtual matrices)
+  int BinWrite(FILE*) const { return 0; }
   ECode Code() const { return(code_); }
 
   static cholmod_common_struct* Common() { return(common_); }

@@ -24,11 +24,17 @@
 
 #include <tol/tol_bcommon.h> 
 
+#if defined( HAVE_CBLAS_H ) && defined(__APPLE__)
+  #include <Accelerate/Accelerate.h>
+#endif
+
 BEGIN_DECLS
 #if defined( HAVE_CBLAS_H )
-#include "cblas.h"
+  #ifndef __APPLE__
+    #include "cblas.h"
+  #endif
 #else
-#include "gsl/gsl_cblas.h"
+  #include "gsl/gsl_cblas.h"
 #endif
 END_DECLS
 
@@ -36,7 +42,9 @@ END_DECLS
 #include <tol/tol_matrix.h>
 
 extern "C" {
+#ifndef __APPLE__
   void cblas_xerbla(int p, const char *rout, const char *form, ...);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

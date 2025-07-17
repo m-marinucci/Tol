@@ -28,7 +28,7 @@
 #include <tol/tol_init.h>
 #include <ctype.h>
 
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
 #  include <errno.h>
 #  include <sys/resource.h>
 #  include <sys/wait.h>
@@ -48,7 +48,7 @@
 //   Global variables (static in BSys)
 //--------------------------------------------------------------------
 BTraceInit("sys.cpp");
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   BBool BSys::unix_=BTRUE;
   BText BSys::editor_("emacs ");
 #else // WINDOWS
@@ -208,7 +208,7 @@ BBool BSys::MkDir(const BText& dir_, bool force)
     dir.PutLength(dir.Length()-1);
   }
   if(BDir::CheckIsDir(dir)) { return(true); }
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   if(force) { return(BSys::System(BText("mkdir -p \"")+dir+"\"")); }
   else      { return(!mkdir(dir.String(),8*8*8-1)); }
 #else
@@ -318,7 +318,7 @@ BText BSys::TempNam(const BText& outputDir,
   if(!BDir::CheckIsDir(dir))
   {
   //Std(BText("\nBSys::TempNam 4 dir = ")+dir);
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
     mkdir(dir, 01777);
 #else
     mkdir(dir);
@@ -385,7 +385,7 @@ BBool BSys::System(const BText& command)
 }
 
 
-#if !defined(UNIX) && !defined(__linux__)
+#if !defined(UNIX) && !defined(__linux__) && !defined(__APPLE__)
 
 //--------------------------------------------------------------------
 BBool BSys::WinExecuteFile(const BText& fileName)
@@ -671,7 +671,7 @@ BBool BSys::Print(const BText& fileName)
  */
 //--------------------------------------------------------------------
 {
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   BText command("lp -c ");
   return(BSys::System(command+fileName));
 #else // WINDOWS
@@ -714,7 +714,7 @@ BBool BSys::Copy(const BText& origin, const BText& target)
  */
 //--------------------------------------------------------------------
 {
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   BText copyCom("cp ");
 #else // WINDOWS
   BText copyCom("copy ");
@@ -794,7 +794,7 @@ BBool BSys::Unlink(const BText& fileName)
 //--------------------------------------------------------------------
 {
   BBool ok=BTRUE;
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   if(unlink(fileName.String())<0) { ok=BFALSE; }
 #else
   if(_unlink(fileName.String())<0) { ok=BFALSE; }
@@ -815,7 +815,7 @@ BBool BSys::Edit(const BText& fileName, BInt typeIndex)
 //--------------------------------------------------------------------
 {
   if(!BSys::Editor().HasName()) { return(BFALSE); }
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   return(BSys::System(BSys::Editor()+" "+fileName+" &"));
 #else // WINDOWS
   if (fileEditor_)
@@ -851,7 +851,7 @@ BBool BSys::EditTable(const BText& fileName, BInt typeIndex)
 //--------------------------------------------------------------------
 {
   if(!BSys::Editor().HasName()) { return(BFALSE); }
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   return(Edit(fileName,0));
 #else // WINDOWS
   if (tableEditor_)
@@ -876,7 +876,7 @@ BBool BSys::EditChart(const BText& fileName, BInt typeIndex)
 //--------------------------------------------------------------------
 {
   if(!BSys::Editor().HasName()) { return(BFALSE); }
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   return(Edit(fileName,0));
 #else // WINDOWS
   if (chartEditor_)
@@ -916,7 +916,7 @@ BBool BSys::EditB(const BText& fileName)
  */
 //--------------------------------------------------------------------
 {
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   return(BSys::System(BSys::Editor()+fileName));
 #else // WINDOWS
   ShellExecute(
@@ -1012,7 +1012,7 @@ void BSys::Dos2Unix(const BText& fileName)
 }
 
 
-#if !defined(UNIX) && !defined(__linux__)
+#if !defined(UNIX) && !defined(__linux__) && !defined(__APPLE__)
 //--------------------------------------------------------------------
 unsigned long _stdcall threadMain(void *arg)
 //--------------------------------------------------------------------
@@ -1037,7 +1037,7 @@ unsigned long _stdcall threadMain(void *arg)
 BBool BSys::ChildProcess(const BText& command)
 //--------------------------------------------------------------------
 {
-#if defined(UNIX) || defined(__linux__)
+#if defined(UNIX) || defined(__linux__) || defined(__APPLE__)
   // Unix implementation using fork/exec
   pid_t pid = fork();
   if (pid == 0) {

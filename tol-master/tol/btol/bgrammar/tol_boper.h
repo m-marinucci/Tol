@@ -609,19 +609,9 @@ class BUserFunction: public BExternalOperator
 #  define DefExtOpr(ORD,CLASS,NAME,MINARG,MAXARG,LISTGRA,LISTARGS,DES,CL)  \
     static void * clone##CLASS##Ext##ORD () {                              \
       BGrammar* gra = CLASS::OwnGrammar();                                 \
-      if (!gra) {                                                          \
-        /* Grammar not initialized yet - create with NULL grammar */       \
-        /* It will be registered later by RegisterPendingOperators */      \
-        BExternalOperator* opr = new BExternalOperator(                   \
-          NAME, (BGrammar*)NULL, LISTGRA, CLASS##Evaluator,               \
-          MINARG, MAXARG, LISTARGS, DES, CL);                             \
-        opr->PutCppFile(__FILE__);                                         \
-        return opr;                                                        \
-      }                                                                    \
-      BExternalOperator* opr = new BExternalOperator	                     \
+      BExternalOperator* opr = new BExternalOperator                       \
       ExtOprConstructor(CLASS,NAME,MINARG,MAXARG,LISTGRA,LISTARGS,DES,CL); \
       opr->PutCppFile(__FILE__);                                           \
-      Std(BText("DefExtOpr: Created operator ") + BText(#NAME) + " at " + (void*)opr); \
       return opr;                                                          \
     }                                                                      \
     static BExternalOperator* CLASS##Ext##ORD  =                           \

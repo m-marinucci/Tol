@@ -23,6 +23,9 @@
 #include <win_tolinc.h>
 #endif
 
+// Include our GSL compatibility header first to prevent CBLAS conflicts
+#include "gsl_ext.h"
+
 #include <tol/tol_bdatgra.h>
 #include <tol/tol_bout.h>
 #include <tol/tol_bmatgra.h>
@@ -31,7 +34,6 @@
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_randist.h>
-#include "gsl_ext.h"
 
 //--------------------------------------------------------------------
 // forze linker functions
@@ -46,8 +48,8 @@ BTraceInit("datgrapr.cpp");
   "(Real unused)",
   I2("Returns the value of the lastest used seed for random numbers "
      "generator. The argument will not be used.",
-     "Devuelve el valor de la última semilla utilizada por el generador "
-     "de números aleatorios. El argumento de la función no se usa."),
+     "Devuelve el valor de la ï¿½ltima semilla utilizada por el generador "
+     "de nï¿½meros aleatorios. El argumento de la funciï¿½n no se usa."),
   BOperClassify::Probability_);
   void BDatGetRandomSeed::CalcContens()
 //--------------------------------------------------------------------
@@ -64,9 +66,9 @@ BTraceInit("datgrapr.cpp");
   I2("Initializes the random number generator with a seed. If this seed "
      "is 0 then a machine clock based seed is stablished."
      "The returned value is the lastest used seed",
-     "Inicializa el generador de números aleatorios con una semilla."
-     "Si la semilla es 0 entonces se establece una semilla en función"
-     "del relog de la máquina. El valor devuelto es el de la última "
+     "Inicializa el generador de nï¿½meros aleatorios con una semilla."
+     "Si la semilla es 0 entonces se establece una semilla en funciï¿½n"
+     "del relog de la mï¿½quina. El valor devuelto es el de la ï¿½ltima "
      "semilla utilizada."),
   BOperClassify::Probability_);
   void BDatPutRandomSeed::CalcContens()
@@ -83,7 +85,7 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatRandom, "Rand", 2, 2,
   "(Real min, Real max)",
   I2("Returns an uniform distributed random variable U(min,max).",
-     "Devuelve una variable aleatoria con distribución uniforme U(min,max)."),
+     "Devuelve una variable aleatoria con distribuciï¿½n uniforme U(min,max)."),
   BOperClassify::Probability_);
   void BDatRandom::CalcContens()
 //--------------------------------------------------------------------
@@ -97,11 +99,11 @@ BTraceInit("datgrapr.cpp");
   DeclareContensClass(BDat, BDatTemporary, BDatGaussian);
   DefIntOpr(1, BDatGaussian, "Gaussian", 2, 2,
   I2("(Real average, Real deviation)",
-     "(Real media, Real desviación)"),
+     "(Real media, Real desviaciï¿½n)"),
   I2("Returns an normal distributed random variable "
      "N(average, stdandard Deviation).",
-     "Devuelve una realización de una variable aleatoria con distribución "
-     "normal N[media, desviación típica]."),
+     "Devuelve una realizaciï¿½n de una variable aleatoria con distribuciï¿½n "
+     "normal N[media, desviaciï¿½n tï¿½pica]."),
   BOperClassify::Probability_);
   void BDatGaussian::CalcContens()
 //--------------------------------------------------------------------
@@ -122,7 +124,7 @@ BTraceInit("datgrapr.cpp");
                "    Real x2 = DrawTruncatedNormal(0, 2, -0.5, +inf);\n"
                "    Real x3 = DrawTruncatedNormal(0, 2, -inf, 1);\n"
                "    Real x4 = DrawTruncatedNormal(0, 2, -inf, +inf);\n",
-               "Devuelve una realización de una variable aleatoria con distribución "
+               "Devuelve una realizaciï¿½n de una variable aleatoria con distribuciï¿½n "
                "normal truncada N[nu, s] en el intervalo (low,high).\n"
                "Ejemplo:\n\n"
                "    Real x1 = DrawTruncatedNormal(0, 2, -0.5, 0);\n"
@@ -198,8 +200,8 @@ BTraceInit("datgrapr.cpp");
   "(Real x [, Real min=0, Real max=1])",
   I2("Uniform(min,max) probability density",
      "Densidad de probabilidad uniforme U(min,max) donde "
-     "los parámetros min y max definen el intervalo de la distribución.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "los parï¿½metros min y max definen el intervalo de la distribuciï¿½n.\n"
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatUniformDens::CalcContens()
@@ -226,10 +228,10 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatUniformDist, "DistUniform", 1, 3,
   "(Real x [, Real min=0, Real max=1])",
   I2("Uniform(min,max) probability distribution.",
-     "Distribución de probabilidad uniforme U(min,max) donde "
-     "los parámetros min y max definen el intervalo de la distribución.\n"
+     "Distribuciï¿½n de probabilidad uniforme U(min,max) donde "
+     "los parï¿½metros min y max definen el intervalo de la distribuciï¿½n.\n"
      "Devuelve Prob(U(min,max)<=x)\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatUniformDist::CalcContens()
@@ -250,11 +252,11 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of Uniform(min,max) probability distribution ."
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(U(min,max)<=x)=y.",
-     "Inversa de la distribución de probabilidad uniforme U(min,max) donde "
-     "los parámetros min y max definen el intervalo de la distribución.\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de probabilidad uniforme U(min,max) donde "
+     "los parï¿½metros min y max definen el intervalo de la distribuciï¿½n.\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(U(min,max)<=x)=y.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatInvUniformDist::CalcContens()
@@ -274,8 +276,8 @@ BTraceInit("datgrapr.cpp");
   "(Real x [, Real nu=0, Real sigma=1])",
   I2("Logarithm of density of probability distribution Normal(nu,sigma)",
      "Logaritmo de la densidad de probabilidad normal N(nu,sigma) donde "
-     "nu es la media de la distribución y sigma su desviación.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "nu es la media de la distribuciï¿½n y sigma su desviaciï¿½n.\n"
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatNormalLogDens::CalcContens()
@@ -293,8 +295,8 @@ BTraceInit("datgrapr.cpp");
   "(Real x [, Real nu=0, Real sigma=1])",
   I2("Normal(nu,sigma) probability density",
      "Densidad de probabilidad normal N(nu,sigma) donde "
-     "nu es la media de la distribución y sigma su desviación.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "nu es la media de la distribuciï¿½n y sigma su desviaciï¿½n.\n"
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatNormalDens::CalcContens()
@@ -313,10 +315,10 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatNormalDist, "DistNormal", 1, 3,
   "(Real x [, Real nu=0, Real sigma=1])",
   I2("Normal(nu,sigma) probability distribution.",
-     "Distribución de probabilidad normal N(nu,sigma) donde "
-     "nu es la media de la distribución y sigma su desviación.\n"
+     "Distribuciï¿½n de probabilidad normal N(nu,sigma) donde "
+     "nu es la media de la distribuciï¿½n y sigma su desviaciï¿½n.\n"
      "Devuelve Prob(N(nu,sigma)<=x)\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatNormalDist::CalcContens()
@@ -338,11 +340,11 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of Normal(nu,sigma) probability distribution ."
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución de probabilidad normal N(nu,sigma) donde "
-     "nu es la media de la distribución y sigma su desviación.\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de probabilidad normal N(nu,sigma) donde "
+     "nu es la media de la distribuciï¿½n y sigma su desviaciï¿½n.\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(N(nu,sigma)<=x)=y.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatInvNormalDist::CalcContens()
@@ -362,10 +364,10 @@ BTraceInit("datgrapr.cpp");
   "(Real x, Real A, Real B [, Real nu=0, Real sigma=1])",
   I2("TruncatedNormal(A,B,nu,sigma) probability density",
      "Densidad de probabilidad normal truncada TN(A,B,nu,sigma) donde "
-     "A y B son los límites de truncamiento, nu es la media de la "
-     "distribución normal y sigma su desviación.\n"
-     "Si A es -Inf o B es +Inf la distribución es semitruncada." 
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "A y B son los lï¿½mites de truncamiento, nu es la media de la "
+     "distribuciï¿½n normal y sigma su desviaciï¿½n.\n"
+     "Si A es -Inf o B es +Inf la distribuciï¿½n es semitruncada." 
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatTruncatedNormalDens::CalcContens()
@@ -386,11 +388,11 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatTruncatedNormalDist, "DistTruncatedNormal", 3, 5,
   "(Real x, Real A, Real B [, Real nu=0, Real sigma=1])",
   I2("TruncatedNormal(A,B,nu,sigma) probability distribution",
-     "Distribución de probabilidad normal truncada TN(A,B,nu,sigma) donde "
-     "A y B son los límites de truncamiento, nu es la media de la "
-     "distribución normal y sigma su desviación.\n"
-     "Si A es -Inf o B es +Inf la distribución es semitruncada." 
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Distribuciï¿½n de probabilidad normal truncada TN(A,B,nu,sigma) donde "
+     "A y B son los lï¿½mites de truncamiento, nu es la media de la "
+     "distribuciï¿½n normal y sigma su desviaciï¿½n.\n"
+     "Si A es -Inf o B es +Inf la distribuciï¿½n es semitruncada." 
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatTruncatedNormalDist::CalcContens()
@@ -411,12 +413,12 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatTruncatedNormalInvDist, "DistTruncatedNormalInv", 3, 5,
   "(Real x, Real A, Real B [, Real nu=0, Real sigma=1])",
   I2("Inverse of TruncatedNormal(A,B,nu,sigma) probability distribution",
-     "Inversa de la Distribución de probabilidad normal truncada "
+     "Inversa de la Distribuciï¿½n de probabilidad normal truncada "
      "TN(A,B,nu,sigma) donde "
-     "A y B son los límites de truncamiento, nu es la media de la "
-     "distribución normal y sigma su desviación.\n"
-     "Si A es -Inf o B es +Inf la distribución es semitruncada." 
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "A y B son los lï¿½mites de truncamiento, nu es la media de la "
+     "distribuciï¿½n normal y sigma su desviaciï¿½n.\n"
+     "Si A es -Inf o B es +Inf la distribuciï¿½n es semitruncada." 
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatTruncatedNormalInvDist::CalcContens()
@@ -437,9 +439,9 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatLogNormalDens, "DensLogNormal", 1, 3,
   "(Real x [, Real nu=0, Real sigma=1])",
   I2("LogNormal(nu,sigma) probability density",
-     "Densidad de probabilidad logarítmico normal LN(nu,sigma) donde "
-     "nu es la media de la distribución transformada y sigma su desviación.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Densidad de probabilidad logarï¿½tmico normal LN(nu,sigma) donde "
+     "nu es la media de la distribuciï¿½n transformada y sigma su desviaciï¿½n.\n"
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatLogNormalDens::CalcContens()
@@ -458,10 +460,10 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatLogNormalDist, "DistLogNormal", 1, 3,
   "(Real x [, Real nu=0, Real sigma=1])",
   I2("LogNormal(nu,sigma) probability distribution.",
-     "Distribución de probabilidad logarítmico normal LN(nu,sigma) donde "
-     "nu es la media de la distribución transformada y sigma su desviación.\n"
+     "Distribuciï¿½n de probabilidad logarï¿½tmico normal LN(nu,sigma) donde "
+     "nu es la media de la distribuciï¿½n transformada y sigma su desviaciï¿½n.\n"
      "Devuelve Prob(LN(nu,sigma)<=x)\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatLogNormalDist::CalcContens()
@@ -482,12 +484,12 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of LogNormal(nu,sigma) probability distribution ."
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(LN(nu,sigma)<=x)=y.",
-     "Inversa de la distribución de probabilidad logarítmico normal "
-     "LN(nu,sigma) donde nu es la media de la distribución transformada "
-     "y sigma su desviación.\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de probabilidad logarï¿½tmico normal "
+     "LN(nu,sigma) donde nu es la media de la distribuciï¿½n transformada "
+     "y sigma su desviaciï¿½n.\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(LN(nu,sigma)<=x)=y.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatInvLogNormalDist::CalcContens()
@@ -507,8 +509,8 @@ BTraceInit("datgrapr.cpp");
   "(Real l, Real s)",
   I2("Returns a random variate from the lognormal "
      "distribution with  location l and shape s",
-     "Retorna una variable aleatoria de la distribución "
-     "de probabilidad LogNormal con parámetros de localización y forma l y s respectivamente. "),
+     "Retorna una variable aleatoria de la distribuciï¿½n "
+     "de probabilidad LogNormal con parï¿½metros de localizaciï¿½n y forma l y s respectivamente. "),
   BOperClassify::Probability_);
   void BDatRandLogNormal::CalcContens()
 //--------------------------------------------------------------------
@@ -517,7 +519,7 @@ BTraceInit("datgrapr.cpp");
 	BDat * s = &Dat(Arg(2));
     if (!l->IsKnown() || !s->IsKnown()) {
   	  Error(I2("wrong parameters in RandLogNormal",
-	  	   "parámetros incorrectos en RandLogNormal"));
+	  	   "parï¿½metros incorrectos en RandLogNormal"));
 	  contens_.PutKnown(0);
 	  return;
     }
@@ -532,7 +534,7 @@ BTraceInit("datgrapr.cpp");
   "(Real n)",
   I2("Returns a random variate from the chi-squared "
      "distribution with  probability distribution with n degrees of freedom.",
-     "Retorna una variable aleatoria de la distribución "
+     "Retorna una variable aleatoria de la distribuciï¿½n "
      "de probabilidad chi-cuadrado con n grados de libertad "),
   BOperClassify::Probability_);
   void BDatRandChisq::CalcContens()
@@ -542,7 +544,7 @@ BTraceInit("datgrapr.cpp");
 
     if (!n->IsKnown() || n->Value() < 1.0) {
 	Error(I2("parameter n < 1 in RandChisq",
-		 "parámetro n < 1 en RandChisq"));
+		 "parï¿½metro n < 1 en RandChisq"));
 	contens_.PutKnown(0);
 	return;
     }
@@ -556,7 +558,7 @@ BTraceInit("datgrapr.cpp");
   I2("Chi-square density distribution with n degrees of freedom.",
      "Densidad de probabilidad chi-cuadrado con n grados de libertad "
      "Chi(n).\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatChiDens::CalcContens()
@@ -573,10 +575,10 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatChiDist, "DistChi", 1, 2,
   "(Real x [, Real n=1])",
   I2("Chi-square probability distribution with n degrees of freedom.",
-     "Distribución de probabilidad chi-cuadrado con n grados de libertad "
+     "Distribuciï¿½n de probabilidad chi-cuadrado con n grados de libertad "
      "Chi(n).\n"
      "Devuelve Prob(Chi(n)<=x)\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatChiDist::CalcContens()
@@ -595,11 +597,11 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of Chi-square distribution with n degrees of freedom. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución  chi-cuadrado con n grados de libertad "
+     "Inversa de la distribuciï¿½n  chi-cuadrado con n grados de libertad "
      "Chi(n).\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(Chi<=x)=y.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatChiInv::CalcContens()
@@ -622,7 +624,7 @@ BTraceInit("datgrapr.cpp");
   "(Real n [, Real s2=1])",
   I2("Returns a random variate from the inverse chi-squared "
      "distribution with  probability distribution with n degrees of freedom and s2.",
-     "Retorna una variable aleatoria de la distribución. See "
+     "Retorna una variable aleatoria de la distribuciï¿½n. See "
      "de probabilidad chi-cuadrado inversa con n grados de libertad y s2. Ver ")+
      "Bayesian Data Analysis, Ap. A",
   BOperClassify::Probability_);
@@ -635,7 +637,7 @@ BTraceInit("datgrapr.cpp");
   if (!d->IsKnown() || n < 1.0) 
   {	
     Error(I2("parameter n < 1 in RandIChisq",
-		         "parámetro n < 1 en RandIChisq"));
+		         "parï¿½metro n < 1 en RandIChisq"));
 	  contens_.PutKnown(0);
 	  return;
   }
@@ -663,7 +665,7 @@ BTraceInit("datgrapr.cpp");
   "(Real x [, Real n=1])",
   I2("t-Student probability density with n degrees of freedom.",
      "Densidad de probabilidad t-Student con n grados de libertad T(n).\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatTStudentDens::CalcContens()
@@ -681,9 +683,9 @@ BTraceInit("datgrapr.cpp");
   "(Real x [, Real n=1])",
   I2("t-Student with n degrees of freedom probability distribution of "
      "a real number.",
-     "Distribución de probabilidad t-Student con n grados de libertad T(n).\n"
+     "Distribuciï¿½n de probabilidad t-Student con n grados de libertad T(n).\n"
      "Devuelve Prob(T(n)<=x)\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatTStudentDist::CalcContens()
@@ -702,10 +704,10 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of t-Student distribution with n degrees of freedom. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución t-Student con n grados de libertad T(n). "
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n t-Student con n grados de libertad T(n). "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(T(n)<=x)=y.\n"
-     "Los parámetros entre corchetes pueden omitirse, en cuyo caso se toman "
+     "Los parï¿½metros entre corchetes pueden omitirse, en cuyo caso se toman "
      "los valores por defecto."),
   BOperClassify::Probability_);
   void BDatTStudentInv::CalcContens()
@@ -724,7 +726,7 @@ BTraceInit("datgrapr.cpp");
   I2("Non central t-Student probability density with n degrees of freedom "
      "and non centrality parameter d.",
      "Densidad de probabilidad t-Student no central con n grados de "
-     "libertad y parámetro de no centralización d  T'(n,d).\n"),
+     "libertad y parï¿½metro de no centralizaciï¿½n d  T'(n,d).\n"),
   BOperClassify::Probability_);
   void BDatNCTDens::CalcContens()
 //--------------------------------------------------------------------
@@ -744,8 +746,8 @@ BTraceInit("datgrapr.cpp");
      "and non centrality parameter d probability distribution of "
      "a real number."
      "Returns Prob(T'(n,d)<=x)\n",
-     "Distribución de probabilidad t-Student no central con n grados de "
-     "libertad y parámetro de no centralización d  T'(n,d).\n"
+     "Distribuciï¿½n de probabilidad t-Student no central con n grados de "
+     "libertad y parï¿½metro de no centralizaciï¿½n d  T'(n,d).\n"
      "Devuelve Prob(T'(n,d)<=x)\n"),
   BOperClassify::Probability_);
   void BDatNCTDist::CalcContens()
@@ -766,9 +768,9 @@ BTraceInit("datgrapr.cpp");
      "freedom and non centrality parameter d T'(n,d)."
      "For each y between 0 and 1, it returns the real number x such that \n"
      "Prob(T'(n,d)<=x)=y.",
-     "Inversa de la distribución t-Student no central con n grados de "
-     "libertad y parámetro de no centralización d  T'(n,d). "
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que \n"
+     "Inversa de la distribuciï¿½n t-Student no central con n grados de "
+     "libertad y parï¿½metro de no centralizaciï¿½n d  T'(n,d). "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que \n"
      "Prob(T'(n,d)<=x)=y.\n"),
   BOperClassify::Probability_);
   void BDatNCTInv::CalcContens()
@@ -806,7 +808,7 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatFSnedecorDist, "DistF", 3, 3,
   "(Real x, Real v1, Real v2)",
   I2("F-Snedecor probability distribution with v1 and v2 degrees of freedom.",
-     "Distribución de probabilidad F-Snedecor con v1 y v2 grados de libertad"
+     "Distribuciï¿½n de probabilidad F-Snedecor con v1 y v2 grados de libertad"
      "F(v1,v2).\n"
      "Devuelve Prob(F(v1,v2)<=x)\n"),
   BOperClassify::Probability_);
@@ -827,9 +829,9 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of F-Snedecor distribution with v1 and v2 degrees of freedom. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución F-Snedecor con v1 y v2 grados de libertad"
+     "Inversa de la distribuciï¿½n F-Snedecor con v1 y v2 grados de libertad"
      "F(v1,v2)/n. "
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(F(v1,v2)<=x)=y."),
   BOperClassify::Probability_);
   void BDatFSnedecorInv::CalcContens()
@@ -849,7 +851,7 @@ BTraceInit("datgrapr.cpp");
   I2("Non central F-Snedecor probability density with n and m degrees of "
      "freedom and non centrality parameter d.",
      "Densidad de probabilidad F-Snedecor no central con n y m grados de "
-     "libertad y parámetro de no centralización d  F'(n,d).\n"),
+     "libertad y parï¿½metro de no centralizaciï¿½n d  F'(n,d).\n"),
   BOperClassify::Probability_);
   void BDatNCFDens::CalcContens()
 //--------------------------------------------------------------------
@@ -870,8 +872,8 @@ BTraceInit("datgrapr.cpp");
      "and non centrality parameter d probability distribution of "
      "a real number."
      "Returns Prob(F'(n,d)<=x)\n",
-     "Distribución de probabilidad F-Snedecor no central con n y m grados de "
-     "libertad y parámetro de no centralización d  F'(n,d).\n"
+     "Distribuciï¿½n de probabilidad F-Snedecor no central con n y m grados de "
+     "libertad y parï¿½metro de no centralizaciï¿½n d  F'(n,d).\n"
      "Devuelve Prob(F'(n,d)<=x)\n"),
   BOperClassify::Probability_);
   void BDatNCFDist::CalcContens()
@@ -893,9 +895,9 @@ BTraceInit("datgrapr.cpp");
      "freedom and non centrality parameter d F'(n,d)."
      "For each y between 0 and 1, it returns the real number x such that \n"
      "Prob(F'(n,d)<=x)=y.",
-     "Inversa de la distribución F-Snedecor no central con n y m grados de "
-     "libertad y parámetro de no centralización d  F'(n,d). "
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que \n"
+     "Inversa de la distribuciï¿½n F-Snedecor no central con n y m grados de "
+     "libertad y parï¿½metro de no centralizaciï¿½n d  F'(n,d). "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que \n"
      "Prob(F'(n,d)<=x)=y.\n"),
   BOperClassify::Probability_);
   void BDatNCFInv::CalcContens()
@@ -932,7 +934,7 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatZFisherDist, "DistZ", 3, 3,
   "(Real x, Real v1, Real v2)",
   I2("z-Fisher probability distribution with n and m degrees of freedom.",
-     "Distribución de probabilidad z-Fisher con n y m grados de libertad."
+     "Distribuciï¿½n de probabilidad z-Fisher con n y m grados de libertad."
      "Z(v1,v2).\n"
      "Devuelve Prob(Z(v1,v2)<=x)\n"),
   BOperClassify::Probability_);
@@ -953,9 +955,9 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of z-Fisher distribution with n and m degrees of freedom."
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución z-Fisher con v1 y v2 grados de libertad "
+     "Inversa de la distribuciï¿½n z-Fisher con v1 y v2 grados de libertad "
      "Z(v1,v2)\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(Z(v1,v2)<=x)=y."),
   BOperClassify::Probability_);
   void BDatZFisherInv::CalcContens()
@@ -973,7 +975,7 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatBetaDens, "DensBeta", 3, 3,
   "(Real x, Real p, Real q)",
   I2("Beta(p,q) probability density.",
-     "Densidad de probabilidad beta con paramétros p y q B(p,q)."),
+     "Densidad de probabilidad beta con paramï¿½tros p y q B(p,q)."),
   BOperClassify::Probability_);
   void BDatBetaDens::CalcContens()
 //--------------------------------------------------------------------
@@ -990,7 +992,7 @@ BTraceInit("datgrapr.cpp");
   DefIntOpr(1, BDatBetaDist, "DistBeta", 3, 3,
   "(Real x, Real p, Real q)",
   I2("Beta(p,q) probability distribution.",
-     "Distribución de probabilidad beta con paramétros p y q B(p,q)\n."
+     "Distribuciï¿½n de probabilidad beta con paramï¿½tros p y q B(p,q)\n."
      "Devuelve Prob(B(p,q)<=x)\n"),
   BOperClassify::Probability_);
   void BDatBetaDist::CalcContens()
@@ -1010,8 +1012,8 @@ BTraceInit("datgrapr.cpp");
   I2("Inverse of Beta(p,q) distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución  beta con paramétros p y q B(p,q).\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n  beta con paramï¿½tros p y q B(p,q).\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(B(p,q)<=x)=y."),
   BOperClassify::Probability_);
   void BDatBetaInv::CalcContens()
@@ -1031,8 +1033,8 @@ BTraceInit("datgrapr.cpp");
 	       "distribution with parameters a (shape) and b. Depending on the value of is_scale b is taken as scale parameter (is_scale!=0) or as rate parameter (is_scale==0). "
                "Parameters a and b must be both positive",
 	       "Retorna una variable  aleatoria a partir "
-	       "de una distribución Gamma con parámetros a (shape) y b. Dependiendo del valor de is_scale el parámetro b se considera como 'scale' (is_scale!=0) o como 'rate' (is_scale==0). "
-               "Los parámetros a y b deben ser ambos positivos"),
+	       "de una distribuciï¿½n Gamma con parï¿½metros a (shape) y b. Dependiendo del valor de is_scale el parï¿½metro b se considera como 'scale' (is_scale!=0) o como 'rate' (is_scale==0). "
+               "Los parï¿½metros a y b deben ser ambos positivos"),
 	    BOperClassify::Probability_);
 void BDatRandGamma::CalcContens()
 //--------------------------------------------------------------------
@@ -1047,7 +1049,7 @@ void BDatRandGamma::CalcContens()
   shape = ptr_dat->Value();
   if (!ptr_dat->IsKnown() || shape <= 0.0) {
     Error(I2("shape parameter a <= 0 in RandGamma",
-             "parámetro 'shape' a <= en RandGamma"));
+             "parï¿½metro 'shape' a <= en RandGamma"));
     contens_.PutKnown(0);
     return;
   }
@@ -1060,7 +1062,7 @@ void BDatRandGamma::CalcContens()
     b = ptr_dat->Value();
     if (!ptr_dat->IsKnown() || b <= 0.0) {
       Error(I2("parameter b <= 0 in RandGamma",
-               "parámetro b <= en RandGamma"));
+               "parï¿½metro b <= en RandGamma"));
       contens_.PutKnown(0);
       return;
     }
@@ -1073,7 +1075,7 @@ void BDatRandGamma::CalcContens()
       is_scale = int(ptr_dat->Value());
       if (!ptr_dat->IsKnown() || (is_scale!=0 && is_scale!=1)) {
         Error(I2("parameter is_scale must be 0 or 1 in RandGamma",
-                 "parámetro is_scale debe ser 0 ó 1 en RandGamma"));
+                 "parï¿½metro is_scale debe ser 0 ï¿½ 1 en RandGamma"));
         contens_.PutKnown(0);
         return;
       }
@@ -1093,7 +1095,7 @@ void BDatRandGamma::CalcContens()
   I2("Gamma(r,a) probability density. The parameter 'a' is known as shape, 's' is known as scale.\n\n"
      "f(x;a,s) = 1/(s^a Gamma(a)) x^(a-1) e^-(x/s)\n\n"
      "0 <= x <= +inf, a > 0, s > 0",
-     "Densidad de probabilidad gamma G(a,s). El parámetro 'a' es conocido como 'shape', 's' is conocido como 'scale'.\n\n"
+     "Densidad de probabilidad gamma G(a,s). El parï¿½metro 'a' es conocido como 'shape', 's' is conocido como 'scale'.\n\n"
      "f(x;a,s) = 1/(s^a Gamma(a)) x^(a-1) e^-(x/s)\n\n"
      "0 <= x <= +inf, a > 0, s > 0"),
   BOperClassify::Probability_);
@@ -1123,7 +1125,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatGammaDist, "DistGamma", 2, 2,
   "(Real x, Real p)",
   I2("Gamma(p) probability distribution.",
-     "Distribución de probabilidad gamma com parámetro p G(p)."
+     "Distribuciï¿½n de probabilidad gamma com parï¿½metro p G(p)."
      "Devuelve Prob(G(q)<=x)\n"),
   BOperClassify::Probability_);
   void BDatGammaDist::CalcContens()
@@ -1142,8 +1144,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Gamma distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución  gamma com parámetro p G(p).\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n  gamma com parï¿½metro p G(p).\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(G(p)<=x)=y."),
   BOperClassify::Probability_);
   void BDatGammaInv::CalcContens()
@@ -1161,7 +1163,7 @@ void BDatRandGamma::CalcContens()
   "(Real x [, Real mu = 1.0])",
   I2("Exponential probability density with scale paremeter 'mu'.\n\n"
      "f(x;r) = 1/mu * e^(- x/mu), x >= 0",
-     "Densidad de probabilidad exponencial X con parámetro mu.\n\n"
+     "Densidad de probabilidad exponencial X con parï¿½metro mu.\n\n"
      "f(x;r) = 1/mu * e^(- x/mu), x >= 0"),
   BOperClassify::Probability_);
   void BDatExpDens::CalcContens()
@@ -1186,7 +1188,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatExpDist, "DistExp", 1, 1,
   "(Real x)",
   I2("Exponential probability distribution.",
-     "Distribución de probabilidad exponencial X.\n"
+     "Distribuciï¿½n de probabilidad exponencial X.\n"
      "Devuelve Prob(X<=x)\n"),
   BOperClassify::Probability_);
   void BDatExpDist::CalcContens()
@@ -1204,8 +1206,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Exponential distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución exponencial X.\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n exponencial X.\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(X<=x)=y."),
   BOperClassify::Probability_);
   void BDatExpInv::CalcContens()
@@ -1222,7 +1224,7 @@ void BDatRandGamma::CalcContens()
   "(Real mu)",
   I2("Returns a random variate from the exponential "
      "distribution with  mean = mu.",
-     "Retorna una variable aleatoria de la distribución "
+     "Retorna una variable aleatoria de la distribuciï¿½n "
      "de probabilidad exponencial con media mu "),
   BOperClassify::Probability_);
   void BDatRandExp::CalcContens()
@@ -1232,7 +1234,7 @@ void BDatRandGamma::CalcContens()
 
     if (!mu->IsKnown() || mu->Value() <= 0.0) {
 	Error(I2("parameter mu <= 0 in RandExp",
-		 "parámetro mu <= 0 en RandExp"));
+		 "parï¿½metro mu <= 0 en RandExp"));
 	contens_.PutKnown(0);
 	return;
     }
@@ -1244,7 +1246,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatWeibullDens, "DensWeibull", 2, 2,
   "(Real x, Real c)",
   I2("Weibull(c) probability density",
-     "Densidad de probabilidad de Weibull con paraámetro c W(c)."),
+     "Densidad de probabilidad de Weibull con paraï¿½metro c W(c)."),
   BOperClassify::Probability_);
   void BDatWeibullDens::CalcContens()
 //--------------------------------------------------------------------
@@ -1260,7 +1262,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatWeibullDist, "DistWeibull", 2, 2,
   "(Real x, Real c)",
   I2("Weibull(c) probability distribution.",
-     "Distribución de probabilidad de Weibull con paraámetro c W(c)."
+     "Distribuciï¿½n de probabilidad de Weibull con paraï¿½metro c W(c)."
      "Devuelve Prob(W(c)<=x)\n"),
   BOperClassify::Probability_);
   void BDatWeibullDist::CalcContens()
@@ -1279,8 +1281,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Weibull(c) distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x)=y.",
-     "Inversa de la distribución de Weibull con paraámetro c W(c). "
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de Weibull con paraï¿½metro c W(c). "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(W(c)<=x)=y."),
   BOperClassify::Probability_);
   void BDatWeibullInv::CalcContens()
@@ -1312,7 +1314,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatLaplaceDist, "DistLaplace", 1, 1,
   "(Real x)",
   I2("Laplace probability distribution.",
-     "Distribución de probabilidad de Laplace L.\n"
+     "Distribuciï¿½n de probabilidad de Laplace L.\n"
      "Devuelve Prob(L<=x)\n"),
   BOperClassify::Probability_);
   void BDatLaplaceDist::CalcContens()
@@ -1330,8 +1332,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Laplace distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(L<=x)=y.",
-     "Inversa de la distribución de Laplace L."
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de Laplace L."
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(L<=x)=y."),
   BOperClassify::Probability_);
   void BDatLaplaceInv::CalcContens()
@@ -1363,7 +1365,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatCauchyDist, "DistCauchy", 1, 1,
   "(Real x)",
   I2("Cauchy probability distribution.",
-     "Distribución de probabilidad de Cauchy C.\n"
+     "Distribuciï¿½n de probabilidad de Cauchy C.\n"
      "Devuelve Prob(C<=x)\n"),
   BOperClassify::Probability_);
   void BDatCauchyDist::CalcContens()
@@ -1381,8 +1383,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Cauchy distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(C<=x)=y.",
-     "Inversa de la distribución de Cauchy C.\n"
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de Cauchy C.\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(C<=x)=y."),
   BOperClassify::Probability_);
   void BDatCauchyInv::CalcContens()
@@ -1399,7 +1401,7 @@ void BDatRandGamma::CalcContens()
   "(Real a)",
   I2("Returns a random variate from the Cauchy "
      "distribution with  probability distribution with scale a.",
-     "Retorna una variable aleatoria de la distribución "
+     "Retorna una variable aleatoria de la distribuciï¿½n "
      "de probabilidad de Cauchy con escala a "),
   BOperClassify::Probability_);
   void BDatRandCauchy::CalcContens()
@@ -1409,7 +1411,7 @@ void BDatRandGamma::CalcContens()
 
     if (!a->IsKnown() || a->Value() < 0.0) {
 	Error(I2("parameter a < 0 in RandCauchy",
-		 "parámetro a < 0 en RandCauchy"));
+		 "parï¿½metro a < 0 en RandCauchy"));
 	contens_.PutKnown(0);
 	return;
     }
@@ -1422,7 +1424,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatParetoDens, "DensPareto", 3, 3,
   "(Real x , Real a, Real k)",
   I2("Pareto(a,k) probability density p(x) = (a*k^a)/(x^(a-1)).",
-     "Densidad de probabilidad de Pareto con parámetros a y k P(a,k)\n."),
+     "Densidad de probabilidad de Pareto con parï¿½metros a y k P(a,k)\n."),
   BOperClassify::Probability_);
   void BDatParetoDens::CalcContens()
 //--------------------------------------------------------------------
@@ -1439,7 +1441,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatParetoDist, "DistPareto", 3, 3,
   "(Real x , Real a, Real k)",
   I2("Pareto probability distribution. Prob(X<=x)=1-(k/x)^a.",
-     "Distribución de probabilidad de Pareto con parámetros a y k P(a,k)\n."
+     "Distribuciï¿½n de probabilidad de Pareto con parï¿½metros a y k P(a,k)\n."
      "Devuelve Prob(P(a,k)<=x)."),
   BOperClassify::Probability_);
   void BDatParetoDist::CalcContens()
@@ -1459,8 +1461,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Pareto distribution. "
      "For each y between 0 and 1, it returns the real number x such that "
      "Prob(X<=x) = 1-(k/x)^a = y.",
-     "Inversa de la distribución de Pareto con parámetros a y k P(a,k)\n. "
-     "Para cada valor y entre 0 y 1, devuelve el número real x tal que "
+     "Inversa de la distribuciï¿½n de Pareto con parï¿½metros a y k P(a,k)\n. "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero real x tal que "
      "Prob(P(a,k)<=x) = y."),
   BOperClassify::Probability_);
   void BDatParetoInv::CalcContens()
@@ -1478,7 +1480,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatDiscreteUniformDens, "ProbDiscreteUniform", 3, 3,
   "(Real k, Real min, Real max)",
   I2("Discrete Uniform(min,max) probability function.",
-     "Función de probabilidad Discreta Uniforme entre min y max\n."
+     "Funciï¿½n de probabilidad Discreta Uniforme entre min y max\n."
      "Devuelve Prob(DU(min,max)=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1497,7 +1499,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatDiscreteUniformDist, "DistDiscreteUniform", 3, 3,
   "(Real k, Real N, Real p)",
   I2("Discrete Uniform(min,max) probability distribution.",
-     "Distribución de probabilidad Discreta Uniforme entre min y max\n."
+     "Distribuciï¿½n de probabilidad Discreta Uniforme entre min y max\n."
      "Devuelve Prob(DU(min,max)<=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1518,8 +1520,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Discrete Uniform(min,max) distribution. "
      "For each y between 0 and 1, it returns the integer number n such that "
      "Prob(X<=n)=y.",
-     "Inversa de la distribución Discreta Uniforme entre min y max\n."
-     "Para cada valor y entre 0 y 1, devuelve el número entero k tal que "
+     "Inversa de la distribuciï¿½n Discreta Uniforme entre min y max\n."
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero entero k tal que "
      "Prob(DU(min,max)<=k)=y."),
   BOperClassify::Probability_);
   void BDatDiscreteUniformInv::CalcContens()
@@ -1537,7 +1539,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatBinomialDens, "ProbBinomial", 3, 3,
   "(Real k, Real N, Real p)",
   I2("Binomial(N,p) probability function.",
-     "Función de probabilidad binomial de parámetros N y p B(N,p)\n."
+     "Funciï¿½n de probabilidad binomial de parï¿½metros N y p B(N,p)\n."
      "Devuelve Prob(B(N,p)=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1556,7 +1558,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatBinomialDist, "DistBinomial", 3, 3,
   "(Real k, Real N, Real p)",
   I2("Binomial(N,p) probability distribution.",
-     "Distribución de probabilidad binomial de parámetros N y p B(N,p)\n."
+     "Distribuciï¿½n de probabilidad binomial de parï¿½metros N y p B(N,p)\n."
      "Devuelve Prob(B(N,p)<=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1577,8 +1579,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Binomial(N,p) distribution. "
      "For each y between 0 and 1, it returns the integer number n such that "
      "Prob(X<=n)=y.",
-     "Inversa de la distribución binomial de parámetros N y p B(N,p)\n."
-     "Para cada valor y entre 0 y 1, devuelve el número entero k tal que "
+     "Inversa de la distribuciï¿½n binomial de parï¿½metros N y p B(N,p)\n."
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero entero k tal que "
      "Prob(B(N,p)<=k)=y."),
   BOperClassify::Probability_);
   void BDatBinomialInv::CalcContens()
@@ -1596,7 +1598,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatNegBinomialDens, "ProbNegBinomial", 3, 3,
   "(Real k, Real N, Real p)",
   I2("Negative-Binomial (N,p) probability function.",
-     "Función de probabilidad binomial negativa de parámetros N y p "
+     "Funciï¿½n de probabilidad binomial negativa de parï¿½metros N y p "
      "BN(N,p)\n."
      "Devuelve Prob(BN(N,p)=k).\n"
      "Si k no es entero se toma su parte entera."),
@@ -1616,7 +1618,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatNegBinomialDist, "DistNegBinomial", 3, 3,
   "(Real k, Real N, Real p)",
   I2("Negative-Binomial(N,p) probability distribution.",
-     "Distribución de probabilidad binomial negativa de parámetros N y p "
+     "Distribuciï¿½n de probabilidad binomial negativa de parï¿½metros N y p "
      "BN(N,p)\n."
      "Devuelve Prob(BN(N,p)<=k).\n"
      "Si k no es entero se toma su parte entera."),
@@ -1638,9 +1640,9 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Negative-Binomial(N,p) distribution. "
      "For each y between 0 and 1, it returns the integer number n such that "
      "Prob(X<=n)=y.",
-     "Inversa de la distribución binomial negativa de parámetros N y p "
+     "Inversa de la distribuciï¿½n binomial negativa de parï¿½metros N y p "
      "BN(N,p)\n."
-     "Para cada valor y entre 0 y 1, devuelve el número entero k tal que "
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero entero k tal que "
      "Prob(BN(N,p)<=k)=y."),
   BOperClassify::Probability_);
   void BDatNegBinomialInv::CalcContens()
@@ -1658,7 +1660,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatGeometricDens, "ProbGeometric", 2, 2,
   "(Real k, Real p)",
   I2("Geometric(p) probability function.",
-     "Función de probabilidad geométrica de parámetro p G(p)\n."
+     "Funciï¿½n de probabilidad geomï¿½trica de parï¿½metro p G(p)\n."
      "Devuelve Prob(G(p)=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1676,7 +1678,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatGeometricDist, "DistGeometric", 2, 2,
   "(Real k, Real p)",
   I2("Geometric(p) probability distribution.",
-     "Distribución de probabilidad  geométrica de parámetro p G(p)\n."
+     "Distribuciï¿½n de probabilidad  geomï¿½trica de parï¿½metro p G(p)\n."
      "Devuelve Prob(G(p)<=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1696,8 +1698,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Geometric(p) distribution. "
      "For each y between 0 and 1, it returns the integer number n such that "
      "Prob(X<=n)=y.",
-     "Inversa de la distribución geométrica de parámetro p G(p)\n."
-     "Para cada valor y entre 0 y 1, devuelve el número entero k tal que "
+     "Inversa de la distribuciï¿½n geomï¿½trica de parï¿½metro p G(p)\n."
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero entero k tal que "
      "Prob(G(p)<=k)=y."),
   BOperClassify::Probability_);
   void BDatGeometricInv::CalcContens()
@@ -1714,7 +1716,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatPoissonDens, "ProbPoisson", 2, 2,
   "(Real k, Real fi)",
   I2("Poisson(fi) probability function.",
-     "Función de probabilidad de Poisson de media fi P(fi).\n."
+     "Funciï¿½n de probabilidad de Poisson de media fi P(fi).\n."
      "Devuelve Prob(P(fi)=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1732,7 +1734,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatPoissonDist, "DistPoisson", 2, 2,
   "(Real k, Real fi)",
   I2("Poisson(fi) probability distribution.",
-     "Distribución de probabilidad de Poisson de media fi P(fi).\n."
+     "Distribuciï¿½n de probabilidad de Poisson de media fi P(fi).\n."
      "Devuelve Prob(P(fi)<=k).\n"
      "Si k no es entero se toma su parte entera."),
   BOperClassify::Probability_);
@@ -1752,8 +1754,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Poisson(fi) distribution. "
      "For each y between 0 and 1, it returns the integer number n such that "
      "Prob(X<=n)=y.",
-     "Inversa de la distribución de Poisson de media fi P(fi).\n."
-     "Para cada valor y entre 0 y 1, devuelve el número entero k tal que "
+     "Inversa de la distribuciï¿½n de Poisson de media fi P(fi).\n."
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero entero k tal que "
      "Prob(P(fi)<=k)=y."),
   BOperClassify::Probability_);
   void BDatPoissonInv::CalcContens()
@@ -1770,7 +1772,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatHypergeometricDens, "ProbHyperG", 4, 4,
   "(Real k, Real N, Real P, Real n)",
   I2("Hypergeometric(N,P,n) probability function.",
-     "Función de probabilidad hipergeométrica de parámetros N, p y n "
+     "Funciï¿½n de probabilidad hipergeomï¿½trica de parï¿½metros N, p y n "
      "HG(N,P,n).\n"
      "Devuelve Prob(HG(N,P,n)=k).\n"
      "Si k no es entero se toma su parte entera."),
@@ -1798,7 +1800,7 @@ void BDatRandGamma::CalcContens()
      "  N=a^2/|a-v| \n"
      "  p=1-min{N/v,v/N} \n"
      "If k is not an integer number it will be truncated.",
-     "Función de probabilidad de la distribución genérica de conteo de "
+     "Funciï¿½n de probabilidad de la distribuciï¿½n genï¿½rica de conteo de "
      "media a>0 y varianza v>0, que puede ser \n"
      " * Binomial(N,p) si a>v, \n"
      " * Poisson(a) si a=v, \n"
@@ -1831,7 +1833,7 @@ void BDatRandGamma::CalcContens()
      "  N=a^2/|a-v| \n"
      "  p=1-min{N/v,v/N} \n"
      "If k is not an integer number it will be truncated.",
-     "Función de probabilidad acumulada de la distribución genérica de "
+     "Funciï¿½n de probabilidad acumulada de la distribuciï¿½n genï¿½rica de "
      "conteo de media a>0 y varianza v>0, que puede ser \n"
      " * Binomial(N,p) si a>v, \n"
      " * Poisson(a) si a=v, \n"
@@ -1863,8 +1865,8 @@ void BDatRandGamma::CalcContens()
      "where \n"
      "  N=a^2/|a-v| \n"
      "  p=1-min{a/v,v/a} \n",
-     "Inversa de la función de probabilidad acumulada de la distribución "
-     "genérica de conteo de media a>0 y varianza v>0, que puede ser \n"
+     "Inversa de la funciï¿½n de probabilidad acumulada de la distribuciï¿½n "
+     "genï¿½rica de conteo de media a>0 y varianza v>0, que puede ser \n"
      " * Binomial(N,p) si a>v, \n"
      " * Poisson(a) si a=v, \n"
      " * Binomial Negativa(N,p) si a<v, \n"
@@ -1899,13 +1901,13 @@ void BDatRandGamma::CalcContens()
      "  N=a^2/|a-v| \n"
      "  p=1-min{N/v,v/N} \n"
      "If k is not an integer number it will be truncated.",
-     "Función de probabilidad de la distribución genérica de conteo de "
-     "inflada en el cero con parámetros \n"
+     "Funciï¿½n de probabilidad de la distribuciï¿½n genï¿½rica de conteo de "
+     "inflada en el cero con parï¿½metros \n"
      " * p0: la probabilidad del valor zero \n"
      " * a: la media de los valores distintos de cero tras restarles la unidad\n"
      " * v: la varianza de los valores distintos de cero tras restarles la unidad\n"
      "Los valores distintos de cero tras restarles la unidad siguen "
-     "la distribución genérica de conteo que puede ser una de las siguientes:\n"
+     "la distribuciï¿½n genï¿½rica de conteo que puede ser una de las siguientes:\n"
      " * Binomial(N,p) si a>v, \n"
      " * Poisson(a) si a=v, \n"
      " * Binomial Negativa(N,p) si a<v, \n"
@@ -1943,13 +1945,13 @@ void BDatRandGamma::CalcContens()
      "  N=a^2/|a-v| \n"
      "  p=1-min{N/v,v/N} \n"
      "If k is not an integer number it will be truncated.",
-     "Función de probabilidad acumulada de la distribución genérica de conteo de "
-     "inflada en el cero con parámetros \n"
+     "Funciï¿½n de probabilidad acumulada de la distribuciï¿½n genï¿½rica de conteo de "
+     "inflada en el cero con parï¿½metros \n"
      " * p0: la probabilidad del valor zero \n"
      " * a: la media de los valores distintos de cero tras restarles la unidad\n"
      " * v: la varianza de los valores distintos de cero tras restarles la unidad\n"
      "Los valores distintos de cero tras restarles la unidad siguen "
-     "la distribución genérica de conteo que puede ser una de las siguientes:\n"
+     "la distribuciï¿½n genï¿½rica de conteo que puede ser una de las siguientes:\n"
      " * Binomial(N,p) si a>v, \n"
      " * Poisson(a) si a=v, \n"
      " * Binomial Negativa(N,p) si a<v, \n"
@@ -1986,13 +1988,13 @@ void BDatRandGamma::CalcContens()
      "where \n"
      "  N=a^2/|a-v| \n"
      "  p=1-min{N/v,v/N} \n",
-     "Función de probabilidad acumulada de la distribución genérica de conteo de "
-     "inflada en el cero con parámetros \n"
+     "Funciï¿½n de probabilidad acumulada de la distribuciï¿½n genï¿½rica de conteo de "
+     "inflada en el cero con parï¿½metros \n"
      " * p0: la probabilidad del valor zero \n"
      " * a: la media de los valores distintos de cero tras restarles la unidad\n"
      " * v: la varianza de los valores distintos de cero tras restarles la unidad\n"
      "Los valores distintos de cero tras restarles la unidad siguen "
-     "la distribución genérica de conteo que puede ser una de las siguientes:\n"
+     "la distribuciï¿½n genï¿½rica de conteo que puede ser una de las siguientes:\n"
      " * Binomial(N,p) si a>v, \n"
      " * Poisson(a) si a=v, \n"
      " * Binomial Negativa(N,p) si a<v, \n"
@@ -2015,7 +2017,7 @@ void BDatRandGamma::CalcContens()
   DefIntOpr(1, BDatHypergeometricDist, "DistHyperG", 4, 4,
   "(Real k, Real N, Real P, Real n)",
   I2("Hypergeometric(N,P,n) probability distribution.",
-     "Distribución de probabilidad hipergeométrica de parámetros N, p y n "
+     "Distribuciï¿½n de probabilidad hipergeomï¿½trica de parï¿½metros N, p y n "
      "HG(N,P,n).\n"
      "Devuelve Prob(HG(N,P,n)<=k).\n"),
   BOperClassify::Probability_);
@@ -2037,8 +2039,8 @@ void BDatRandGamma::CalcContens()
   I2("Inverse of Hypergeometric(N,P,n) distribution. "
      "For each y between 0 and 1, it returns the integer number n such that "
      "Prob(X<=k)=y.",
-     "Inversa de la distribución hipergeométrica de parámetros N, p y n.\n"
-     "Para cada valor y entre 0 y 1, devuelve el número entero n tal que "
+     "Inversa de la distribuciï¿½n hipergeomï¿½trica de parï¿½metros N, p y n.\n"
+     "Para cada valor y entre 0 y 1, devuelve el nï¿½mero entero n tal que "
      "Prob(HG(N,P,n)<=k)=y."),
   BOperClassify::Probability_);
   void BDatHypergeometricInv::CalcContens()
@@ -2164,7 +2166,7 @@ void BDatDensMultiNormal::CalcContens()
                "mean --> es el vector de medias expresado como una matriz columna.\n"
                "cov  --> es la matriz de varianzas-covarianzas.\n"
                "log  --> argumento opcional. Si log==1 entonces se retorna el log de la densidad.\n\n"
-               "xl,xu --> define la región truncada como un hiperrectángullo. Cualquier punto x pertenece a esta región sii xl[i]<= x[i] <= xu[i] para todo 1 <= i <= dim(x).\n\n"
+               "xl,xu --> define la regiï¿½n truncada como un hiperrectï¿½ngullo. Cualquier punto x pertenece a esta regiï¿½n sii xl[i]<= x[i] <= xu[i] para todo 1 <= i <= dim(x).\n\n"
                "Ejemplo:\n\n"
                "Matrix cov =\n"
                "((3.7779406,   0.8044385,  -3.518737,  0.7422526, -3.463709),\n"

@@ -35,6 +35,12 @@ class BComplex;
 #define BParamCmp     BGraParameter    < BComplex >
 #define BCmpTemporary BTmpContens      < BComplex >
 
+// Explicit specialization declarations
+template<> BGrammar* BGraContensBase<BComplex>::ownGrammar_;
+template<> void BGraContensBase<BComplex>::Do();
+template<> void BGraContensBase<BComplex>::InitInstances();
+template<> BSyntaxObject* BGraContensBase<BComplex>::FindConstant(const BText& name);
+template<> BSyntaxObject* BGraContensBase<BComplex>::Casting(BSyntaxObject* obj);
 
 template class TOL_API BGraContensBase< BComplex >;
 template class TOL_API BGraContens    < BComplex >;

@@ -255,7 +255,7 @@ void  BOut::FlushAll()
  */
 //--------------------------------------------------------------------
 {
-  #if defined( UNIX ) || defined( __MINGW32__ ) 
+  #if defined( UNIX ) || defined( __MINGW32__ ) || defined(__APPLE__)
   fflush(NULL);
   #else 
   flushall();
