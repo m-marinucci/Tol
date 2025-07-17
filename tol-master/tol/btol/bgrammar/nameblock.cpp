@@ -275,7 +275,7 @@ BNameBlock& BNameBlock::operator= (const BNameBlock& ns)
   Clean(); 
   PutName(ns.Name());
   localName_ = ns.LocalName();
-  PutClass((BClass*)ns.Class());
+  PutClass(const_cast<BClass*>(ns.Class()));
   BArray<BDat> p;
   BInt pos = -1;
   BSet copy;

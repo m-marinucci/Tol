@@ -213,7 +213,7 @@ BTraceInit("oisxml.cpp");
           break;
         }
       }
-      header_->Print("<file_%d><path>%s</path><release>%s</release><size>%"_LLD64_"</size></file_%d>\n", 
+      header_->Print("<file_%d><path>%s</path><release>%s</release><size>%" _LLD64_ "</size></file_%d>\n", 
                      n+1,
                      path.String(), 
                      dateFmt_.DateToText(fileTime).String(),
@@ -244,7 +244,7 @@ BTraceInit("oisxml.cpp");
   {
     if(allFiles_[n])
     {				
-      header_->Print("<%s><size>%"_LLD64_"</size><entries>%ld</entries></%s>\n",
+      header_->Print("<%s><size>%" _LLD64_ "</size><entries>%ld</entries></%s>\n",
                     allFiles_[n]->Title().String(), 
                     stat_.fileStat_[n].bytes_, 
                     stat_.fileStat_[n].entries_, 
@@ -551,7 +551,7 @@ BTraceInit("oisxml.cpp");
     XMLEnsure(XMLGetNextTagValue(tag_, value_, "path"   )); tolSources_[n].path_ = value_;
     XMLEnsure(XMLGetNextTagValue(tag_, value_, "release")); tolSources_[n].release_ = dateFmt_.TextToDate(value_);
     XMLEnsure(XMLGetNextTagValue(tag_, value_, "size"   )); 
-    sscanf(value_,"%"_LLD64_,&tolSources_[n].bytes_  ); 
+    sscanf(value_,"%" _LLD64_,&tolSources_[n].bytes_  ); 
     XMLEnsure(XMLEnsureEndTag   (fn.String()));
     
     bool checkSource = checkSourceExists_ || checkSourceSize_ || checkSourceDate_;
@@ -599,7 +599,7 @@ BTraceInit("oisxml.cpp");
     if(n<0) { continue; }
     XMLEnsure(XMLGetNextTagTitle(tag_, allFiles_[n]->Title().String()));
     XMLEnsure(XMLGetNextTagValue(tag_, value_, "size"   ));
-    sscanf(value_,"%"_LLD64_, &stat_.fileStat_[n].bytes_  );
+    sscanf(value_,"%" _LLD64_, &stat_.fileStat_[n].bytes_  );
     XMLEnsure(XMLGetNextTagValue(tag_, value_, "entries")); sscanf(value_,"%d",   &stat_.fileStat_[n].entries_);
     XMLEnsure(XMLEnsureEndTag   (allFiles_[n]->Title().String()));
   }

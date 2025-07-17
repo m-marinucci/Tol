@@ -28,9 +28,11 @@
 #include <tol/tol_init.h>
 #include <ctype.h>
 
-#ifdef UNIX
+#if defined(UNIX) || defined(__linux__)
 #  include <errno.h>
 #  include <sys/resource.h>
+#  include <sys/wait.h>
+#  include <unistd.h>
 #else // WINDOWS
 #  include <windows.h>
 #  include <process.h>
@@ -46,7 +48,7 @@
 //   Global variables (static in BSys)
 //--------------------------------------------------------------------
 BTraceInit("sys.cpp");
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   BBool BSys::unix_=BTRUE;
   BText BSys::editor_("emacs ");
 #else // WINDOWS
@@ -206,7 +208,7 @@ BBool BSys::MkDir(const BText& dir_, bool force)
     dir.PutLength(dir.Length()-1);
   }
   if(BDir::CheckIsDir(dir)) { return(true); }
-#if defined(UNIX)
+#if defined(UNIX) || defined(__linux__)
   if(force) { return(BSys::System(BText("mkdir -p \"")+dir+"\"")); }
   else      { return(!mkdir(dir.String(),8*8*8-1)); }
 #else
@@ -316,7 +318,7 @@ BText BSys::TempNam(const BText& outputDir,
   if(!BDir::CheckIsDir(dir))
   {
   //Std(BText("\nBSys::TempNam 4 dir = ")+dir);
-#ifdef UNIX
+#if defined(UNIX) || defined(__linux__)
     mkdir(dir, 01777);
 #else
     mkdir(dir);
@@ -383,7 +385,7 @@ BBool BSys::System(const BText& command)
 }
 
 
-#ifndef UNIX
+#if !defined(UNIX) && !defined(__linux__)
 
 //--------------------------------------------------------------------
 BBool BSys::WinExecuteFile(const BText& fileName)
@@ -592,7 +594,28 @@ BBool BSys::WinSystemQuiet(const BText& command,
   return(ok);  
 }
 
+#else // Unix/Linux implementations
+
+//--------------------------------------------------------------------
+BBool BSys::WinSystem(const BText& command, BInt showMode, bool wait)
+//--------------------------------------------------------------------
+{
+  // On Unix/Linux, just use the regular System function
+  // showMode is ignored on Unix
+  return BSys::System(command);
+}
+
+//--------------------------------------------------------------------
+BBool BSys::WinSystemQuiet(const BText& command, 
+                           BText& output, BText& error)
+//--------------------------------------------------------------------
+{
+  // On Unix/Linux, use PExecQuiet
+  return BSys::PExecQuiet(command, output, error);
+}
+
 #endif
+
 
 //--------------------------------------------------------------------
 BBool BSys::PExecQuiet(const BText& command, 
@@ -648,7 +671,7 @@ BBool BSys::Print(const BText& fileName)
  */
 //--------------------------------------------------------------------
 {
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   BText command("lp -c ");
   return(BSys::System(command+fileName));
 #else // WINDOWS
@@ -691,7 +714,7 @@ BBool BSys::Copy(const BText& origin, const BText& target)
  */
 //--------------------------------------------------------------------
 {
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   BText copyCom("cp ");
 #else // WINDOWS
   BText copyCom("copy ");
@@ -771,7 +794,11 @@ BBool BSys::Unlink(const BText& fileName)
 //--------------------------------------------------------------------
 {
   BBool ok=BTRUE;
+#if defined(UNIX) || defined(__linux__)
   if(unlink(fileName.String())<0) { ok=BFALSE; }
+#else
+  if(_unlink(fileName.String())<0) { ok=BFALSE; }
+#endif
   return(ok);
 }
 
@@ -788,7 +815,7 @@ BBool BSys::Edit(const BText& fileName, BInt typeIndex)
 //--------------------------------------------------------------------
 {
   if(!BSys::Editor().HasName()) { return(BFALSE); }
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   return(BSys::System(BSys::Editor()+" "+fileName+" &"));
 #else // WINDOWS
   if (fileEditor_)
@@ -824,7 +851,7 @@ BBool BSys::EditTable(const BText& fileName, BInt typeIndex)
 //--------------------------------------------------------------------
 {
   if(!BSys::Editor().HasName()) { return(BFALSE); }
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   return(Edit(fileName,0));
 #else // WINDOWS
   if (tableEditor_)
@@ -849,7 +876,7 @@ BBool BSys::EditChart(const BText& fileName, BInt typeIndex)
 //--------------------------------------------------------------------
 {
   if(!BSys::Editor().HasName()) { return(BFALSE); }
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   return(Edit(fileName,0));
 #else // WINDOWS
   if (chartEditor_)
@@ -889,7 +916,7 @@ BBool BSys::EditB(const BText& fileName)
  */
 //--------------------------------------------------------------------
 {
-#ifdef   UNIX
+#if defined(UNIX) || defined(__linux__)
   return(BSys::System(BSys::Editor()+fileName));
 #else // WINDOWS
   ShellExecute(
@@ -985,7 +1012,7 @@ void BSys::Dos2Unix(const BText& fileName)
 }
 
 
-#ifndef UNIX
+#if !defined(UNIX) && !defined(__linux__)
 //--------------------------------------------------------------------
 unsigned long _stdcall threadMain(void *arg)
 //--------------------------------------------------------------------
@@ -1010,10 +1037,22 @@ unsigned long _stdcall threadMain(void *arg)
 BBool BSys::ChildProcess(const BText& command)
 //--------------------------------------------------------------------
 {
-#ifndef    UNIX
-
-//Std(BText("\nClient Question : \n")+command+"\n");
-
+#if defined(UNIX) || defined(__linux__)
+  // Unix implementation using fork/exec
+  pid_t pid = fork();
+  if (pid == 0) {
+    // Child process - execute the command
+    int result = system(command.String());
+    exit(WEXITSTATUS(result));
+  } else if (pid > 0) {
+    // Parent process - command executed in child
+    return(BTRUE);
+  } else {
+    // Fork failed
+    Error("Fork failed in ChildProcess");
+    return(BFALSE);
+  }
+#else // Windows implementation
   SECURITY_ATTRIBUTES    sa =
   {
     sizeof(SECURITY_ATTRIBUTES),   // structure size
@@ -1035,14 +1074,13 @@ BBool BSys::ChildProcess(const BText& command)
 
   if(hThread == INVALID_HANDLE_VALUE)
   {
-    //MessageBox(0, "Thread Creation Failed", "Error", MB_OK);
-  Error("Thread Creation Failed");
+    Error("Thread Creation Failed");
     return(BFALSE);
   }
   ResumeThread(hThread);
   printf("Created thread with an ID of %u\n", threadId);
-#endif
   return(BTRUE);
+#endif
 }
 
 //--------------------------------------------------------------------
