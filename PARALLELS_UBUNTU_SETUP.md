@@ -52,7 +52,7 @@ This guide provides step-by-step instructions for setting up an Ubuntu ARM64 vir
    
    - **Shared Folders**:
      - Click **+** to add
-     - Folder: `/Users/numinate/PY_inverence/Tol`
+     - Folder: `/Users/numinate/PY_inference/Tol`
      - Name: `tol-source`
      - Permissions: Read & Write
      - Options: ✓ Share Mac folders with Linux
