@@ -3,24 +3,136 @@ build/
 build-*/
 cmake-build-*/
 docker-build/
+tol-master/tol/build*/
+tol-master/building/*/build*/
+build-linux-arm64/
+build-macos/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+CTestTestfile.cmake
+*.cmake
+!*Config.cmake.in
+!scripts/**/*.cmake
+
+# Compiled binaries and libraries
+*.o
+*.so
+*.dylib
+*.a
+*.lib
+*.dll
+*.exe
+tolcon
+tolbase
+PackArchive
+tol_tests/test_runner
 
 # IDE files
 .vscode/
 .idea/
 *.xcodeproj
 *.xcworkspace
+*.suo
+*.user
+*.sln.docstates
 
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
-# Temporary
+# Linux
+*~
+.directory
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Temporary and log files
 *.tmp
+*.temp
 *.log
-*.o
-*.so
-*.dylib
-*.a
+*.out
+*.err
+*.pid
+*.stackdump
+
+# Test outputs
+test_results/
+test_output/
+*.test
+
+# Documentation build
+docs/_build/
+docs/api/
+doxygen/
+*.doxygen
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+
+# SSH and credentials
+*.pem
+*.key
+ssh-*.exp
+.ssh/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.old
+*.swp
+*.swo
+*~
+
+# Local configuration
+local.cmake
+.local/
+
+# Parallels/VM specific
+.prl*
+*.pvm
 
 # TOL specific
 tolcon
 libtol.*
+*.tol.out
+tol-master/tol/autom4te.cache/
+tol-master/tol/Makefile.in
+tol-master/tol/*/Makefile.in
+
+# Archive files (keep source archives)
+*.tar.gz
+*.zip
+!tol-master/tol/contrib/**/*.zip
+
+# Installation artifacts
+install_manifest.txt
+
+# Specific helper scripts (local use only)
+install-tol-ubuntu.sh
+setup-tol-ubuntu.sh
+setup-ubuntu-vm.sh
+build-tol-linux-remote.sh
+ssh-connect.exp
+ssh-setup-commands.sh
+ubuntu-ssh-setup.sh
+fix_template_specializations.py
+temp.txt
+DOWNLOAD_UBUNTU.md
+
+# Backup source files
+*.cpp.linux
+*.cpp.backup
+*.h.backup
