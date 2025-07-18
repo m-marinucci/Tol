@@ -29,7 +29,7 @@ fi
 # Clean previous build if requested
 if [[ "$1" == "clean" ]]; then
     echo "Cleaning previous build..."
-    rm -rf CMakeCache.txt CMakeFiles/
+    rm -rf CMakeCache.txt CMakeFiles/ Makefile cmake_install.cmake bin/ build/
 fi
 
 # Configure with CMake
