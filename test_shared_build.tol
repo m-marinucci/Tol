@@ -1,0 +1,5 @@
+// Test TOL script for shared folder build
+Real WriteLn("Testing TOL from shared folder build!");
+Real WriteLn("Math test: 2 + 2 = 4");
+Real WriteLn("Shared folder test successful!");
+Real WriteLn("Build directory test complete!");

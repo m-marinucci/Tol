@@ -1043,7 +1043,7 @@ int BExternalOperator::FixupMissingGrammars()
         // Try to find the grammar name from argTable
         if(n < argTable_.Size() && argTable_[n].Size() > 0) {
           BText grammarName = argTable_[n][0];
-          if(grammarName.IsEmpty()) {
+          if(!grammarName.Length()) {
             Warning(BText("Empty grammar name in argTable for operator '") + Name() + "'");
           } else {
             BGrammar* gra = BGrammar::FindByName(grammarName, false);
