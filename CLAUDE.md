@@ -8,12 +8,12 @@ TOL (Time-Oriented Language) is a declarative, autoevaluative programming langua
 
 ## Current Project Status
 
-- **Linux Build**: ✅ 100% success (PR #26 fixed major compatibility issues)
-- **Windows Build**: ✅ Fully maintained
-- **macOS Build**: ✅ Native support
-- **Testing Framework**: ✅ Comprehensive cross-platform framework (NUM-11)
-- **CI/CD Pipeline**: ✅ GitHub Actions ready (NUM-17)
-- **Documentation**: ✅ Complete Linux build guides (NUM-12)
+- **Linux Build**: ✅ Successfully builds on x86_64 and ARM64
+- **Windows Build**: ✅ Supported via MinGW and Visual Studio
+- **macOS Build**: ✅ Native support (Intel and Apple Silicon)
+- **Static Initialization**: ✅ Fixed (PR #43, PR #47)
+- **Cross-Platform Development**: ✅ Parallels Desktop integration documented
+- **Repository**: ✅ Cleaned and organized
 
 ## Build Commands
 
@@ -21,17 +21,21 @@ TOL (Time-Oriented Language) is a declarative, autoevaluative programming langua
 
 ```bash
 # Install dependencies (Ubuntu/Debian)
-curl -fsSL https://raw.githubusercontent.com/m-marinucci/Tol/master/scripts/install-deps-ubuntu.sh | bash
+sudo apt update
+sudo apt install -y build-essential cmake git \
+    libgsl-dev liblapacke-dev libblas-dev libfftw3-dev \
+    libbz2-dev libsuitesparse-dev libsparsehash-dev
 
 # Clone and build
 git clone https://github.com/m-marinucci/Tol.git
 cd Tol
+cd tol-master/tol
 mkdir build && cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j$(nproc)
 
 # Test installation
-make test
+./tolcon -c 'WriteLn("TOL is working!");'
 ```
 
 ### CMake Build Options
@@ -52,16 +56,47 @@ make tolbase      # GUI application
 make test_unit    # Run unit tests only
 ```
 
-### Alternative Build Methods
+### macOS Build (Apple Silicon/Intel)
 
 ```bash
-# Using build scripts (if available)
-cd tol-master/building/Linux
-./build.sh tol Release
+# Install dependencies via Homebrew
+brew install cmake gsl lapack openblas fftw bzip2 suite-sparse
 
-# Windows MinGW build
+# Build
+cd tol-master/tol
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(sysctl -n hw.ncpu)
+
+# Test
+./tolcon -c 'WriteLn("TOL on macOS!");'
+```
+
+### Linux ARM64 Build
+
+```bash
+# For ARM64 platforms (e.g., Raspberry Pi, AWS Graviton, Apple M1/M2 VMs)
+cd tol-master/tol
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-O3 -march=armv8-a -fPIC" \
+    -DCMAKE_C_FLAGS="-O3 -march=armv8-a -fPIC" \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+make -j$(nproc)
+```
+
+### Windows Build
+
+```bash
+# Using MinGW
 cd tol-master\building\MinGW
 build.bat
+
+# Using Visual Studio (from Developer Command Prompt)
+cd tol-master\tol
+mkdir build && cd build
+cmake .. -G "Visual Studio 16 2019"
+cmake --build . --config Release
 ```
 
 ## Testing Commands
@@ -138,23 +173,33 @@ tolcon -v -c "WriteLn(\"Running test\"); Include(\"test.tol\")"
 - **GSL**: GNU Scientific Library for mathematical functions
 - **FFTW3**: Fast Fourier Transform operations
 - **BLAS/LAPACK**: Linear algebra operations
-- **Boost**: Utilities, threading, filesystem
+  - Linux: OpenBLAS or ATLAS
+  - macOS: Accelerate framework (built-in) or OpenBLAS
+  - Windows: OpenBLAS or Intel MKL
+- **BZip2**: Compression support
 - **CHOLMOD/SuiteSparse**: Sparse matrix operations (optional)
+- **Boost**: Some components may require Boost libraries
 
 ### Known Issues and Workarounds
 
-1. **Build Order Dependencies** (PR #35):
-   - `bbasic` must be built before `PackArchive` and `OIS`
-   - Fixed in CMakeLists.txt build order
+1. **Static Initialization** (Fixed in PR #43, #47):
+   - Operators were crashing due to initialization order
+   - Fixed by deferring registration until grammars are ready
+   - Added proper NULL checks and error handling
 
-2. **C++ Compatibility** (PR #26, PR #40):
-   - Deprecated `register` keyword usage
-   - Thread safety issues with static initialization
-   - Character encoding problems with non-ASCII
+2. **macOS Compatibility**:
+   - Use Accelerate framework instead of CBLAS to avoid conflicts
+   - GSL must be configured to not use its own CBLAS
+   - Template specializations need explicit declarations
 
-3. **Platform-Specific Code**:
-   - Windows: Check `win_tolinc.h` includes
-   - Linux: Ensure all dependencies installed via scripts
+3. **ARM64 Linux**:
+   - Requires `-fPIC` flag for position-independent code
+   - Some distributions may need manual BLAS configuration
+
+4. **Platform-Specific Paths**:
+   - Windows: Uses backslashes in paths
+   - Unix/Linux/macOS: Forward slashes
+   - Build scripts handle this automatically
 
 ## TOL Language Syntax
 
@@ -242,7 +287,7 @@ The project includes GitHub Actions workflows (PR #37, #39):
 
 - Main CMakeLists.txt: `tol/CMakeLists.txt`
 - Test framework: `tol_tests/enhanced_test_framework.tol`
-- Linux build scripts: `scripts/install-deps-*.sh`
+- Build instructions: See platform-specific sections above
 - Grammar definitions: `tol/btol/bgrammar/*.y`
 - Standard library: `tol/stdlib/_tolcore.tol`
 - Memory handler: `tol/bbasic/tol_bfsmem.h`

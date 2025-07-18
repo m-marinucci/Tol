@@ -26,13 +26,15 @@ TOL is a domain-specific language that excels in:
 - **Mathematical:** `Matrix`, `VMatrix` (sparse matrices), `Polynomial`, `PolMat` (polynomial matrices)
 - **Structural:** `Set`, `Text`, `Code`, `NameBlock` (namespaces)
 
-## Installation
+## Recent Improvements
 
-### From Original GitLab Source
-```bash
-git clone https://gitlab.com/tol-project/tol.git
-cd tol
-```
+- **Fixed static initialization crashes** that prevented TOL from running (PR #43, #47)
+- **Full macOS compatibility** including Apple Silicon support
+- **ARM64 Linux support** for Raspberry Pi and cloud instances
+- **Cleaned repository structure** with comprehensive .gitignore
+- **Cross-platform development** documentation for VM-based workflows
+
+## Installation
 
 ### From This GitHub Repository
 ```bash
@@ -40,17 +42,73 @@ git clone https://github.com/m-marinucci/Tol.git
 cd Tol
 ```
 
+### From Original GitLab Source
+```bash
+git clone https://gitlab.com/tol-project/tol.git
+cd tol
+```
+
 ### Building from Source
 
-TOL supports multiple build systems:
+TOL has been successfully built and tested on:
+- ✅ Linux (x86_64, ARM64)
+- ✅ macOS (Intel, Apple Silicon)
+- ✅ Windows (MinGW, Visual Studio)
 
-#### Using CMake (Recommended)
+#### Prerequisites
+
+**Linux (Ubuntu/Debian):**
 ```bash
-cd tol-master
+sudo apt update
+sudo apt install -y build-essential cmake git \
+    libgsl-dev liblapacke-dev libblas-dev libfftw3-dev \
+    libbz2-dev libsuitesparse-dev libsparsehash-dev
+```
+
+**macOS:**
+```bash
+# Install Xcode Command Line Tools
+xcode-select --install
+
+# Install dependencies via Homebrew
+brew install cmake gsl lapack openblas fftw bzip2 suite-sparse
+```
+
+**Windows:**
+- Install MinGW-w64 or Visual Studio 2019+
+- Install CMake
+- Dependencies can be installed via vcpkg or compiled manually
+
+#### Build Instructions
+
+**Linux/macOS:**
+```bash
+cd tol-master/tol
 mkdir build && cd build
-cmake ..
-make
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)  # Linux
+make -j$(sysctl -n hw.ncpu)  # macOS
+
+# Test the build
+./tolcon -c 'WriteLn("Hello from TOL!");'
+
+# Optional: Install system-wide
 sudo make install
+```
+
+**Windows (MinGW):**
+```bash
+cd tol-master\building\MinGW
+build.bat
+```
+
+**Windows (Visual Studio):**
+```powershell
+cd tol-master\tol
+mkdir build
+cd build
+cmake .. -G "Visual Studio 16 2019"
+cmake --build . --config Release
 ```
 
 #### Using Autotools
