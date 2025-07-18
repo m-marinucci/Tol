@@ -29,7 +29,7 @@ fi
 # Clean previous build if requested
 if [[ "$1" == "clean" ]]; then
     echo "Cleaning previous build..."
-    rm -rf CMakeCache.txt CMakeFiles/ Makefile cmake_install.cmake bin/ build/
+    rm -rf CMakeCache.txt CMakeFiles/ Makefile cmake_install.cmake bin/ build/ *.a *.so tolcon tolbase PackArchive
 fi
 
 # Configure with CMake

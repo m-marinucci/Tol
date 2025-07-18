@@ -1,4 +1,4 @@
-#\!/bin/bash
+#!/bin/bash
 # Run this on the Ubuntu VM to check Parallels Tools
 
 echo "Checking Parallels Tools installation..."
@@ -26,4 +26,3 @@ fi
 echo ""
 echo "Parallels kernel modules:"
 lsmod | grep prl || echo "No Parallels modules loaded"
-EOF < /dev/null
