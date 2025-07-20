@@ -28,20 +28,25 @@ By participating in this project, you agree to abide by our Code of Conduct:
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/Tol.git
    cd Tol
-   ```
+```text
+
 3. **Add the upstream remote**:
+
    ```bash
    git remote add upstream https://github.com/InverenceBBS/Tol.git
-   ```
+```text
+
 4. **Keep your fork up to date**:
+
    ```bash
    git fetch upstream
    git checkout master
    git merge upstream/master
-   ```
+```text
 
 ## How to Contribute
 
@@ -89,7 +94,7 @@ cd tol-master
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Debug
 make -j$(nproc)
-```
+```text
 
 #### Using Autotools
 
@@ -98,7 +103,7 @@ cd tol-master/tol
 ./bootstrap
 ./configure --enable-debug
 make -j$(nproc)
-```
+```text
 
 ### Running Tests
 
@@ -109,7 +114,7 @@ make test
 # Or run the test suite directly
 cd ../tol_tests
 ./run_all_tests.sh
-```
+```text
 
 ## Coding Standards
 
@@ -130,6 +135,7 @@ cd ../tol_tests
   - One class per file when possible
 
 Example:
+
 ```cpp
 // tol_bmatrix.h
 #ifndef TOL_BMATRIX_H
@@ -150,7 +156,7 @@ public:
 };
 
 #endif // TOL_BMATRIX_H
-```
+```text
 
 ### TOL Language Style
 
@@ -159,6 +165,7 @@ public:
 - **Comments**: Use `//` for single-line, `/* */` for multi-line
 
 Example:
+
 ```tol
 // Calculate moving average of a time series
 Serie MovingAverage(Serie data, Real window) {
@@ -166,20 +173,20 @@ Serie MovingAverage(Serie data, Real window) {
   Serie result = Filter(data, weight * Ones(window));
   result
 };
-```
+```text
 
 ### Commit Messages
 
 Follow these guidelines for commit messages:
 
-- **Format**: 
-  ```
+- **Format**:
+```text
   <type>: <subject>
   
   <body>
   
   <footer>
-  ```
+```text
 
 - **Types**:
   - `feat`: New feature
@@ -197,7 +204,8 @@ Follow these guidelines for commit messages:
 - **Footer**: Reference issues (e.g., `Fixes #123`)
 
 Example:
-```
+
+```text
 feat: Add sparse matrix multiplication support
 
 Implement efficient sparse matrix multiplication using CHOLMOD
@@ -205,7 +213,7 @@ library. This improves performance for large sparse matrices
 commonly used in time series analysis.
 
 Fixes #456
-```
+```text
 
 ## Testing
 
@@ -216,6 +224,7 @@ Fixes #456
 - Use the test framework: `_tolTester.tol`
 
 Example test:
+
 ```tol
 // test_matrix_operations.tol
 Include("_tolTester.tol");
@@ -240,7 +249,7 @@ Set tests = [[
 Real RunTests(Real dummy) {
   Real TestGroup(testName, tests)
 };
-```
+```text
 
 ### Test Requirements
 
@@ -252,9 +261,10 @@ Real RunTests(Real dummy) {
 ## Pull Request Process
 
 1. **Create a feature branch**:
+
    ```bash
    git checkout -b feature/your-feature-name
-   ```
+```text
 
 2. **Make your changes**:
    - Write clean, well-documented code
@@ -262,20 +272,23 @@ Real RunTests(Real dummy) {
    - Update documentation as needed
 
 3. **Test your changes**:
+
    ```bash
    make test
-   ```
+```text
 
 4. **Commit your changes**:
+
    ```bash
    git add .
    git commit -m "feat: Add your feature description"
-   ```
+```text
 
 5. **Push to your fork**:
+
    ```bash
    git push origin feature/your-feature-name
-   ```
+```text
 
 6. **Create a Pull Request**:
    - Go to the original repository on GitHub
@@ -343,6 +356,7 @@ For feature requests, please:
 - **User documentation**: Clear, example-driven explanations
 
 Example documentation:
+
 ```cpp
 /**
  * Performs ARIMA model estimation on time series data
@@ -357,7 +371,7 @@ Example documentation:
  * @throws InsufficientDataException if series too short
  */
 ARIMAModel EstimateARIMA(const Serie& series, int p, int d, int q);
-```
+```text
 
 ### Areas Needing Documentation
 
@@ -384,6 +398,7 @@ ARIMAModel EstimateARIMA(const Serie& series, int p, int d, int q);
 ### Recognition
 
 Contributors are recognized in:
+
 - The AUTHORS file
 - Release notes
 - Project documentation

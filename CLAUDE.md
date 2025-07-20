@@ -1,10 +1,12 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code)
+when working with code in this repository.
 
 ## Overview
 
-TOL (Time-Oriented Language) is a declarative, autoevaluative programming language with dynamic memory management and lazy evaluation, specifically designed for time-series analysis, mathematical computation, and statistical modeling. The codebase is primarily implemented in C++ with multiple build system support.
+TOL (Time-Oriented Language) is a declarative, autoevaluative programming language with dynamic memory management and lazy evaluation,
+specifically designed for time-series analysis, mathematical computation, and statistical modeling. The codebase is primarily implemented in C++ with multiple build system support.
 
 ## Current Project Status
 
