@@ -127,9 +127,10 @@ scripts/setup_build_env.sh
 ```
 
 If the official TOL package repository is unavailable, download the default
-packages (StdLib and TclCore) using the helper script. It will query the
-Internet Archive's Wayback Machine API for the latest archived packages if the
-official server cannot be reached:
+packages (StdLib and TclCore) using the helper script. The script first tries to
+use HTTPS when contacting `packages.tol-project.org` and, if that download
+fails, it queries the Internet Archive's Wayback Machine API for the latest
+archived packages:
 ```bash
 scripts/fetch_default_packages.sh
 ```
