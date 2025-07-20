@@ -85,7 +85,10 @@ brew install cmake gsl lapack openblas fftw bzip2 suite-sparse
 ```bash
 cd tol-master/tol
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+       -DCLAPACK_LIBRARY=/path/to/liblapack.so  # if LAPACK already provides CLAPACK
+# Install a separate CLAPACK package if your LAPACK build does not include the
+# C interface.
 make -j$(nproc)  # Linux
 make -j$(sysctl -n hw.ncpu)  # macOS
 
@@ -142,6 +145,7 @@ TOL requires the following external libraries:
 - **FFTW** - Fast Fourier Transform operations
 - **CHOLMOD** - Sparse matrix operations
 - **LAPACK/BLAS** - Linear algebra routines
+- **CLAPACK** (or LAPACK with built-in CLAPACK symbols) - C LAPACK interface
 - **Boost** - C++ utilities and threading
 - **Tcl/Tk** (optional) - For GUI components
 
