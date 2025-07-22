@@ -237,6 +237,15 @@ Before submitting documentation:
 - [ ] Markdown formatting is consistent
 - [ ] File passes markdownlint validation
 
+Before running the helper scripts below, make sure the required Python
+packages are installed:
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs dependencies like **PyYAML** used by the index generator.
+
 ## Automated Tools
 
 ### Index Generation
