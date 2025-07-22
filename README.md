@@ -245,7 +245,7 @@ We are developing an MCP (Model Context Protocol) server to provide seamless, na
 - Integration with modern AI assistants
 - Simplified access to TOL's powerful features
 
-See [TOL_MCP_SERVER_STRATEGIC_PLAN.md](TOL_MCP_SERVER_STRATEGIC_PLAN.md) for details.
+The strategic plan for the MCP server is under development and will be added here once available.
 
 ## License
 
