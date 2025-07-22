@@ -16,18 +16,24 @@ else
     TOL_PLATFORM="Linux32GNU"
 fi
 
-# Determine whether the package server supports HTTPS. If the probe fails,
-# continue with plain HTTP.
-if curl -fsI https://packages.tol-project.org >/dev/null 2>&1; then
-    BASE_PROTO="https"
-else
-    BASE_PROTO="http"
-fi
+# Function to detect protocol support
+detect_protocol() {
+    if curl -fsI --connect-timeout 5 https://packages.tol-project.org >/dev/null 2>&1; then
+        echo "https"
+    else
+        echo "http"
+    fi
+}
+
+# Allow protocol override via environment variable, otherwise auto-detect
+BASE_PROTO="${TOL_FORCE_PROTO:-$(detect_protocol)}"
+[ -n "${VERBOSE:-}" ] && echo "Using ${BASE_PROTO^^} protocol for package downloads"
 BASE_URL="${BASE_PROTO}://packages.tol-project.org/OfficialTolArchiveNetwork/repository.php"
 
 fetch_pkg() {
     local pkg="$1"
     local url="${BASE_URL}?action=download&format=attachment&tol_package_version=4&package=$pkg"
+    [ -n "${VERBOSE:-}" ] && echo "Attempting to download $pkg from $url"
     if ! wget --tries=3 --content-disposition "$url"; then
         echo "Failed to fetch $pkg from official repository. Searching Wayback..."
         api_url="https://archive.org/wayback/available?url=$url"
