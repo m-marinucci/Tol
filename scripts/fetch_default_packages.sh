@@ -28,7 +28,7 @@ BASE_URL="${BASE_PROTO}://packages.tol-project.org/OfficialTolArchiveNetwork/rep
 fetch_pkg() {
     local pkg="$1"
     local url="${BASE_URL}?action=download&format=attachment&tol_package_version=4&package=$pkg"
-    if ! wget --content-disposition "$url"; then
+    if ! wget --tries=3 --content-disposition "$url"; then
         echo "Failed to fetch $pkg from official repository. Searching Wayback..."
         api_url="https://archive.org/wayback/available?url=$url"
         snapshot=$(curl -fsSL "$api_url" | grep -o '"url":"[^"]*"' | head -n1 | cut -d'"' -f4)
