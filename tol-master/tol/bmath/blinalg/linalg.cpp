@@ -153,7 +153,7 @@ BMatrix<BDat> gsl_MinimumResidualsSolve(const BMatrix<BDat>& A_,
     }
   } else if (cols==1) {
     // y = A*cols, cols scalar
-    //VBR: Este warning no tiene mucho sentido pues el número 
+    //VBR: Este warning no tiene mucho sentido pues el nÃºmero 
     //     de variables tiene todo el derecho del mundo ha ser 1
     //
     //Warning("MRS y = A*cols, cols scalar");
