@@ -181,7 +181,7 @@ class APIDocumentationIndexer:
         content.append("# TOL API Documentation")
         content.append("")
         content.append("This directory contains comprehensive API documentation for all TOL modules.")
-        content.append(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        content.append(f"Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}")
         content.append("")
         
         # Quick stats
