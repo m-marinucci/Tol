@@ -1,10 +1,18 @@
 # TOL - Time-Oriented Language
 
-TOL (Time-Oriented Language) is a powerful programming language specifically designed for time-series analysis, statistical modeling, and mathematical computations. Originally developed for advanced data analysis and econometric modeling, TOL provides a declarative environment that is autoevaluative (i.e., expressions are automatically evaluated as they are defined, similar to languages like Lisp), with dynamic memory management and lazy evaluation.
+TOL (Time-Oriented Language) is a powerful programming language specifically
+designed for time-series analysis, statistical modeling, and mathematical
+computations.
+Originally developed for advanced data analysis and econometric modeling,
+TOL provides a declarative environment that is autoevaluative (i.e.,
+expressions are automatically evaluated as they are defined,
+similar to languages like Lisp),
+with dynamic memory management and lazy evaluation.
 
 ## Overview
 
 TOL is a domain-specific language that excels in:
+
 - **Time-series analysis** with native support for temporal data structures
 - **Statistical modeling** including ARIMA, Bayesian methods, and Monte Carlo simulations
 - **Mathematical computations** with integrated linear algebra and numerical analysis
@@ -14,6 +22,7 @@ TOL is a domain-specific language that excels in:
 ## Key Features
 
 ### Language Characteristics
+
 - **Declarative paradigm** with functional programming elements
 - **Autoevaluative execution** with lazy evaluation
 - **Dynamic typing** with a strong type system
@@ -21,6 +30,7 @@ TOL is a domain-specific language that excels in:
 - **Integrated mathematical libraries** (GSL, LAPACK, BLAS, FFTW, CHOLMOD)
 
 ### Core Data Types
+
 - **Numerical:** `Real`, `Complex`, `Ratio` (rational numbers)
 - **Time-Related:** `Date`, `TimeSet`, `Serie` (time series), `CTime` (calendar time)
 - **Mathematical:** `Matrix`, `VMatrix` (sparse matrices), `Polynomial`, `PolMat` (polynomial matrices)
@@ -37,12 +47,14 @@ TOL is a domain-specific language that excels in:
 ## Installation
 
 ### From This GitHub Repository
+
 ```bash
 git clone https://github.com/m-marinucci/Tol.git
 cd Tol
 ```
 
 ### From Original GitLab Source
+
 ```bash
 git clone https://gitlab.com/tol-project/tol.git
 cd tol
@@ -51,6 +63,7 @@ cd tol
 ### Building from Source
 
 TOL has been successfully built and tested on:
+
 - ✅ Linux (x86_64, ARM64)
 - ✅ macOS (Intel, Apple Silicon)
 - ✅ Windows (MinGW, Visual Studio)
@@ -58,6 +71,7 @@ TOL has been successfully built and tested on:
 #### Prerequisites
 
 **Linux (Ubuntu/Debian):**
+
 ```bash
 sudo apt update
 sudo apt install -y build-essential cmake git \
@@ -66,6 +80,7 @@ sudo apt install -y build-essential cmake git \
 ```
 
 **macOS:**
+
 ```bash
 # Install Xcode Command Line Tools
 xcode-select --install
@@ -75,6 +90,7 @@ brew install cmake gsl lapack openblas fftw bzip2 suite-sparse
 ```
 
 **Windows:**
+
 - Install MinGW-w64 or Visual Studio 2019+
 - Install CMake
 - Dependencies can be installed via vcpkg or compiled manually
@@ -82,10 +98,14 @@ brew install cmake gsl lapack openblas fftw bzip2 suite-sparse
 #### Build Instructions
 
 **Linux/macOS:**
+
 ```bash
 cd tol-master/tol
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+       -DCLAPACK_LIBRARY=/path/to/liblapack.so  # if LAPACK already provides CLAPACK
+# Install a separate CLAPACK package if your LAPACK build does not include the
+# C interface.
 make -j$(nproc)  # Linux
 make -j$(sysctl -n hw.ncpu)  # macOS
 
@@ -97,12 +117,14 @@ sudo make install
 ```
 
 **Windows (MinGW):**
+
 ```bash
 cd tol-master\building\MinGW
 build.bat
 ```
 
 **Windows (Visual Studio):**
+
 ```powershell
 cd tol-master\tol
 mkdir build
@@ -112,6 +134,7 @@ cmake --build . --config Release
 ```
 
 #### Using Autotools
+
 ```bash
 cd tol-master/tol
 ./bootstrap
@@ -121,7 +144,9 @@ sudo make install
 ```
 
 ### Dependencies
+
 To install common build dependencies (including LAPACK for linear algebra) on a fresh system, run:
+
 ```bash
 scripts/setup_build_env.sh
 ```
@@ -134,15 +159,18 @@ archived packages:
 ```bash
 scripts/fetch_default_packages.sh
 ```
+
 These packages contain the standard library and Tcl/Tk integration. Building
 without them removes many of TOL's mathematical functions, time series tools,
 and GUI features.
 
 TOL requires the following external libraries:
+
 - **GSL** (GNU Scientific Library) - Core mathematical functions
 - **FFTW** - Fast Fourier Transform operations
 - **CHOLMOD** - Sparse matrix operations
 - **LAPACK/BLAS** - Linear algebra routines
+- **CLAPACK** (or LAPACK with built-in CLAPACK symbols) - C LAPACK interface
 - **Boost** - C++ utilities and threading
 - **Tcl/Tk** (optional) - For GUI components
 
@@ -175,11 +203,13 @@ NameBlock Timer = [[
 ### Running TOL
 
 After installation, you can run TOL programs using:
+
 ```bash
 tolcon your_script.tol
 ```
 
 Or start an interactive session:
+
 ```bash
 tolcon
 ```
@@ -203,6 +233,7 @@ tolcon
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+
 - Code style and conventions
 - Testing requirements
 - Pull request process
@@ -210,13 +241,15 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## Future Developments
 
 ### TOL MCP Server
+
 We are developing an MCP (Model Context Protocol) server to provide seamless, natural language access to TOL's capabilities. This will enable:
+
 - Natural language queries for time-series analysis
 - Automated code generation from user intent
 - Integration with modern AI assistants
 - Simplified access to TOL's powerful features
 
-See [TOL_MCP_SERVER_STRATEGIC_PLAN.md](TOL_MCP_SERVER_STRATEGIC_PLAN.md) for details.
+The strategic plan for the MCP server is under development and will be added here once available.
 
 ## License
 
@@ -225,7 +258,9 @@ TOL is distributed under the terms specified in the [LICENSE](LICENSE) file.
 ## Documentation
 
 ### API Reference
+
 Comprehensive API documentation is available in the [`docs/api/`](docs/api/) directory:
+
 - **[Complete API Index](docs/api/README.md)** - Overview of all 12 TOL modules
 - **Core Computational**: Mathematical operations, statistical analysis, time-series processing
 - **Data Handling**: Database connectivity, file I/O, system integration
@@ -234,6 +269,7 @@ Comprehensive API documentation is available in the [`docs/api/`](docs/api/) dir
 - **MCP Compatible**: 8 modules support natural language interaction
 
 ### Documentation Features
+
 - **YAML Front-matter**: Machine-readable metadata for MCP server integration
 - **User Personas**: Content tailored for novices, experts, statisticians, and integrators
 - **Code Examples**: Tested TOL code samples with real-world use cases
@@ -248,5 +284,3 @@ Comprehensive API documentation is available in the [`docs/api/`](docs/api/) dir
 ## Acknowledgments
 
 TOL was originally developed by the Bayes Inference research group. Special thanks to all contributors who have helped make TOL a powerful tool for time-oriented programming and analysis.
-
-
