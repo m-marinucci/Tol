@@ -86,7 +86,7 @@ TOL depends on several mathematical and scientific libraries:
 | Boost | 1.65+ | ❌ No | C++ utilities |
 | Tcl/Tk | 8.5+ | ❌ No | GUI components |
 
-\* CLAPACK is required unless your LAPACK build includes the C interface
+* CLAPACK is required unless your LAPACK build includes the C interface
 
 ## Platform-Specific Instructions
 
