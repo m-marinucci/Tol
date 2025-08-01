@@ -71,6 +71,27 @@ jobs:
         name: documentation
         path: public/
 
+  comment-pr:
+    name: Comment on PR
+    runs-on: ubuntu-latest
+    needs: build-documentation
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Comment PR Status
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const status = '${{ needs.build-documentation.result }}';
+          const emoji = status === 'success' ? '✅' : '❌';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `${emoji} Documentation build ${status} for commit ${{ github.sha }}\n\n[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+          });
+
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
