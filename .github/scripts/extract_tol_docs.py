@@ -56,9 +56,25 @@ class TOLDocExtractor:
             self.tol_functions.append(func_doc)
         
         # Extract type definitions
-        type_pattern = r'(Real|Text|Matrix|Serie|NameBlock|Set|Code)\s+(\w+)\s*='
-        for match in re.finditer(type_pattern, content):
-            type_name, var_name = match.groups()
+        # Improved pattern: optional modifiers, allow colon or equals, avoid matching in comments
+        type_pattern = r'^(?!\s*(//|#|\*|/\*)).*?\b(?:public|private|protected)?\s*(Real|Text|Matrix|Serie|NameBlock|Set|Code)\s+(\w+)\s*[:=]'
+        for match in re.finditer(type_pattern, content, re.MULTILINE):
+            # Skip matches inside multi-line comments
+            line_start = content.rfind('\n', 0, match.start()) + 1
+            line_end = content.find('\n', match.start())
+            if line_end == -1:
+                line_end = len(content)
+            line_text = content[line_start:line_end]
+            if (
+                line_text.strip().startswith('//')
+                or line_text.strip().startswith('#')
+                or line_text.strip().startswith('*')
+                or '/*' in line_text
+                or '*/' in line_text
+            ):
+                continue
+            # Extract type and variable name
+            type_name, var_name = match.groups()[-2:]
             type_info = {
                 'type': type_name,
                 'name': var_name,
