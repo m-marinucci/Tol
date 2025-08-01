@@ -393,7 +393,7 @@ extern "C" {
         // Simulate occasional validation failures
         static std::atomic<int> validation_counter{0};
         int count = validation_counter.fetch_add(1);
-        return (count % 50 == 49) ? -1 : 0;  // Fail every 50th validation
+        return (count % VALIDATION_FAILURE_RATE == VALIDATION_FAILURE_RATE - 1) ? -1 : 0;  // Fail every VALIDATION_FAILURE_RATE-th validation
     }
     
     int TestOperatorRegistration() {
