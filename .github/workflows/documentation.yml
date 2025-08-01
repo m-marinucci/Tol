@@ -1,0 +1,147 @@
+name: Auto-Update Documentation
+
+on:
+  push:
+    branches: [ master, develop, feat/auto-documentation ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-documentation:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install Documentation Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz
+        pip install mkdocs==1.5.3 mkdocs-material==9.5.18
+        echo "Doxygen version: $(doxygen --version)"
+
+    - name: Create Documentation Structure
+      run: |
+        mkdir -p docs/api docs/language docs/getting-started docs/developer
+        mkdir -p docs/cpp-api docs/generated
+
+    - name: Generate C++ API Documentation with Doxygen
+      run: |
+        if [ -f Doxyfile ]; then
+          echo "Running Doxygen..."
+          doxygen Doxyfile
+          echo "Doxygen documentation generated"
+        else
+          echo "No Doxyfile found, skipping C++ documentation"
+        fi
+
+    - name: Extract TOL Documentation
+      run: |
+        if [ -f .github/scripts/extract_tol_docs.py ]; then
+          echo "Extracting TOL documentation..."
+          python .github/scripts/extract_tol_docs.py tol-master/tol -o docs/generated
+          echo "TOL documentation extracted"
+        else
+          echo "Documentation extraction script not found"
+        fi
+
+    - name: Generate Documentation Index
+      run: |
+        cat > docs/index.md << 'ENDOFFILE'
+        # TOL Documentation
+        
+        Welcome to the comprehensive TOL documentation.
+        
+        ## Available Documentation
+        
+        - [Getting Started Guide](getting-started/installation/README.md)
+        - [API Reference](api/README.md)
+        - [C++ API Documentation](cpp-api/html/index.html)
+        - [Generated TOL Documentation](generated/index.md)
+        
+        Generated on: $(date)
+        ENDOFFILE
+
+    - name: Build MkDocs
+      run: |
+        # Create minimal mkdocs.yml
+        cat > mkdocs.yml << 'ENDOFFILE'
+        site_name: TOL Documentation
+        theme:
+          name: material
+        ENDOFFILE
+        
+        # Build site
+        mkdocs build -d public
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation
+        path: public/
+
+  comment-pr:
+    name: Comment on PR
+    runs-on: ubuntu-latest
+    needs: build-documentation
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Comment PR Status
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const status = '${{ needs.build-documentation.result }}';
+          const emoji = status === 'success' ? '✅' : '❌';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `${emoji} Documentation build ${status} for commit ${{ github.sha }}\n\n[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+          });
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-documentation
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: documentation
+        path: public
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: public
+
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4

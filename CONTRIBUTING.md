@@ -46,7 +46,7 @@ By participating in this project, you agree to abide by our Code of Conduct:
    git fetch upstream
    git checkout master
    git merge upstream/master
-```bash
+```text
 
 ## How to Contribute
 
@@ -94,6 +94,7 @@ cd tol-master
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Debug
 make -j$(nproc)
+```text
 
 #### Using Autotools
 
@@ -102,6 +103,7 @@ cd tol-master/tol
 ./bootstrap
 ./configure --enable-debug
 make -j$(nproc)
+```text
 
 ### Running Tests
 
@@ -262,6 +264,7 @@ Real RunTests(Real dummy) {
 
    ```bash
    git checkout -b feature/your-feature-name
+```text
 
 2. **Make your changes**:
    - Write clean, well-documented code
@@ -272,6 +275,7 @@ Real RunTests(Real dummy) {
 
    ```bash
    make test
+```text
 
 4. **Commit your changes**:
 
@@ -367,7 +371,7 @@ Example documentation:
  * @throws InsufficientDataException if series too short
  */
 ARIMAModel EstimateARIMA(const Serie& series, int p, int d, int q);
-```cpp
+```text
 
 ### Areas Needing Documentation
 
