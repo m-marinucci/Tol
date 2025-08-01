@@ -367,7 +367,7 @@ Example documentation:
  * @throws InsufficientDataException if series too short
  */
 ARIMAModel EstimateARIMA(const Serie& series, int p, int d, int q);
-```text
+```cpp
 
 ### Areas Needing Documentation
 
