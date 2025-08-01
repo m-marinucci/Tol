@@ -4,7 +4,6 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](#)
 [![Version](https://img.shields.io/badge/version-3.0.0-orange.svg)](#)
-
 TOL (Time-Oriented Language) is a powerful programming language specifically
 designed for time-series analysis, statistical modeling, and mathematical
 computations.
