@@ -38,18 +38,47 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y doxygen graphviz
-        pip install mkdocs mkdocs-material
+        pip install mkdocs==1.5.3 mkdocs-material==9.5.18
+        echo "Doxygen version: $(doxygen --version)"
 
     - name: Create Documentation Structure
       run: |
         mkdir -p docs/api docs/language docs/getting-started docs/developer
+        mkdir -p docs/cpp-api docs/generated
 
-    - name: Generate Simple Index
+    - name: Generate C++ API Documentation with Doxygen
+      run: |
+        if [ -f Doxyfile ]; then
+          echo "Running Doxygen..."
+          doxygen Doxyfile
+          echo "Doxygen documentation generated"
+        else
+          echo "No Doxyfile found, skipping C++ documentation"
+        fi
+
+    - name: Extract TOL Documentation
+      run: |
+        if [ -f .github/scripts/extract_tol_docs.py ]; then
+          echo "Extracting TOL documentation..."
+          python .github/scripts/extract_tol_docs.py tol-master/tol -o docs/generated
+          echo "TOL documentation extracted"
+        else
+          echo "Documentation extraction script not found"
+        fi
+
+    - name: Generate Documentation Index
       run: |
         cat > docs/index.md << 'ENDOFFILE'
         # TOL Documentation
         
-        This is the TOL documentation.
+        Welcome to the comprehensive TOL documentation.
+        
+        ## Available Documentation
+        
+        - [Getting Started Guide](getting-started/installation/README.md)
+        - [API Reference](api/README.md)
+        - [C++ API Documentation](cpp-api/html/index.html)
+        - [Generated TOL Documentation](generated/index.md)
         
         Generated on: $(date)
         ENDOFFILE

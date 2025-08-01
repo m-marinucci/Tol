@@ -1,0 +1,482 @@
+# Doxyfile for TOL - Time-Oriented Language
+# This file configures Doxygen to generate API documentation from C++ source code
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+# The PROJECT_NAME tag is a single word (or a sequence of words surrounded by quotes)
+PROJECT_NAME           = "TOL - Time-Oriented Language"
+
+# The PROJECT_NUMBER tag can be used to enter a project or revision number
+PROJECT_NUMBER         = "3.0.0"
+
+# Brief project description
+PROJECT_BRIEF          = "A declarative programming language for time-series analysis and mathematical computation"
+
+# Logo for the project (optional)
+PROJECT_LOGO           = 
+
+# The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
+OUTPUT_DIRECTORY       = docs/cpp-api
+
+# The OUTPUT_LANGUAGE tag is used to specify the language in which all documentation will be written
+OUTPUT_LANGUAGE        = English
+
+# Brief member descriptions after member documentation
+BRIEF_MEMBER_DESC      = YES
+
+# Repeat brief descriptions in detailed sections
+REPEAT_BRIEF           = YES
+
+# Prepend brief description to detailed description
+ALWAYS_DETAILED_SEC    = NO
+
+# Show all members of a class in the class documentation
+INLINE_INHERITED_MEMB  = NO
+
+# Prepend the full path before files
+FULL_PATH_NAMES        = YES
+
+# Strip this prefix from the path
+STRIP_FROM_PATH        = Tol
+
+# Strip from include path
+STRIP_FROM_INC_PATH    = 
+
+# Short names for files
+SHORT_NAMES            = NO
+
+# JavaDoc style comments
+JAVADOC_AUTOBRIEF      = YES
+
+# Qt style comments
+QT_AUTOBRIEF           = NO
+
+# Multiline C++ style comments
+MULTILINE_CPP_IS_BRIEF = NO
+
+# Tab size in spaces
+TAB_SIZE               = 2
+
+# Aliases for custom commands
+ALIASES                = 
+
+# Optimize for C++ output
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+OPTIMIZE_FOR_FORTRAN   = NO
+OPTIMIZE_OUTPUT_VHDL   = NO
+
+# Extension mapping
+EXTENSION_MAPPING      = 
+
+# Markdown support
+MARKDOWN_SUPPORT       = YES
+
+# Automatic link generation
+AUTOLINK_SUPPORT       = YES
+
+# Use built-in STL support
+BUILTIN_STL_SUPPORT    = YES
+
+# Group member descriptions
+DISTRIBUTE_GROUP_DOC   = NO
+
+# Show namespaces
+SHOW_NAMESPACES        = YES
+
+#---------------------------------------------------------------------------
+# Build related configuration options
+#---------------------------------------------------------------------------
+
+# Extract all entities
+EXTRACT_ALL            = YES
+
+# Extract private members
+EXTRACT_PRIVATE        = NO
+
+# Extract static members
+EXTRACT_STATIC         = YES
+
+# Extract local classes
+EXTRACT_LOCAL_CLASSES  = YES
+
+# Extract anonymous namespaces
+EXTRACT_ANON_NSPACES   = NO
+
+# Hide undocumented members
+HIDE_UNDOC_MEMBERS     = NO
+
+# Hide undocumented classes
+HIDE_UNDOC_CLASSES     = NO
+
+# Hide friend compounds
+HIDE_FRIEND_COMPOUNDS  = NO
+
+# Hide in body docs
+HIDE_IN_BODY_DOCS      = NO
+
+# Show include files
+SHOW_INCLUDE_FILES     = YES
+
+# Show inline info
+INLINE_INFO            = YES
+
+# Sort members
+SORT_MEMBER_DOCS       = YES
+
+# Sort brief descriptions
+SORT_BRIEF_DOCS        = NO
+
+# Sort by scope name
+SORT_MEMBERS_CTORS_1ST = NO
+
+# Sort group names
+SORT_GROUP_NAMES       = NO
+
+# Generate deprecation list
+GENERATE_DEPRECATEDLIST= YES
+
+# Enabled sections
+ENABLED_SECTIONS       = 
+
+# Maximum initializer lines
+MAX_INITIALIZER_LINES  = 30
+
+# Show used files
+SHOW_USED_FILES        = YES
+
+# Show directories
+SHOW_DIRECTORIES       = NO
+
+# Show files
+SHOW_FILES             = YES
+
+#---------------------------------------------------------------------------
+# Configuration options related to warning and progress messages
+#---------------------------------------------------------------------------
+
+# Quiet mode
+QUIET                  = NO
+
+# Warnings
+WARNINGS               = YES
+
+# Warn if undocumented
+WARN_IF_UNDOCUMENTED   = YES
+
+# Warn if doc error
+WARN_IF_DOC_ERROR      = YES
+
+# Warn on undocumented params
+WARN_NO_PARAMDOC       = NO
+
+# Warning format
+WARN_FORMAT            = "$file:$line: $text"
+
+# Warning logfile
+WARN_LOGFILE           = doxygen_warnings.log
+
+#---------------------------------------------------------------------------
+# Configuration options related to the input files
+#---------------------------------------------------------------------------
+
+# Input directories and files
+INPUT                  = tol-master/tol/bbasic \
+                        tol-master/tol/bmath \
+                        tol-master/tol/btol \
+                        tol-master/tol/bparser \
+                        tol-master/tol/lang \
+                        tol-master/tol/OIS
+
+# File patterns to include
+FILE_PATTERNS          = *.c \
+                        *.cc \
+                        *.cxx \
+                        *.cpp \
+                        *.c++ \
+                        *.h \
+                        *.hh \
+                        *.hxx \
+                        *.hpp \
+                        *.h++
+
+# Recursive search
+RECURSIVE              = YES
+
+# Exclude patterns
+EXCLUDE                = */test/* \
+                        */tests/* \
+                        */deprecated/*
+
+# Exclude symbols
+EXCLUDE_SYMLINKS       = NO
+
+# Exclude patterns from the input
+EXCLUDE_PATTERNS       = *_test.* \
+                        *_unittest.*
+
+# Example path
+EXAMPLE_PATH           = tol-master/tol_tests
+
+# Example patterns
+EXAMPLE_PATTERNS       = *.tol
+
+# Example recursive
+EXAMPLE_RECURSIVE      = YES
+
+# Filter source files
+FILTER_SOURCE_FILES    = NO
+
+#---------------------------------------------------------------------------
+# Configuration options related to the HTML output
+#---------------------------------------------------------------------------
+
+# Generate HTML
+GENERATE_HTML          = YES
+
+# HTML output directory
+HTML_OUTPUT            = html
+
+# HTML file extension
+HTML_FILE_EXTENSION    = .html
+
+# HTML header
+HTML_HEADER            = 
+
+# HTML footer
+HTML_FOOTER            = 
+
+# HTML stylesheet
+HTML_STYLESHEET        = 
+
+# HTML extra stylesheet
+HTML_EXTRA_STYLESHEET  = 
+
+# HTML colorstyle
+HTML_COLORSTYLE_HUE    = 220
+
+# HTML colorstyle saturation
+HTML_COLORSTYLE_SAT    = 100
+
+# HTML colorstyle gamma
+HTML_COLORSTYLE_GAMMA  = 80
+
+# Timestamp
+HTML_TIMESTAMP         = YES
+
+# Dynamic sections
+HTML_DYNAMIC_SECTIONS  = YES
+
+# Generate index
+GENERATE_HTMLHELP      = NO
+
+# Generate treeview
+GENERATE_TREEVIEW      = YES
+
+# Treeview width
+TREEVIEW_WIDTH         = 250
+
+# Enum values per line
+ENUM_VALUES_PER_LINE   = 4
+
+# Formula fontsize
+FORMULA_FONTSIZE       = 10
+
+# Use MathJax
+USE_MATHJAX            = YES
+
+# MathJax format
+MATHJAX_FORMAT         = HTML-CSS
+
+# MathJax relative path
+MATHJAX_RELPATH        = https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/
+
+# Search engine
+SEARCHENGINE           = YES
+
+# Server based search
+SERVER_BASED_SEARCH    = NO
+
+#---------------------------------------------------------------------------
+# Configuration options related to the LaTeX output
+#---------------------------------------------------------------------------
+
+# Generate LaTeX
+GENERATE_LATEX         = NO
+
+# LaTeX output directory
+LATEX_OUTPUT           = latex
+
+# LaTeX command name
+LATEX_CMD_NAME         = latex
+
+# MakeIndex command name
+MAKEINDEX_CMD_NAME     = makeindex
+
+# Compact LaTeX
+COMPACT_LATEX          = NO
+
+# Paper type
+PAPER_TYPE             = a4
+
+# Extra packages
+EXTRA_PACKAGES         = 
+
+# LaTeX header
+LATEX_HEADER           = 
+
+# LaTeX footer
+LATEX_FOOTER           = 
+
+# PDF hyperlinks
+PDF_HYPERLINKS         = YES
+
+# Use PDFLaTeX
+USE_PDFLATEX           = YES
+
+# LaTeX batch mode
+LATEX_BATCHMODE        = NO
+
+# LaTeX hide indices
+LATEX_HIDE_INDICES     = NO
+
+#---------------------------------------------------------------------------
+# Configuration options related to the preprocessor
+#---------------------------------------------------------------------------
+
+# Enable preprocessing
+ENABLE_PREPROCESSING   = YES
+
+# Macro expansion
+MACRO_EXPANSION        = YES
+
+# Expand only predefined
+EXPAND_ONLY_PREDEF     = NO
+
+# Search includes
+SEARCH_INCLUDES        = YES
+
+# Include path
+INCLUDE_PATH           = tol-master/tol
+
+# Include file patterns
+INCLUDE_FILE_PATTERNS  = 
+
+# Predefined macros
+PREDEFINED             = DOXYGEN \
+                        __cplusplus=201703L \
+                        "TOLBASE_API=" \
+                        "BSR_API=" \
+                        "BTOL_API="
+
+# Expand as defined
+EXPAND_AS_DEFINED      = 
+
+# Skip function macros
+SKIP_FUNCTION_MACROS   = YES
+
+#---------------------------------------------------------------------------
+# Configuration options related to external references
+#---------------------------------------------------------------------------
+
+# Generate tagfile
+GENERATE_TAGFILE       = tol.tag
+
+# All externals
+ALLEXTERNALS           = NO
+
+# External groups
+EXTERNAL_GROUPS        = YES
+
+# Perl path
+PERL_PATH              = /usr/bin/perl
+
+#---------------------------------------------------------------------------
+# Configuration options related to the dot tool
+#---------------------------------------------------------------------------
+
+# Class diagrams
+CLASS_DIAGRAMS         = YES
+
+# Hide undoc relations
+HIDE_UNDOC_RELATIONS   = YES
+
+# Have dot
+HAVE_DOT               = YES
+
+# Dot number of threads
+DOT_NUM_THREADS        = 0
+
+# Dot fontname
+DOT_FONTNAME           = Helvetica
+
+# Dot fontsize
+DOT_FONTSIZE           = 10
+
+# Dot fontpath
+DOT_FONTPATH           = 
+
+# Class graph
+CLASS_GRAPH            = YES
+
+# Collaboration graph
+COLLABORATION_GRAPH    = YES
+
+# Group graphs
+GROUP_GRAPHS           = YES
+
+# UML look
+UML_LOOK               = NO
+
+# UML limit num fields
+UML_LIMIT_NUM_FIELDS   = 10
+
+# Template relations
+TEMPLATE_RELATIONS     = YES
+
+# Include graph
+INCLUDE_GRAPH          = YES
+
+# Included by graph
+INCLUDED_BY_GRAPH      = YES
+
+# Call graph
+CALL_GRAPH             = YES
+
+# Caller graph
+CALLER_GRAPH           = YES
+
+# Graphical hierarchy
+GRAPHICAL_HIERARCHY    = YES
+
+# Directory graph
+DIRECTORY_GRAPH        = YES
+
+# Dot image format
+DOT_IMAGE_FORMAT       = svg
+
+# Interactive SVG
+INTERACTIVE_SVG        = YES
+
+# Dot path
+DOT_PATH               = 
+
+# Dot file dirs
+DOTFILE_DIRS           = 
+
+# Max dot graph depth
+MAX_DOT_GRAPH_DEPTH    = 0
+
+# Dot transparent
+DOT_TRANSPARENT        = NO
+
+# Dot multi targets
+DOT_MULTI_TARGETS      = YES
+
+# Generate legend
+GENERATE_LEGEND        = YES
+
+# Dot cleanup
+DOT_CLEANUP            = YES
