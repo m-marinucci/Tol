@@ -46,7 +46,7 @@ By participating in this project, you agree to abide by our Code of Conduct:
    git fetch upstream
    git checkout master
    git merge upstream/master
-```text
+```bash
 
 ## How to Contribute
 
