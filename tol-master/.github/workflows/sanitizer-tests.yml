@@ -242,7 +242,7 @@ jobs:
         
         cmake .. \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXE_FLAGS="-g -O1 -fsanitize=thread -fno-omit-frame-pointer" \
+          -DCMAKE_CXX_FLAGS="-g -O1 -fsanitize=thread -fno-omit-frame-pointer" \
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread" \
           -DENABLE_THREAD_SANITIZER=ON
         
