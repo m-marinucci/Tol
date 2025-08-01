@@ -88,7 +88,11 @@ mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release \
        -DCLAPACK_LIBRARY=/path/to/liblapack.so  # if LAPACK already provides CLAPACK
 # Install a separate CLAPACK package if your LAPACK build does not include the
-# C interface.
+cmake .. -DCMAKE_BUILD_TYPE=Release
+# Note: You only need to set -DCLAPACK_LIBRARY if your LAPACK installation does not provide CLAPACK symbols or if automatic detection fails.
+# For example:
+#   cmake .. -DCMAKE_BUILD_TYPE=Release -DCLAPACK_LIBRARY=/path/to/libclapack.so
+# Install a separate CLAPACK package if your LAPACK build does not include the C interface.
 make -j$(nproc)  # Linux
 make -j$(sysctl -n hw.ncpu)  # macOS
 
