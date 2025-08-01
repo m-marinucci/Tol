@@ -5,6 +5,7 @@ This document provides clear instructions for contributors working on TOL API do
 ## Overview
 
 The TOL API documentation follows a unified structure that combines:
+
 - **PR #14's approach**: User-friendly filenames and comprehensive organization
 - **PR #15's approach**: Detailed technical content and accurate module references
 - **YAML front-matter**: Machine-readable metadata for MCP server integration
@@ -14,11 +15,13 @@ The TOL API documentation follows a unified structure that combines:
 ### Option A: Sequential Merge (Recommended)
 
 **Step 1: Merge PR #14 First**
+
 1. PR #14 establishes the base structure in `docs/api/`
 2. Creates the main README.md index
 3. Sets the filename convention
 
 **Step 2: Rebase and Update PR #15**
+
 1. PR #15 author rebases onto merged PR #14
 2. Moves files from `docs/api_reference/` to `docs/api/`
 3. Renames files according to mapping table (see below)
@@ -28,6 +31,7 @@ The TOL API documentation follows a unified structure that combines:
 ### Option B: Consolidated Merge
 
 Create a new branch that manually combines both PRs:
+
 1. Clone repository and create `docs-consolidation` branch
 2. Manually merge content from both PRs
 3. Apply file naming mappings
@@ -113,19 +117,25 @@ Each documentation file should follow this structure:
 ```
 
 **Errors**
+
 - `ErrorType` if condition
 
 ## Data Types
+
 [List and describe relevant data types]
 
 ## Integration Notes
+
 [How this module works with other modules]
 
 ## Performance Considerations
+
 [Memory usage, computational complexity, optimization tips]
 
 ## Related Modules
+
 [Cross-references to related documentation]
+
 ```
 
 ## Step-by-Step Update Instructions
@@ -141,6 +151,7 @@ Each documentation file should follow this structure:
    ```
 
 3. **Move and rename files**:
+
    ```bash
    # Create the target directory structure
    mkdir -p docs/api
@@ -165,6 +176,7 @@ Each documentation file should follow this structure:
    - Maintain consistent formatting
 
 6. **Validate and test**:
+
    ```bash
    # Validate YAML front-matter
    python scripts/generate_api_index.py --validate-only
@@ -177,6 +189,7 @@ Each documentation file should follow this structure:
    ```
 
 7. **Update commit message and push**:
+
    ```bash
    git add docs/api/
    git commit -m "Merge API documentation: combine PR #14 structure with PR #15 content
@@ -195,10 +208,13 @@ Each documentation file should follow this structure:
 2. **Use the YAML template** from `docs/yaml_frontmatter_template.yaml`
 3. **Follow the content structure** outlined above
 4. **Test your documentation**:
+
    ```bash
    python scripts/generate_api_index.py --validate-only
    ```
+
 5. **Update the index**:
+
    ```bash
    python scripts/generate_api_index.py
    ```
@@ -221,9 +237,19 @@ Before submitting documentation:
 - [ ] Markdown formatting is consistent
 - [ ] File passes markdownlint validation
 
+Before running the helper scripts below, make sure the required Python
+packages are installed:
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs dependencies like **PyYAML** used by the index generator.
+
 ## Automated Tools
 
 ### Index Generation
+
 ```bash
 # Generate/update the main README
 python scripts/generate_api_index.py
@@ -233,6 +259,7 @@ python scripts/generate_api_index.py --validate-only
 ```
 
 ### Markdown Linting
+
 ```bash
 # Fix common markdown issues
 npx markdownlint docs/api/*.md --fix
@@ -242,6 +269,7 @@ npx markdownlint docs/api/*.md
 ```
 
 ### YAML Validation
+
 The index generator automatically validates YAML front-matter and reports errors.
 
 ## Benefits for User Personas
@@ -257,6 +285,7 @@ This documentation structure serves multiple audiences:
 ## Support and Questions
 
 For questions about the documentation process:
+
 1. Check this guide first
 2. Review existing documentation examples
 3. Validate with automated tools
@@ -265,6 +294,7 @@ For questions about the documentation process:
 ## Future Enhancements
 
 Planned improvements to the documentation system:
+
 - Interactive code examples
 - Automated API extraction from C++ source
 - Documentation versioning
