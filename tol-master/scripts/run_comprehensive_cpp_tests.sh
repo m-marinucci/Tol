@@ -197,7 +197,20 @@ test_cpp_standards() {
                 -DCMAKE_CXX_STANDARD="$std" \
                 -DCMAKE_CXX_STANDARD_REQUIRED=ON \
                 -DCMAKE_CXX_EXTENSIONS=OFF \
-                -DCMAKE_C_COMPILER="$(echo $compiler | sed 's/g++/gcc/' | sed 's/clang++/clang/')" \
+            # Determine C compiler from C++ compiler name
+            C_COMPILER="$(echo $compiler | sed 's/g++/gcc/' | sed 's/clang++/clang/')"
+            if ! command -v "$C_COMPILER" >/dev/null 2>&1; then
+                log_error "C compiler '$C_COMPILER' (derived from '$compiler') not found. Skipping $compiler C++$std."
+                test_results+=("$build_name:FAILED:missing_c_compiler")
+                continue
+            fi
+            # Configure
+            if ! cmake "$TOL_DIR" \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_CXX_STANDARD="$std" \
+                -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+                -DCMAKE_CXX_EXTENSIONS=OFF \
+                -DCMAKE_C_COMPILER="$C_COMPILER" \
                 -DCMAKE_CXX_COMPILER="$compiler" \
                 -DENABLE_TESTING=ON \
                 >> "$LOG_FILE" 2>&1; then
