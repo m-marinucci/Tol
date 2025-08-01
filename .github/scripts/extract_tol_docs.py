@@ -100,9 +100,16 @@ class TOLDocExtractor:
             self.tol_types.append(type_info)
         
         # Extract code examples
-        example_pattern = r'//\s*Example:(.+?)(?=\n(?!//)|$)'
-        for match in re.finditer(example_pattern, content, re.DOTALL):
-            example = match.group(1).strip()
+        example_pattern = r'//\s*Example:(.*(?:\n\s*//.*)*)'
+        for match in re.finditer(example_pattern, content):
+            raw_example = match.group(1)
+            # Split into lines, remove leading // and whitespace
+            example_lines = [
+                re.sub(r'^\s*//\s?', '', line)
+                for line in raw_example.splitlines()
+            ]
+            # Remove any empty lines at the start/end
+            example = '\n'.join(line.rstrip() for line in example_lines).strip()
             example_info = {
                 'code': example,
                 'file': str(filepath),
