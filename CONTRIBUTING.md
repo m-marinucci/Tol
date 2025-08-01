@@ -94,7 +94,6 @@ cd tol-master
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Debug
 make -j$(nproc)
-```text
 
 #### Using Autotools
 
