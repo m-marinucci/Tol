@@ -706,9 +706,6 @@ class TOLDocExtractor:
         print(f"- Examples extracted: {len(self.tol_examples)}")
         print(f"- TOL-C++ bindings: {len(self.tol_cpp_mappings)}")
 
-import os
-import sys
-
 def main():
     parser = argparse.ArgumentParser(description="Extract documentation from TOL files")
     parser.add_argument("directory", help="Directory containing TOL files")
