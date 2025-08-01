@@ -170,10 +170,10 @@ jobs:
         run: |
           echo "Checking build security practices..."
           
-          # Check for compiler security flags
+          # Check for compiler warning and security flags
           find . -name "CMakeLists.txt" | while read file; do
-            if ! grep -q "Wall\|Wextra\|Werror" "$file"; then
-              echo "INFO: Consider adding compiler warnings in $file"
+            if ! grep -qE "Wall|Wextra|Werror|Wformat|Wformat-security|-fPIE|-pie" "$file"; then
+              echo "INFO: Consider adding compiler warning and security flags (-Wall, -Wextra, -Werror, -Wformat, -Wformat-security, -fPIE, -pie) in $file"
             fi
             
             if ! grep -q "fstack-protector\|D_FORTIFY_SOURCE" "$file"; then
