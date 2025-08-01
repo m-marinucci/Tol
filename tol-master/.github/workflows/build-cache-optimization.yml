@@ -133,10 +133,12 @@ jobs:
     - name: Clean Build Directory
       working-directory: tol-master/tol/build-${{ matrix.cache_type }}-${{ matrix.compiler }}
       run: |
+        # 'make clean' should remove all build artifacts including object files.
+        # If additional cleaning is needed, document the reason below.
         make clean
-        # Remove object files but keep cache
-        find . -name "*.o" -delete
-        find . -name "*.obj" -delete
+        # If you find that 'make clean' does not remove all .o/.obj files, uncomment the following lines:
+        # find . -name "*.o" -delete
+        # find . -name "*.obj" -delete
 
     - name: Second Build (Warm Cache)
       working-directory: tol-master/tol/build-${{ matrix.cache_type }}-${{ matrix.compiler }}
