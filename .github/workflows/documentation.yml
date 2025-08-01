@@ -1,0 +1,82 @@
+name: Auto-Update Documentation
+
+on:
+  push:
+    branches: [ master, develop, feat/auto-documentation ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-documentation:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install Documentation Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz
+        pip install mkdocs mkdocs-material
+
+    - name: Create Documentation Structure
+      run: |
+        mkdir -p docs/api docs/language docs/getting-started docs/developer
+
+    - name: Generate Simple Index
+      run: |
+        cat > docs/index.md << 'ENDOFFILE'
+        # TOL Documentation
+        
+        This is the TOL documentation.
+        
+        Generated on: $(date)
+        ENDOFFILE
+
+    - name: Build MkDocs
+      run: |
+        # Create minimal mkdocs.yml
+        cat > mkdocs.yml << 'ENDOFFILE'
+        site_name: TOL Documentation
+        theme:
+          name: material
+        ENDOFFILE
+        
+        # Build site
+        mkdocs build -d public
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: public/
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-documentation
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    
+    steps:
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
