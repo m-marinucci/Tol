@@ -148,7 +148,9 @@ WriteLn("3-day moving average: " + Text(ma3));
 
 // Advanced: ARIMA forecasting (if you have time)
 // SetOfSerie arima = ARIMA::Estimate(prices, 1, 0, 1);
-// Serie forecast = ARIMA::Forecast(arima, 5);
+// Advanced: ARIMA forecasting (requires ARIMA module/plugin)
+SetOfSerie arima = ARIMA::Estimate(prices, 1, 0, 1);
+Serie forecast = ARIMA::Forecast(arima, 5);
 ```
 
 **Key Serie Operations:**
