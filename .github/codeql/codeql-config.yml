@@ -38,7 +38,7 @@ packs:
 # Configuration for specific queries
 query-filters:
   - exclude:
-      id: 
+      id:
         - cpp/poorly-documented-function  # Too noisy for existing codebase
         - cpp/short-global-name           # Legacy naming conventions
   - include:

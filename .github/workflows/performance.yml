@@ -71,9 +71,10 @@ jobs:
             export CC=gcc-11
             export CXX=g++-11
           elif [[ "${{ matrix.compiler }}" == "clang-14" ]]; then
-            sudo apt install -y clang-14 clang++-14
-            export CC=clang-14
-            export CXX=clang++-14
+            # For Ubuntu 24.04, install clang-18 as clang-14 is not available
+            sudo apt install -y clang-18 clang++-18
+            export CC=clang-18
+            export CXX=clang++-18
           fi
 
       - name: Cache build dependencies
@@ -98,8 +99,9 @@ jobs:
             export CC=gcc-11
             export CXX=g++-11
           elif [[ "${{ matrix.compiler }}" == "clang-14" ]]; then
-            export CC=clang-14
-            export CXX=clang++-14
+            # Use clang-18 for Ubuntu 24.04 compatibility
+            export CC=clang-18
+            export CXX=clang++-18
           fi
           
           # Configure with performance optimizations
