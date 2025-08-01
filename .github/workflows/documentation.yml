@@ -1,0 +1,487 @@
+name: Auto-Update Documentation
+
+on:
+  push:
+    branches: [ master, develop ]
+    paths:
+      - 'tol-master/**/*.cpp'
+      - 'tol-master/**/*.h'
+      - 'tol-master/**/*.hpp'
+      - 'tol-master/**/*.tol'
+      - 'docs/**'
+      - '.github/workflows/documentation.yml'
+      - 'CLAUDE.md'
+      - 'README.md'
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild all documentation'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  analyze-changes:
+    name: Analyze Documentation Changes
+    runs-on: ubuntu-latest
+    outputs:
+      docs_changed: ${{ steps.changes.outputs.docs }}
+      code_changed: ${{ steps.changes.outputs.code }}
+      config_changed: ${{ steps.changes.outputs.config }}
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+    
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          docs:
+            - 'docs/**'
+            - '*.md'
+          code:
+            - 'tol-master/**/*.cpp'
+            - 'tol-master/**/*.h'
+            - 'tol-master/**/*.hpp'
+            - 'tol-master/**/*.tol'
+          config:
+            - '.github/workflows/documentation.yml'
+            - 'Doxyfile'
+            - 'mkdocs.yml'
+
+  build-documentation:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    needs: analyze-changes
+    if: |
+      needs.analyze-changes.outputs.docs_changed == 'true' ||
+      needs.analyze-changes.outputs.code_changed == 'true' ||
+      needs.analyze-changes.outputs.config_changed == 'true' ||
+      github.event.inputs.force_rebuild == 'true'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0  # Full history for better documentation
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install Documentation Tools
+      run: |
+        # System packages
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz plantuml pandoc
+        
+        # Python packages for documentation
+        pip install --upgrade pip
+        pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
+        pip install sphinx sphinx-rtd-theme breathe exhale
+        pip install pydoc-markdown
+
+    - name: Extract Code Comments and Docstrings
+      run: |
+        mkdir -p docs/api
+        
+        # Extract documentation from C++ files
+        find tol-master -name "*.cpp" -o -name "*.h" -o -name "*.hpp" | while read file; do
+          echo "Processing: $file"
+          # Extract and format documentation comments
+          python3 - << 'EOF' "$file" > "docs/api/$(basename "$file" .cpp).md" 2>/dev/null || true
+import sys
+import re
+import os
+
+def extract_docs(filepath):
+    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+        content = f.read()
+    
+    # Extract Doxygen-style comments
+    doxygen_comments = re.findall(r'/\*\*.*?\*/', content, re.DOTALL)
+    
+    # Extract function signatures with their comments
+    functions = re.findall(r'(/\*\*.*?\*/)\s*\n\s*(\w+\s+\w+\s*\([^)]*\))', content, re.DOTALL)
+    
+    if doxygen_comments or functions:
+        print(f"# Documentation for {os.path.basename(filepath)}\n")
+        
+        for comment in doxygen_comments:
+            cleaned = comment.strip('/*').strip()
+            print(cleaned)
+            print()
+        
+        if functions:
+            print("\n## Functions\n")
+            for comment, signature in functions:
+                print(f"### {signature}")
+                print(comment.strip('/*').strip())
+                print()
+
+if len(sys.argv) > 1:
+    extract_docs(sys.argv[1])
+EOF
+        done
+
+    - name: Generate Doxygen Documentation
+      run: |
+        # Create enhanced Doxyfile
+        cat > Doxyfile << 'EOF'
+PROJECT_NAME           = "TOL - Time Oriented Language"
+PROJECT_NUMBER         = "${{ github.sha }}"
+PROJECT_BRIEF          = "Declarative language for time-series analysis and mathematical computation"
+PROJECT_LOGO           = 
+
+INPUT                  = tol-master/tol README.md CLAUDE.md
+RECURSIVE              = YES
+FILE_PATTERNS          = *.cpp *.h *.hpp *.c *.cc *.cxx *.tol *.md
+EXCLUDE_PATTERNS       = */build/* */deps-build/* */.git/*
+
+OUTPUT_DIRECTORY       = docs/doxygen
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+
+HTML_OUTPUT            = html
+HTML_TIMESTAMP         = YES
+HTML_DYNAMIC_SECTIONS  = YES
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_EXTRA_STYLESHEET  = 
+HTML_COLORSTYLE        = AUTO_LIGHT
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = NO
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+USE_HTAGS              = NO
+
+GENERATE_TODOLIST      = YES
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = tol-master/tol/include
+
+CLASS_DIAGRAMS         = YES
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 0
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = YES
+GROUP_GRAPHS           = YES
+UML_LOOK               = YES
+TEMPLATE_RELATIONS     = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+GRAPHICAL_HIERARCHY    = YES
+DIRECTORY_GRAPH        = YES
+
+SEARCHENGINE           = YES
+SERVER_BASED_SEARCH    = NO
+
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+WARN_AS_ERROR          = NO
+EOF
+        
+        # Run Doxygen
+        doxygen Doxyfile || echo "Doxygen completed with warnings"
+
+    - name: Generate TOL Language Reference
+      run: |
+        mkdir -p docs/language
+        
+        # Extract TOL syntax examples from test files
+        echo "# TOL Language Reference" > docs/language/reference.md
+        echo "" >> docs/language/reference.md
+        echo "Auto-generated from test files on $(date)" >> docs/language/reference.md
+        echo "" >> docs/language/reference.md
+        
+        # Find and process TOL test files
+        find tol_tests -name "*.tol" | sort | while read file; do
+          echo "## $(basename "$file" .tol)" >> docs/language/reference.md
+          echo "" >> docs/language/reference.md
+          echo '```tol' >> docs/language/reference.md
+          head -50 "$file" | grep -E "^(//|Real|Text|Matrix|Serie|NameBlock)" >> docs/language/reference.md || true
+          echo '```' >> docs/language/reference.md
+          echo "" >> docs/language/reference.md
+        done
+
+    - name: Generate Change Log
+      run: |
+        mkdir -p docs/changelog
+        
+        # Generate changelog from git commits
+        cat > docs/changelog/CHANGELOG.md << 'EOF'
+# Change Log
+
+Auto-generated on $(date)
+
+## Recent Changes
+
+EOF
+        
+        # Add recent commits
+        git log --pretty=format:"- %h %s (%an, %ar)" -20 >> docs/changelog/CHANGELOG.md
+
+    - name: Create MkDocs Configuration
+      run: |
+        cat > mkdocs.yml << 'EOF'
+site_name: TOL Documentation
+site_description: Time Oriented Language - Comprehensive Documentation
+site_url: https://m-marinucci.github.io/Tol/
+repo_url: https://github.com/m-marinucci/Tol
+repo_name: m-marinucci/Tol
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.arithmatex:
+      generic: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Building from Source: getting-started/building.md
+  - Language Reference:
+      - Overview: language/overview.md
+      - Syntax: language/syntax.md
+      - Types: language/types.md
+      - Functions: language/functions.md
+      - Examples: language/reference.md
+  - API Documentation:
+      - C++ API: api/cpp-api.md
+      - TOL Standard Library: api/stdlib.md
+      - Module Reference: api/modules.md
+  - Developer Guide:
+      - Architecture: developer/architecture.md
+      - Contributing: developer/contributing.md
+      - Testing: developer/testing.md
+  - Changelog: changelog/CHANGELOG.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/m-marinucci/Tol
+  version:
+    provider: mike
+EOF
+
+    - name: Create Documentation Index
+      run: |
+        cat > docs/index.md << 'EOF'
+# TOL - Time Oriented Language
+
+Welcome to the TOL documentation. This documentation is automatically generated and updated with every commit.
+
+## What is TOL?
+
+TOL is a declarative, autoevaluative programming language specifically designed for:
+
+- **Time-series analysis** - Built-in support for temporal data structures
+- **Mathematical computation** - Extensive mathematical libraries
+- **Statistical modeling** - Comprehensive statistical functions
+- **Scientific computing** - High-performance numerical operations
+
+## Key Features
+
+- 🚀 **High Performance** - Optimized C++ implementation
+- 📊 **Time-Series Native** - First-class support for temporal data
+- 🔢 **Rich Type System** - Complex numbers, matrices, polynomials
+- 🧮 **Mathematical Libraries** - GSL, FFTW, BLAS/LAPACK integration
+- 🔄 **Lazy Evaluation** - Efficient computation strategies
+- 🗄️ **Dynamic Memory Management** - Custom allocator with reference counting
+
+## Quick Example
+
+```tol
+// Load time series data
+Serie prices = ReadSerie("stock_prices.csv");
+
+// Calculate returns
+Serie returns = Log(prices / prices.B);
+
+// Perform ARIMA modeling
+SetOfSerie model = ARIMA::Estimate(returns, 1, 1, 1);
+Serie forecast = ARIMA::Forecast(model, 30);
+
+// Display results
+WriteLn("30-day forecast: " + forecast);
+```
+
+## Documentation Structure
+
+- **[Getting Started](getting-started/installation.md)** - Installation and setup guides
+- **[Language Reference](language/overview.md)** - Complete language documentation
+- **[API Documentation](api/cpp-api.md)** - Detailed API references
+- **[Developer Guide](developer/architecture.md)** - For contributors
+
+## Latest Updates
+
+This documentation was generated on: **$(date)**  
+From commit: **${{ github.sha }}**  
+Branch: **${{ github.ref_name }}**
+
+## Support
+
+- 🐛 [Report Issues](https://github.com/m-marinucci/Tol/issues)
+- 💬 [Discussions](https://github.com/m-marinucci/Tol/discussions)
+- 📧 [Contact](mailto:support@tol-project.org)
+EOF
+
+    - name: Build MkDocs Site
+      run: |
+        # Create necessary directories and stub files
+        mkdir -p docs/getting-started docs/language docs/api docs/developer
+        
+        # Create stub files if they don't exist
+        for dir in getting-started language api developer; do
+          for file in installation quickstart building overview syntax types functions cpp-api stdlib modules architecture contributing testing; do
+            if [ ! -f "docs/$dir/$file.md" ]; then
+              echo "# $(echo $file | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g')" > "docs/$dir/$file.md" 2>/dev/null || true
+              echo "" >> "docs/$dir/$file.md" 2>/dev/null || true
+              echo "This page is under construction." >> "docs/$dir/$file.md" 2>/dev/null || true
+            fi
+          done
+        done
+        
+        # Build the documentation
+        mkdocs build -d public
+
+    - name: Generate Documentation Metrics
+      run: |
+        # Create metrics file
+        cat > docs/metrics.json << EOF
+{
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "commit": "${{ github.sha }}",
+  "branch": "${{ github.ref_name }}",
+  "stats": {
+    "total_files": $(find tol-master -name "*.cpp" -o -name "*.h" | wc -l),
+    "documented_files": $(grep -l "/\*\*" tol-master/**/*.{cpp,h} 2>/dev/null | wc -l || echo 0),
+    "total_functions": $(grep -E "^\s*\w+\s+\w+\s*\(" tol-master/**/*.{cpp,h} 2>/dev/null | wc -l || echo 0),
+    "test_files": $(find tol_tests -name "*.tol" | wc -l)
+  }
+}
+EOF
+
+    - name: Upload Documentation Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation-${{ github.sha }}
+        path: |
+          public/
+          docs/doxygen/html/
+          docs/metrics.json
+
+    - name: Setup Pages
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      uses: actions/configure-pages@v4
+
+    - name: Upload to GitHub Pages
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: public
+
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+  notify-documentation:
+    name: Notify Documentation Status
+    runs-on: ubuntu-latest
+    needs: build-documentation
+    if: always()
+    
+    steps:
+    - name: Create Status Comment
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const status = '${{ needs.build-documentation.result }}';
+          const emoji = status === 'success' ? '✅' : '❌';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `${emoji} Documentation build ${status} for commit ${{ github.sha }}`
+          });
