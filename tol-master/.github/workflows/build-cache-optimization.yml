@@ -378,9 +378,30 @@ jobs:
         CC: gcc-11
         CXX: g++-11
       run: |
-        for jobs in 1 2 4 8; do
+        # Detect number of available CPU cores
+        if command -v nproc >/dev/null 2>&1; then
+          CORES=$(nproc)
+        elif [[ "$RUNNER_OS" == "macOS" ]]; then
+          CORES=$(sysctl -n hw.ncpu)
+        else
+          CORES=2  # Fallback default
+        fi
+
+        # Choose job counts based on available cores
+        JOB_COUNTS="1"
+        if [ "$CORES" -ge 2 ]; then
+          JOB_COUNTS="$JOB_COUNTS 2"
+        fi
+        if [ "$CORES" -ge 4 ]; then
+          JOB_COUNTS="$JOB_COUNTS 4"
+        fi
+        if [ "$CORES" -ge 8 ]; then
+          JOB_COUNTS="$JOB_COUNTS 8"
+        fi
+
+        for jobs in $JOB_COUNTS; do
           echo "Testing with -j$jobs"
-          
+
           mkdir -p build-j$jobs
           cd build-j$jobs
           
