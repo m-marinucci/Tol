@@ -165,9 +165,9 @@ template <class Any>
 void BMatrixGen<Any>::SetAllValuesTo(const Any& x0)
 //--------------------------------------------------------------------
 {
-  register int  s = data_.Size();
-  register Any* x = data_.GetBuffer();
-  register Any* y = x + s;
+  int  s = data_.Size();
+  Any* x = data_.GetBuffer();
+  Any* y = x + s;
   for(; x<y; x++)
   {
     (*x) = x0;
@@ -183,15 +183,15 @@ BMatrixGen<Any>& BMatrixGen<Any>::Copy(const BMatrixGen<Any>* m)
  */
 //--------------------------------------------------------------------
 {
-  register int i;
-  register int j;
-  register int r = m->Rows();
-  register int c = m->Columns();
+  int i;
+  int j;
+  int r = m->Rows();
+  int c = m->Columns();
   Alloc(r, c);
   if((m->StoreType()!=BMST_dense_))
   {
-    register Any* y;
-    register Any* x = data_.GetBuffer();
+    Any* y;
+    Any* x = data_.GetBuffer();
     for(i=0; i<r; i++)
     {
 	    for(j=0; j<c; j++)
@@ -205,8 +205,8 @@ BMatrixGen<Any>& BMatrixGen<Any>::Copy(const BMatrixGen<Any>* m)
   else
   {
     int s = m->Data().Size();
-    register       Any* x = data_.GetBuffer();
-    register const Any* y = m->Data().Buffer();
+          Any* x = data_.GetBuffer();
+    const Any* y = m->Data().Buffer();
     memcpy(x,y,s*sizeof(Any));
   }
   return(*this);
@@ -302,10 +302,10 @@ BMatrixGen<Any>::operator += (const BMatrixGen<Any>& m)
  */
 //--------------------------------------------------------------------
 {
-  register int i;
-  register int j;
-  register int r = Rows();
-  register int c = Columns();
+  int i;
+  int j;
+  int r = Rows();
+  int c = Columns();
   if((r==m.Rows())&&(c==m.Columns()))
   {
     if((StoreType()!=BMST_dense_)||(m.StoreType()!=BMST_dense_))
@@ -320,10 +320,10 @@ BMatrixGen<Any>::operator += (const BMatrixGen<Any>& m)
     }
     else
     {
-      register       int  s = m.Data().Size();
-      register       Any* x = data_.GetBuffer();
-      register const Any* y = m.Data().Buffer();
-      register       Any* z = data_.GetBuffer() + s;
+            int  s = m.Data().Size();
+            Any* x = data_.GetBuffer();
+      const Any* y = m.Data().Buffer();
+            Any* z = data_.GetBuffer() + s;
       for(; x<z; x++, y++)
       {
         (*x) += (*y);
@@ -367,10 +367,10 @@ BMatrixGen<Any>::operator -= (const BMatrixGen<Any>& m)
  */
 //--------------------------------------------------------------------
 {
-  register int i;
-  register int j;
-  register int r = Rows();
-  register int c = Columns();
+  int i;
+  int j;
+  int r = Rows();
+  int c = Columns();
   if((r==m.Rows())&&(c==m.Columns()))
   {
     if((StoreType()!=BMST_dense_)||(m.StoreType()!=BMST_dense_))
@@ -385,10 +385,10 @@ BMatrixGen<Any>::operator -= (const BMatrixGen<Any>& m)
     }
     else
     {
-      register       int  s = m.Data().Size();
-      register       Any* x = data_.GetBuffer();
-      register const Any* y = m.Data().Buffer();
-      register       Any* z = data_.GetBuffer() + s;
+            int  s = m.Data().Size();
+            Any* x = data_.GetBuffer();
+      const Any* y = m.Data().Buffer();
+            Any* z = data_.GetBuffer() + s;
       for(; x<z; x++, y++)
       {
         (*x) -= (*y);
@@ -543,8 +543,8 @@ MatMult(const BMatrixGen<Any>& A, const BMatrixGen<Any>& B, BMatrixGen<Any>& C)
  */
 //--------------------------------------------------------------------
 {
-    register Any aux;
-    register Any zero = Any(0);
+    Any aux;
+    Any zero = Any(0);
     if(!A.Columns() || !B.Columns() || !A.Rows() || !B.Rows())
     {
       C.Alloc(0,0);
@@ -554,12 +554,12 @@ MatMult(const BMatrixGen<Any>& A, const BMatrixGen<Any>& B, BMatrixGen<Any>& C)
     {
 	return;
     }
-    register int M  = A.Rows();
-    register int K  = B.Rows();
-    register int N  = B.Columns();
+    int M  = A.Rows();
+    int K  = B.Rows();
+    int N  = B.Columns();
     C.Alloc(M,N);
     
-    register int m, n, k;
+    int m, n, k;
     if(M>=N)
     {
 	for(n=0; n<N; n++)
@@ -595,7 +595,7 @@ void	WeightProd(const BMatrixGen<Any>& A, const BMatrixGen<Any>& B, BMatrixGen<A
  */
 //--------------------------------------------------------------------
 {
-  register Any aux;
+  Any aux;
   if(!A.Columns() || !B.Columns() || !A.Rows() || !B.Rows())
   {
     C.Alloc(0,0);
@@ -605,15 +605,15 @@ void	WeightProd(const BMatrixGen<Any>& A, const BMatrixGen<Any>& B, BMatrixGen<A
   {
   	return;
   }
-  register int M  = A.Rows();
-  register int N  = A.Columns();
-  register int S  = A.Data().Size();
+  int M  = A.Rows();
+  int N  = A.Columns();
+  int S  = A.Data().Size();
   C.Alloc(M,N);
     
-  register int k;
-  register const Any* a = A.Data().Buffer();
-  register const Any* b = B.Data().Buffer();
-  register Any* c = C.GetData().GetBuffer();
+  int k;
+  const Any* a = A.Data().Buffer();
+  const Any* b = B.Data().Buffer();
+  Any* c = C.GetData().GetBuffer();
 	for(k=0; k<S; k++, a++, b++, c++)
 	{
     *c = *a * *b;

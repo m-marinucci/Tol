@@ -188,11 +188,11 @@ BSpaMatrix<Any>::operator*(const BMatrix <Any>& B)
     {
 	return(C);
     }
-    register int M  = A.Rows();
-    register int K  = B.Rows();
-    register int N  = B.Columns();
-    register int m, n, k, j, s;
-    register Any aux;
+    int M  = A.Rows();
+    int K  = B.Rows();
+    int N  = B.Columns();
+    int m, n, k, j, s;
+    Any aux;
     
     const BArray< BInt >&		     nnv = A.NotNullRows();
     const BArray< BArray< BIndexed<Any> > >& v   = A.Vectors();
@@ -228,10 +228,10 @@ BSpaMatrix<Any>::MBtProd(const BSpaMatrix <Any>& B)
     {
 	return(C);
     }
-    register int M  = A.Rows();
-    register int N  = B.Rows();
-    register int m, n, k, i, j, r, s;
-    register Any aux;
+    int M  = A.Rows();
+    int N  = B.Rows();
+    int m, n, k, i, j, r, s;
+    Any aux;
     
     const BArray< BInt >&			   nnu = A.NotNullRows();
     const BArray< BInt >&			   nnv = B.NotNullRows();
@@ -269,9 +269,9 @@ BSpaMatrix<Any>::MMtSqr()
 {
     BMatrix<Any> C;
     BSpaMatrix<Any>& A = *this;
-    register int M  = A.Rows();
-    register int m, n, k, i, j, r, s;
-    register Any aux;
+    int M  = A.Rows();
+    int m, n, k, i, j, r, s;
+    Any aux;
     
     
     const BArray< BInt >&		     nnv = A.NotNullRows();

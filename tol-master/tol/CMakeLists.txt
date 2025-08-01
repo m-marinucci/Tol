@@ -233,11 +233,18 @@ check_function_exists( round HAVE_ROUND )
 string( TIMESTAMP build_date "%Y-%m-%d" UTC )
 string( TIMESTAMP build_time "%H:%M:%S" UTC )
 
+# C++ Compatibility options
+option(TOL_LEGACY_REGISTER "Enable deprecated 'register' keyword for legacy compilers" OFF)
+
 add_definitions( -DHAVE_CONFIG_H -DUSE_DELAY_INIT -D__USE_ZIP_ARCHIVE__
   -D__USE_DYNSCOPE__
   -D__POOL_NONE__=0 -D__POOL_BFSMEM__=1 -D__USE_POOL__=__POOL_BFSMEM__
   -D__HASH_MAP_MSVC__=1 -D__HASH_MAP_GOOGLE__=2 -D__HASH_MAP_GCC__=3 
   -D__HASH_MAP_ICC__=4 -D__USE_HASH_MAP__=__HASH_MAP_GOOGLE__ )
+
+if(TOL_LEGACY_REGISTER)
+  add_definitions(-DTOL_LEGACY_REGISTER)
+endif()
 
 if( CMAKE_SYSTEM_NAME STREQUAL "Linux" )
   add_definitions( -DUNIX )
