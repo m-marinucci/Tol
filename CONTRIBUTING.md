@@ -272,7 +272,6 @@ Real RunTests(Real dummy) {
 
    ```bash
    make test
-```text
 
 4. **Commit your changes**:
 
