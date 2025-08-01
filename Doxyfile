@@ -39,7 +39,7 @@ INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = YES
 
 # Strip this prefix from the path
-STRIP_FROM_PATH        = /Users/numinate/PY_inverence/Tol
+STRIP_FROM_PATH        = Tol
 
 # Strip from include path
 STRIP_FROM_INC_PATH    = 
