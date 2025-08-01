@@ -383,7 +383,7 @@ class TOLDocExtractor:
         
         for match in re.finditer(class_pattern, content):
             class_name = match.group(1)
-            base_class = match.group(2) if match.group(2) else None
+            base_class = match.group(2) or None
             
             class_info = {
                 'name': class_name,
