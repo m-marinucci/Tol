@@ -306,9 +306,36 @@ extern "C" {
         return 0; // Always succeed for this test
     }
     
-    void tol_cleanup() {
-        // Simulate cleanup work
-        std::this_thread::sleep_for(std::chrono::milliseconds(2));
-        // Note: We don't reset tol_initialized here to simulate persistent state
+void tol_cleanup() {
+    // Simulate cleanup work
+    std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    // Note: We don't reset tol_initialized here to simulate persistent state
+}
+
+// Test: Re-initialization after cleanup should not reset tol_initialized
+void test_reinitialization_after_cleanup() {
+    // Ensure tol_initialized is true (simulate initialized state)
+    tol_initialized.store(true);
+
+    // Call cleanup
+    tol_cleanup();
+
+    // tol_initialized should still be true
+    assert(tol_initialized.load() && "tol_initialized should remain true after cleanup");
+
+    // Try to re-initialize (simulate what would happen in real code)
+    int init_result = tol_initialize();
+    // If tol_initialize is a no-op when already initialized, it should return 0 or a specific value
+    assert(init_result == 0 && "Re-initialization should succeed or be a no-op");
+
+    // Cleanup again for completeness
+    tol_cleanup();
+}
+
+// Register the test (assuming a simple test runner)
+struct RegisterReinitTest {
+    RegisterReinitTest() {
+        test_reinitialization_after_cleanup();
     }
+} registerReinitTestInstance;
 }
