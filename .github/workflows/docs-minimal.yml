@@ -1,0 +1,12 @@
+name: Minimal Documentation
+
+on:
+  push:
+    branches: [ feat/auto-documentation ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: echo "Testing documentation workflow"
