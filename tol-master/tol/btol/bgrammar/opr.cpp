@@ -637,7 +637,7 @@ void BOperator::RegisterPendingOperators()
           if (!pendingOperators_) {
             pendingOperators_ = new BList();
           }
-        });
+        std::call_once(pendingOperatorsInitFlag_, BOperator::InitPendingOperators);
         
         {
           std::lock_guard<std::mutex> lock(pendingOperatorsMutex_);
