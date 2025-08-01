@@ -38,7 +38,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y doxygen graphviz
-        pip install mkdocs mkdocs-material
+        pip install mkdocs==1.5.3 mkdocs-material==9.5.18
         echo "Doxygen version: $(doxygen --version)"
 
     - name: Create Documentation Structure
