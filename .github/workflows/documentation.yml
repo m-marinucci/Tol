@@ -417,16 +417,22 @@ EOF
     - name: Generate Documentation Metrics
       run: |
         # Create metrics file
+        TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+        TOTAL_FILES=$(find tol-master -name "*.cpp" -o -name "*.h" | wc -l)
+        DOC_FILES=$(grep -l "/\*\*" tol-master/**/*.{cpp,h} 2>/dev/null | wc -l || echo 0)
+        TOTAL_FUNCS=$(grep -E "^\s*\w+\s+\w+\s*\(" tol-master/**/*.{cpp,h} 2>/dev/null | wc -l || echo 0)
+        TEST_FILES=$(find tol_tests -name "*.tol" | wc -l)
+        
         cat > docs/metrics.json << EOF
 {
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "timestamp": "${TIMESTAMP}",
   "commit": "${{ github.sha }}",
   "branch": "${{ github.ref_name }}",
   "stats": {
-    "total_files": $(find tol-master -name "*.cpp" -o -name "*.h" | wc -l),
-    "documented_files": $(grep -l "/\*\*" tol-master/**/*.{cpp,h} 2>/dev/null | wc -l || echo 0),
-    "total_functions": $(grep -E "^\s*\w+\s+\w+\s*\(" tol-master/**/*.{cpp,h} 2>/dev/null | wc -l || echo 0),
-    "test_files": $(find tol_tests -name "*.tol" | wc -l)
+    "total_files": ${TOTAL_FILES},
+    "documented_files": ${DOC_FILES},
+    "total_functions": ${TOTAL_FUNCS},
+    "test_files": ${TEST_FILES}
   }
 }
 EOF
