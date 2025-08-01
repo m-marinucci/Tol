@@ -35,10 +35,15 @@ class TOLDocExtractor:
             'description': ''
         }
         
-        # Extract file-level documentation
-        file_doc = re.search(r'^//!\s*(.+?)(?=\n(?!//!))', content, re.MULTILINE | re.DOTALL)
-        if file_doc:
-            doc_info['description'] = file_doc.group(1).strip()
+        # Extract file-level documentation (all consecutive //! lines at the top)
+        file_doc_lines = []
+        for line in content.splitlines():
+            if line.strip().startswith('//!'):
+                file_doc_lines.append(line.strip()[3:].strip())
+            elif file_doc_lines:
+                break
+        if file_doc_lines:
+            doc_info['description'] = "\n".join(file_doc_lines).strip()
         
         # Extract function documentation
         func_pattern = r'//!\s*@brief\s+(.+?)\n(?://!\s*@.+?\n)*\s*(\w+)\s+(\w+)\s*\(([^)]*)\)'
