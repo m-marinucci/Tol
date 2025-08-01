@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Release, RelWithDebInfo]
-        compiler: [gcc-11, clang-14]
+        compiler: [gcc-11, clang-18]
     
     steps:
       - name: Checkout code
@@ -63,15 +63,14 @@ jobs:
           sudo apt install -y build-essential cmake git time \
             libgsl-dev liblapacke-dev libblas-dev libfftw3-dev \
             libbz2-dev libsuitesparse-dev libsparsehash-dev \
-            valgrind perf-tools-unstable
+            valgrind
           
           # Install specific compiler versions
           if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
             sudo apt install -y gcc-11 g++-11
             export CC=gcc-11
             export CXX=g++-11
-          elif [[ "${{ matrix.compiler }}" == "clang-14" ]]; then
-            # For Ubuntu 24.04, install clang-18 as clang-14 is not available
+          elif [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
             sudo apt install -y clang-18 clang++-18
             export CC=clang-18
             export CXX=clang++-18
@@ -98,8 +97,7 @@ jobs:
           if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
             export CC=gcc-11
             export CXX=g++-11
-          elif [[ "${{ matrix.compiler }}" == "clang-14" ]]; then
-            # Use clang-18 for Ubuntu 24.04 compatibility
+          elif [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
             export CC=clang-18
             export CXX=clang++-18
           fi
@@ -322,6 +320,8 @@ jobs:
           
           # Set CPU governor to performance mode for consistent results
           echo "Setting CPU governor to performance mode..."
+          # Install cpupower if not available
+          sudo apt install -y linux-tools-common linux-tools-generic || true
           sudo cpupower frequency-set --governor performance || true
           
           # Run the benchmarks

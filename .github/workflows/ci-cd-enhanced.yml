@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [gcc-9, gcc-10, gcc-11, gcc-12, clang-13, clang-14]
+        compiler: [gcc-9, gcc-10, gcc-11, gcc-12, clang-13, clang-18]
         include:
           - compiler: gcc-9
             cc: gcc-9
@@ -55,10 +55,10 @@ jobs:
             cc: clang-13
             cxx: clang++-13
             cache_key_prefix: clang13
-          - compiler: clang-14
-            cc: clang-14
-            cxx: clang++-14
-            cache_key_prefix: clang14
+          - compiler: clang-18
+            cc: clang-18
+            cxx: clang++-18
+            cache_key_prefix: clang18
 
     steps:
     - name: Checkout Repository
