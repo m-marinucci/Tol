@@ -102,7 +102,6 @@ cd tol-master/tol
 ./bootstrap
 ./configure --enable-debug
 make -j$(nproc)
-```text
 
 ### Running Tests
 
