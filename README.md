@@ -138,10 +138,11 @@ brew install cmake gsl lapack openblas fftw bzip2 suite-sparse
 ```bash
 cd tol-master/tol
 mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release \
-       -DCLAPACK_LIBRARY=/path/to/liblapack.so  # if LAPACK already provides CLAPACK
-# Install a separate CLAPACK package if your LAPACK build does not include the
-# C interface.
+cmake .. -DCMAKE_BUILD_TYPE=Release
+# Note: If CLAPACK detection fails, specify the C interface library explicitly:
+#   -DCLAPACK_LIBRARY=/path/to/liblapacke.so   # For LAPACKE (recommended)
+#   -DCLAPACK_LIBRARY=/path/to/libclapack.so   # For CLAPACK
+# The library must provide the C LAPACK interface, not the Fortran LAPACK library.
 make -j$(nproc)  # Linux
 make -j$(sysctl -n hw.ncpu)  # macOS
 
