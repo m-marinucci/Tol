@@ -262,7 +262,6 @@ Real RunTests(Real dummy) {
 
    ```bash
    git checkout -b feature/your-feature-name
-```text
 
 2. **Make your changes**:
    - Write clean, well-documented code
