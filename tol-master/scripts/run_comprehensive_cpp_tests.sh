@@ -456,6 +456,17 @@ test_performance() {
         
         log_info "Matrix performance: ${matrix_time}s"
         perf_results+=("matrix:${matrix_time}s")
+        if ./tolcon -c 'Matrix m = [[1,2,3],[4,5,6],[7,8,9]]; Real det = MatDet(m); WriteLn("Determinant: ", det);' >> "$LOG_FILE" 2>&1; then
+            end_time=$(date +%s%N)
+            local matrix_time=$(echo "scale=3; ($end_time - $start_time) / 1000000000" | bc)
+            log_info "Matrix performance: ${matrix_time}s"
+            perf_results+=("matrix:${matrix_time}s")
+        else
+            end_time=$(date +%s%N)
+            local matrix_time=$(echo "scale=3; ($end_time - $start_time) / 1000000000" | bc)
+            log_error "Matrix performance test failed"
+            perf_results+=("matrix:FAILED (${matrix_time}s)")
+        fi
         
         # Save results
         printf '%s\n' "${perf_results[@]}" > "$RESULTS_DIR/performance_results.txt"
