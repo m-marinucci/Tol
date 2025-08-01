@@ -1,0 +1,129 @@
+version: 2
+updates:
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "m-marinucci"  # Adjust to actual maintainer usernames
+    assignees:
+      - "m-marinucci"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automated"
+    # Group all GitHub Actions updates into a single PR when possible
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # C++ system dependencies (CMake-based)
+  # Note: Dependabot has limited support for CMake, but we can monitor common patterns
+  - package-ecosystem: "cmake"
+    directory: "/tol-master/tol"
+    schedule:
+      interval: "monthly"
+      day: "first-monday"
+      time: "06:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "m-marinucci"
+    assignees:
+      - "m-marinucci"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "cpp"
+      - "automated"
+    # Only update specific dependencies to avoid breaking changes
+    allow:
+      - dependency-type: "direct"
+    # Group related C++ library updates
+    groups:
+      math-libraries:
+        patterns:
+          - "*gsl*"
+          - "*blas*"
+          - "*lapack*"
+          - "*fftw*"
+      compression-libraries:
+        patterns:
+          - "*zlib*"
+          - "*bzip2*"
+      build-tools:
+        patterns:
+          - "*cmake*"
+
+  # Python dependencies for scripts and tools
+  - package-ecosystem: "pip"
+    directory: "/scripts"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "m-marinucci"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+      - "automated"
+    groups:
+      python-tools:
+        patterns:
+          - "*"
+
+  # Docker dependencies (if Docker files are added in the future)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "06:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "m-marinucci"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "automated"
+
+  # Submodules and Git dependencies
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "first-tuesday"
+      time: "06:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "m-marinucci"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "submodules"
+      - "automated"
+
+# Global configuration for all ecosystems
+registries: {}
+
+# Update strategy: Create individual PRs for security updates,
+# but group non-security updates when possible to reduce PR volume

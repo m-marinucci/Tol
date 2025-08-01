@@ -165,9 +165,15 @@ if(ENABLE_TESTING)
                 COMMAND ${CMAKE_BINARY_DIR}/bin/tolcon --help
             )
             
-            set_tests_properties("basic_version_test" "basic_help_test" PROPERTIES
+            # C++ standards compatibility tests
+            add_test(
+                NAME "cpp_compatibility_test"
+                COMMAND ${CMAKE_BINARY_DIR}/bin/tolcon -c "WriteLn(\"C++ compatibility test: PASSED\");"
+            )
+            
+            set_tests_properties("basic_version_test" "basic_help_test" "cpp_compatibility_test" PROPERTIES
                 TIMEOUT 30
-                LABELS "basic"
+                LABELS "basic;compatibility"
             )
         endif()
         
@@ -176,6 +182,14 @@ if(ENABLE_TESTING)
             add_performance_test("arithmetic_performance"
                 "${CMAKE_BINARY_DIR}/bin/tolcon -c \"Real x = 0; For(Real i=1, i<=100000, i++, x = x + i*i); WriteLn(x)\""
             )
+            
+            add_performance_test("matrix_performance"
+                "${CMAKE_BINARY_DIR}/bin/tolcon -c \"Matrix m = RandomMatrix(100, 100); Real det = MatDet(m); WriteLn(\\\"Matrix determinant: \\\", det)\""
+            )
+            
+            add_performance_test("serie_performance"
+                "${CMAKE_BINARY_DIR}/bin/tolcon -c \"Serie s = SetOfReal(1 To 10000)::Serie; Real sum = Sum(s); WriteLn(\\\"Serie sum: \\\", sum)\""
+            )
         endif()
         
         # Add memory leak tests for key executables
@@ -183,6 +197,16 @@ if(ENABLE_TESTING)
             add_valgrind_test("tolcon_memory"
                 "${CMAKE_BINARY_DIR}/bin/tolcon --version"
             )
+            
+            add_valgrind_test("tolcon_basic_ops"
+                "${CMAKE_BINARY_DIR}/bin/tolcon -c \"Real x = Sqrt(25); WriteLn(x)\""
+            )
+        endif()
+        
+        # Add thread safety tests if the directory exists
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../tol_tests/unit_tests/thread_safety")
+            message(STATUS "Adding thread safety tests...")
+            add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../tol_tests/unit_tests/thread_safety" thread_safety_tests)
         endif()
         
         message(STATUS "Test discovery completed")

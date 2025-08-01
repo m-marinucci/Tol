@@ -1,0 +1,55 @@
+name: "TOL Security Analysis"
+
+queries:
+  - security-and-quality
+  - security-extended
+
+# Specify paths to scan
+paths:
+  - tol-master/tol/bbasic
+  - tol-master/tol/bmath
+  - tol-master/tol/bparser
+  - tol-master/tol/btol
+  - tol-master/tol/lang
+  - tol-master/tol/OIS
+  - tol-master/tol/PackArchive
+  - tol-master/tol/LoadDynLib
+  - tol-master/tol/contrib
+  - tol-master/tol/dbdrivers
+
+# Paths to ignore for security scanning
+paths-ignore:
+  - tol-master/tol/win-VC*
+  - tol-master/tol/build*
+  - tol-master/tol/cmake
+  - "**/test*"
+  - "**/Test*"
+  - "**/example*"
+  - "**/doc*"
+
+# Disable specific query packs if they produce too many false positives
+# disable-default-queries: false
+
+# Additional packs to include
+packs:
+  - codeql/cpp-queries:Security
+  - codeql/cpp-queries:Correctness
+
+# Configuration for specific queries
+query-filters:
+  - exclude:
+      id: 
+        - cpp/poorly-documented-function  # Too noisy for existing codebase
+        - cpp/short-global-name           # Legacy naming conventions
+  - include:
+      id:
+        - cpp/buffer-overflow
+        - cpp/use-after-free
+        - cpp/double-free
+        - cpp/memory-leak
+        - cpp/null-pointer-dereference
+        - cpp/integer-overflow
+        - cpp/tainted-format-string
+        - cpp/command-line-injection
+        - cpp/path-injection
+        - cpp/sql-injection
