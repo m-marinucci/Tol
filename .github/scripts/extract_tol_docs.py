@@ -706,16 +706,24 @@ class TOLDocExtractor:
         print(f"- Examples extracted: {len(self.tol_examples)}")
         print(f"- TOL-C++ bindings: {len(self.tol_cpp_mappings)}")
 
+import os
+import sys
+
 def main():
     parser = argparse.ArgumentParser(description="Extract documentation from TOL files")
     parser.add_argument("directory", help="Directory containing TOL files")
     parser.add_argument("-o", "--output", default="docs/generated", 
                        help="Output directory for documentation")
-    
+
     args = parser.parse_args()
-    
+
+    input_dir = args.directory
+    if not os.path.isdir(input_dir):
+        print(f"Error: The specified directory '{input_dir}' does not exist or is not accessible.", file=sys.stderr)
+        sys.exit(1)
+
     extractor = TOLDocExtractor(args.output)
-    extractor.process_directory(Path(args.directory))
+    extractor.process_directory(Path(input_dir))
 
 if __name__ == "__main__":
     main()
