@@ -46,8 +46,18 @@ class TOLDocExtractor:
             doc_info['description'] = "\n".join(file_doc_lines).strip()
         
         # Extract function documentation
-        func_pattern = r'//!\s*@brief\s+(.+?)\n(?://!\s*@.+?\n)*\s*(\w+)\s+(\w+)\s*\(([^)]*)\)'
-        for match in re.finditer(func_pattern, content):
+        # NOTE: This regex attempts to match TOL function signatures that may span multiple lines,
+        # include qualified return types, and allow for complex parameter lists.
+        # It may still miss some edge cases (e.g., function pointers, macros, or unusual formatting).
+        # For full accuracy, consider using a proper parser.
+        func_pattern = (
+            r'//!\s*@brief\s+(.+?)\n'                # @brief line
+            r'(?://!\s*@.+?\n)*'                     # any other doc lines
+            r'\s*([a-zA-Z_][\w:\s\*&<>]*)\s+'        # return type (qualified, with spaces, *, &, etc.)
+            r'([a-zA-Z_]\w*)\s*'                     # function name
+            r'\(([^)]*)\)'                           # parameter list (not perfect for nested)
+        )
+        for match in re.finditer(func_pattern, content, re.MULTILINE | re.DOTALL):
             brief, return_type, name, params = match.groups()
             func_doc = {
                 'name': name,
