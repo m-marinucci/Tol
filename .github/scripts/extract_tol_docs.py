@@ -664,8 +664,12 @@ class TOLDocExtractor:
         tol_files = list(directory.rglob("*.tol"))
         cpp_files = list(directory.rglob("*.cpp")) + list(directory.rglob("*.h")) + list(directory.rglob("*.hpp"))
         
-        # Filter out test and third-party files
-        cpp_files = [f for f in cpp_files if not any(skip in str(f) for skip in ['test/', 'tests/', 'deprecated/', 'third-party/'])]
+        # Filter out test and third-party files using precise path checks (case-insensitive)
+        skip_dirs = {'test', 'tests', 'deprecated', 'third-party'}
+        cpp_files = [
+            f for f in cpp_files
+            if not any(part.lower() in skip_dirs for part in f.parts)
+        ]
         
         print(f"Found {len(tol_files)} TOL files to process")
         print(f"Found {len(cpp_files)} C++ files to process")
