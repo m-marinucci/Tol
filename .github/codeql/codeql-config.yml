@@ -1,48 +1,33 @@
 name: "TOL Security Analysis"
 
+# Query suite selection
 queries:
-  - security-and-quality
-  - security-extended
+  - uses: security-and-quality
+  - uses: security-extended
 
-# Specify paths to scan
+# Specify paths to analyze
 paths:
-  - tol-master/tol/bbasic
-  - tol-master/tol/bmath
-  - tol-master/tol/bparser
-  - tol-master/tol/btol
-  - tol-master/tol/lang
-  - tol-master/tol/OIS
-  - tol-master/tol/PackArchive
-  - tol-master/tol/LoadDynLib
-  - tol-master/tol/contrib
-  - tol-master/tol/dbdrivers
+  - "tol-master/tol/bbasic"
+  - "tol-master/tol/bmath"
+  - "tol-master/tol/bparser"
+  - "tol-master/tol/btol"
+  - "tol-master/tol/lang"
+  - "tol-master/tol/OIS"
+  - "tol-master/tol/PackArchive"
+  - "tol-master/tol/LoadDynLib"
+  - "tol-master/tol/contrib"
+  - "tol-master/tol/dbdrivers"
 
 # Paths to ignore for security scanning
 paths-ignore:
-  - tol-master/tol/win-VC*
-  - tol-master/tol/build*
-  - tol-master/tol/cmake
+  - "tol-master/tol/win-VC*"
+  - "tol-master/tol/build*"
+  - "tol-master/tol/cmake"
   - "**/test*"
   - "**/Test*"
   - "**/example*"
   - "**/doc*"
 
-# Disable specific query packs if they produce too many false positives
-# disable-default-queries: false
-
-# Additional packs to include
+# Additional query packs
 packs:
-  - codeql/cpp-queries:Security
-  - codeql/cpp-queries:Correctness
-
-# Configuration for specific queries
-# The query-filters syntax is not valid in CodeQL config
-# Instead, we use the standard queries section with packs
-# and can disable default queries if needed
-
-# To include specific security queries, they are already covered by:
-# - security-and-quality (includes core security queries)
-# - security-extended (includes additional security queries)
-# - codeql/cpp-queries:Security pack (includes buffer-overflow, use-after-free, etc.)
-
-# Note: Individual query filtering is done through query suites, not config files
+  - "codeql/cpp-queries"
