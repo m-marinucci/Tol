@@ -300,7 +300,29 @@ if( TRACE_COMPONENTS_FOUND )
 endif( TRACE_COMPONENTS_FOUND )
 
 # CLAPACK configuration
-find_package( CLAPACK REQUIRED )
+find_package( CLAPACK )
+
+# If CLAPACK not found, try to use LAPACK as fallback
+if(NOT CLAPACK_FOUND)
+  message(STATUS "CLAPACK not found, using LAPACK as fallback")
+  if(LAPACK_FOUND)
+    # Set CLAPACK variables to LAPACK values
+    set(CLAPACK_FOUND TRUE)
+    set(CLAPACK_LIBRARIES ${LAPACK_LIBRARIES})
+    set(CLAPACK_LIBRARY ${LAPACK_LIBRARIES})
+    # Try to find lapacke header
+    find_path(CLAPACK_INCLUDE_DIR
+      NAMES lapacke.h
+      PATHS /usr/include /usr/include/lapacke
+    )
+    if(NOT CLAPACK_INCLUDE_DIR)
+      set(CLAPACK_INCLUDE_DIR "")
+    endif()
+    message(STATUS "Using LAPACK libraries: ${LAPACK_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "Neither CLAPACK nor LAPACK found. Please install liblapack-dev and liblapacke-dev")
+  endif()
+endif()
 
 if( CLAPACK_FOUND AND TRACE_COMPONENTS_FOUND )
   message("CLAPACK_INCLUDE_DIR = ${CLAPACK_INCLUDE_DIR}")
