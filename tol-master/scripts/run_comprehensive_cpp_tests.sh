@@ -191,12 +191,6 @@ test_cpp_standards() {
             mkdir -p "$test_build_dir"
             cd "$test_build_dir"
             
-            # Configure
-            if ! cmake "$TOL_DIR" \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_CXX_STANDARD="$std" \
-                -DCMAKE_CXX_STANDARD_REQUIRED=ON \
-                -DCMAKE_CXX_EXTENSIONS=OFF \
             # Determine C compiler from C++ compiler name
             C_COMPILER="$(echo $compiler | sed 's/g++/gcc/' | sed 's/clang++/clang/')"
             if ! command -v "$C_COMPILER" >/dev/null 2>&1; then
@@ -456,17 +450,6 @@ test_performance() {
         
         log_info "Matrix performance: ${matrix_time}s"
         perf_results+=("matrix:${matrix_time}s")
-        if ./tolcon -c 'Matrix m = [[1,2,3],[4,5,6],[7,8,9]]; Real det = MatDet(m); WriteLn("Determinant: ", det);' >> "$LOG_FILE" 2>&1; then
-            end_time=$(date +%s%N)
-            local matrix_time=$(echo "scale=3; ($end_time - $start_time) / 1000000000" | bc)
-            log_info "Matrix performance: ${matrix_time}s"
-            perf_results+=("matrix:${matrix_time}s")
-        else
-            end_time=$(date +%s%N)
-            local matrix_time=$(echo "scale=3; ($end_time - $start_time) / 1000000000" | bc)
-            log_error "Matrix performance test failed"
-            perf_results+=("matrix:FAILED (${matrix_time}s)")
-        fi
         
         # Save results
         printf '%s\n' "${perf_results[@]}" > "$RESULTS_DIR/performance_results.txt"

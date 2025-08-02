@@ -114,9 +114,10 @@ jobs:
           cd build-security
           cmake .. \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_C_FLAGS="-g -O0" \
-            -DCMAKE_CXX_FLAGS="-g -O0" \
-            -DZIPARCHIVE_AS_STATIC=0
+            -DCMAKE_C_FLAGS="-g -O0 -fPIC" \
+            -DCMAKE_CXX_FLAGS="-g -O0 -fPIC" \
+            -DTOL_LEGACY_REGISTER=OFF \
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           
           # Build with single thread to avoid header dependency issues
           # Focus on core components for security analysis
@@ -150,15 +151,15 @@ jobs:
               -o ./static-analysis-results \
               cmake .. \
               -DCMAKE_BUILD_TYPE=Debug \
-              -DZIPARCHIVE_AS_STATIC=0 || {
+              -DTOL_LEGACY_REGISTER=OFF \
+              -DCMAKE_POSITION_INDEPENDENT_CODE=ON || {
               echo "CMake configuration with scan-build failed, trying without..."
-              cmake .. -DCMAKE_BUILD_TYPE=Debug -DZIPARCHIVE_AS_STATIC=0
+              cmake .. -DCMAKE_BUILD_TYPE=Debug -DTOL_LEGACY_REGISTER=OFF
             }
           else
             echo "scan-build not available, configuring without static analysis..."
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DZIPARCHIVE_AS_STATIC=0
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DTOL_LEGACY_REGISTER=OFF
           fi
-          }
           
           # Build with scan-build if available, focus on core components
           if command -v scan-build &> /dev/null; then

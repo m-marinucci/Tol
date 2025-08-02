@@ -80,21 +80,15 @@ jobs:
             
             wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
             
-            # Use the appropriate repository based on Ubuntu version
-            if [[ "$UBUNTU_VERSION" == "noble" ]]; then
-              echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
-            else
-              # Fallback for other versions
-              echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
-            fi
+            # GitHub Actions uses Ubuntu 22.04 (Jammy)
+            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
             
             sudo apt update
             sudo apt install -y clang-18 || {
-              echo "Failed to install clang-18, trying alternative method..."
-              # Fallback: try installing from default repositories
-              sudo apt install -y clang
-              export CC=clang
-              export CXX=clang++
+              echo "Warning: clang-18 not available, using clang-15 instead"
+              sudo apt install -y clang-15
+              export CC=clang-15
+              export CXX=clang++-15
             }
             
             # Set compiler if clang-18 was successfully installed
@@ -131,26 +125,14 @@ jobs:
           fi
           
           # Configure with performance optimizations
-          # Use appropriate flags based on build type
-          if [[ "${{ matrix.build_type }}" == "RelWithDebInfo" ]]; then
-            # RelWithDebInfo needs special handling
-            cmake .. \
-              -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-              -DCMAKE_C_FLAGS="-O1 -g -DNDEBUG" \
-              -DCMAKE_CXX_FLAGS="-O1 -g -DNDEBUG" \
-              -DENABLE_TESTING=ON \
-              -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
-              -DZIPARCHIVE_AS_STATIC=0 \
-              -DCMAKE_VERBOSE_MAKEFILE=ON
-          else
-            cmake .. \
-              -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-              -DCMAKE_C_FLAGS="-O2 -DNDEBUG" \
-              -DCMAKE_CXX_FLAGS="-O2 -DNDEBUG" \
-              -DENABLE_TESTING=ON \
-              -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
-              -DZIPARCHIVE_AS_STATIC=0
-          fi
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_C_FLAGS="-O2 -DNDEBUG -fPIC" \
+            -DCMAKE_CXX_FLAGS="-O2 -DNDEBUG -fPIC" \
+            -DENABLE_TESTING=ON \
+            -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
+            -DTOL_LEGACY_REGISTER=OFF \
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           
           # Build with single thread to avoid header dependency issues
           echo "Starting build process..."

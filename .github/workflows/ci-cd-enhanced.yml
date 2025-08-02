@@ -126,11 +126,16 @@ jobs:
           
           # Special handling for clang-18 (needs LLVM repository)
           if [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
-            # Add LLVM repository for clang-18 (Ubuntu 24.04 Noble)
+            # Add LLVM repository for clang-18 (Ubuntu 22.04 Jammy)
             wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
-            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/noble/ llvm-toolchain-noble main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
             sudo apt-get update
-            sudo apt-get install -y clang-18
+            sudo apt-get install -y clang-18 || {
+              echo "Warning: clang-18 not available, using clang-15 instead"
+              sudo apt-get install -y clang-15
+              echo "CC=clang-15" >> $GITHUB_ENV
+              echo "CXX=clang++-15" >> $GITHUB_ENV
+            }
           else
             sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
           fi
