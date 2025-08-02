@@ -25,10 +25,8 @@
 # include <values.h>
 #endif
 
-#if GCC_VERSION >= 40300
 #include <limits>
 #include <climits>
-#endif
 
 //--------------------------------------------------------------------
 template <class Any>
