@@ -36,20 +36,13 @@ packs:
   - codeql/cpp-queries:Correctness
 
 # Configuration for specific queries
-query-filters:
-  - exclude:
-      id:
-        - cpp/poorly-documented-function  # Too noisy for existing codebase
-        - cpp/short-global-name           # Legacy naming conventions
-  - include:
-      id:
-        - cpp/buffer-overflow
-        - cpp/use-after-free
-        - cpp/double-free
-        - cpp/memory-leak
-        - cpp/null-pointer-dereference
-        - cpp/integer-overflow
-        - cpp/tainted-format-string
-        - cpp/command-line-injection
-        - cpp/path-injection
-        - cpp/sql-injection
+# The query-filters syntax is not valid in CodeQL config
+# Instead, we use the standard queries section with packs
+# and can disable default queries if needed
+
+# To include specific security queries, they are already covered by:
+# - security-and-quality (includes core security queries)
+# - security-extended (includes additional security queries)
+# - codeql/cpp-queries:Security pack (includes buffer-overflow, use-after-free, etc.)
+
+# Note: Individual query filtering is done through query suites, not config files
