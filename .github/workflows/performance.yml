@@ -73,6 +73,10 @@ jobs:
           echo "Checking Boost:"
           pkg-config --libs boost || true
           ls -la /usr/include/boost/ | head -5 || true
+          echo "Checking Boost pkg-config files:"
+          ls -la /usr/lib/pkgconfig/boost* 2>/dev/null || echo "No boost pkgconfig files found"
+          echo "Installing pkg-config if missing:"
+          sudo apt install -y pkg-config
           
           # Install specific compiler versions
           if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
@@ -118,6 +122,10 @@ jobs:
           # Configure with performance optimizations
           # Help CMake find LAPACKE (C interface to LAPACK)
           export CLAPACK_DIR=/usr
+          
+          # Help CMake find Boost
+          export BOOST_ROOT=/usr
+          export Boost_NO_SYSTEM_PATHS=OFF
           
           # Find LAPACKE library dynamically
           LAPACKE_LIB=$(find /usr/lib -name "liblapacke.so*" -type f 2>/dev/null | head -1)
@@ -187,7 +195,7 @@ jobs:
           Real iterations = ${{ env.BENCHMARK_ITERATIONS }};
           Real warmup = ${{ env.WARMUP_ITERATIONS }};
           
-          NameBlock BenchmarkResults = [[ ]];
+          NameBlock BenchmarkResults = [[]];
           
           // Core arithmetic benchmarks
           Real BenchmarkArithmetic(Real size) {
