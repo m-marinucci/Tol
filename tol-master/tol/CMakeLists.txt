@@ -20,8 +20,12 @@ option(TOL_LEGACY_REGISTER "Use deprecated register keyword for old compilers" O
 # Option for CI builds to control error handling
 option(CI_BUILD "Building in CI environment" OFF)
 
-# Option to use precompiled headers
-option(TOL_USE_PCH "Use precompiled headers" ON)
+# Option to use precompiled headers (disabled in CI by default)
+if(CI_BUILD)
+  option(TOL_USE_PCH "Use precompiled headers" OFF)
+else()
+  option(TOL_USE_PCH "Use precompiled headers" ON)
+endif()
 
 #-----------------------------------------------------------------------------
 #
@@ -509,8 +513,13 @@ target_link_libraries( tolcon tol )
 
 # Configure precompiled headers if enabled
 if(TOL_USE_PCH AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
-  target_precompile_headers(tol PRIVATE tol/pch.hpp)
-  target_precompile_headers(tolcon REUSE_FROM tol)
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tol/pch.hpp")
+    target_precompile_headers(tol PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/tol/pch.hpp")
+    target_precompile_headers(tolcon REUSE_FROM tol)
+  else()
+    message(WARNING "Precompiled header tol/pch.hpp not found, disabling PCH")
+    set(TOL_USE_PCH OFF)
+  endif()
 endif()
 
 #message( STATUS "ALL_HEADERS_LIST ${ALL_HEADERS_LIST}" )
