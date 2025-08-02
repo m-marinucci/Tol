@@ -23,6 +23,7 @@
 #include <win_tolinc.h>
 #endif
 
+#include <cctype>
 #include <tol/tol_bpolmatgra.h>
 #include <tol/tol_bdatgra.h>
 #include <tol/tol_bpolgra.h>
@@ -219,7 +220,7 @@ DeclareContensClass(BDat, BDatTemporary, BDatPolMatRows);
 DefExtOpr(1, BDatPolMatRows, "PolMatRows", 1, 1, "PolMatrix",
   "(PolMatrix p)",
   I2("Returns the number of rows of a polynomial matrix",
-     "Devuelve el número de filas de una matriz polinomial."),
+     "Devuelve el nï¿½mero de filas de una matriz polinomial."),
     BOperClassify::RetardPolynomial_);
 //--------------------------------------------------------------------
 void BDatPolMatRows::CalcContens()
@@ -235,7 +236,7 @@ DeclareContensClass(BDat, BDatTemporary, BDatPolMatColumns);
 DefExtOpr(1, BDatPolMatColumns, "PolMatColumns", 1, 1, "PolMatrix",
   "(PolMatrix p)",
   I2("Returns the number of columns of a polynomial matrix",
-     "Devuelve el número de columnas de una matriz polinomial."),
+     "Devuelve el nï¿½mero de columnas de una matriz polinomial."),
     BOperClassify::RetardPolynomial_);
 //--------------------------------------------------------------------
 void BDatPolMatColumns::CalcContens()
@@ -329,7 +330,7 @@ DeclareContensClass(BVMat, BVMatTemporary, BVMatCompanionMatrix);
 DefExtOpr(1, BVMatCompanionMatrix, "CompanionMatrix", 1, 1, "PolMatrix",
   "(PolMatrix p)",
   I2("Reurns the companion matrix of a VAR process.",
-     "Devuelve la matriz de acompañamiento de un proceso VAR."),
+     "Devuelve la matriz de acompaï¿½amiento de un proceso VAR."),
     BOperClassify::RetardPolynomial_);
 //--------------------------------------------------------------------
 void BVMatCompanionMatrix::CalcContens()
@@ -989,7 +990,7 @@ bool internal_builtin_SetMat(
     _mid+I2("Wrong set format: all elements should "
             "be sets with the same number of reals ",
             "Fallo en formato de conjunto: todos sus elementos "
-            "deberían ser conjuntos con el mismo número de reales");
+            "deberï¿½an ser conjuntos con el mismo nï¿½mero de reales");
   if(!set.Card() || (set[1]->Grammar()!=GraSet()))
   {
     Error(_wrongFormat);
@@ -1001,7 +1002,7 @@ bool internal_builtin_SetMat(
   if(!numRow)
   {
     Warning(_mid+I2("Emty set is converted in empty polynomial matrix",
-             "El conjunto vacío se convierte en la matriz polinomial vacía"));
+             "El conjunto vacï¿½o se convierte en la matriz polinomial vacï¿½a"));
     mat = BPolMat::Unknown();
   }
   else if(!numCol)
@@ -1273,7 +1274,7 @@ DefExtOpr(1, BPolMatSubTriang,    "SubTriang", 2, 2, "PolMatrix Text",
      "  la parte triangular inferior si <UPLO>==\"L\" \n"
      "Si la matriz polinomial no es cuadrada silo se tendra en cuenta la submatriz "
      "menor principal.\n"
-     "Si el tamaño de <m> es n entonces el tamaño del vector devuelto "
+     "Si el tamaï¿½o de <m> es n entonces el tamaï¿½o del vector devuelto "
      "sera k=n*(n+1)/2\n" 
      "Para restaurar la matriz polinomial triangular use SetTriang"),
     BOperClassify::MatrixAlgebra_);
@@ -1327,8 +1328,8 @@ DefExtOpr(1, BPolMatSetTriang, "SetTriang", 2, 2, "PolMatrix Text",
      "  una matriz polinomial triangular superior si <UPLOSI>==\"U\" \n"
      "  una matriz polinomial triangular inferior si <UPLOSI>==\"L\" \n"
      "  una matriz polinomial simetrica si <UPLOSI>==\"S\" \n"
-     "El tamaño del vector <v> debe ser un entero k tal que "
-     "k=n*(n+1)/2, siendo n el tamaño de la matriz polinomial cuadrada "
+     "El tamaï¿½o del vector <v> debe ser un entero k tal que "
+     "k=n*(n+1)/2, siendo n el tamaï¿½o de la matriz polinomial cuadrada "
      "resultante"),
     BOperClassify::MatrixAlgebra_);
 //--------------------------------------------------------------------

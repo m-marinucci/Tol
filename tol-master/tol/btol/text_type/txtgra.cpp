@@ -22,6 +22,8 @@
 #include <win_tolinc.h>
 #endif
 
+#include <cctype>
+
 /*
  * OJO!!! este valor no debe redefinirse en ninguno de los .h que se incluyan
  * a continuacion.
