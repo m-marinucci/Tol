@@ -61,9 +61,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential cmake git time \
-            libgsl-dev liblapacke-dev libblas-dev libfftw3-dev \
+            libgsl-dev libopenblas-dev libfftw3-dev \
             libbz2-dev libsuitesparse-dev libsparsehash-dev \
-            libatlas-base-dev libopenblas-dev liblapack-dev \
             valgrind
           
           # Install specific compiler versions

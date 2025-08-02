@@ -139,8 +139,7 @@ jobs:
             cmake \
             ccache \
             libgsl-dev \
-            liblapacke-dev \
-            libblas-dev \
+            libopenblas-dev \
             libfftw3-dev \
             libbz2-dev \
             libsuitesparse-dev \
