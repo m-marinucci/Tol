@@ -71,13 +71,35 @@ jobs:
             export CC=gcc-11
             export CXX=g++-11
           elif [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
-            # Add LLVM repository for clang-18 (Ubuntu 24.04 Noble)
+            # Add LLVM repository for clang-18
+            # Determine Ubuntu version and use appropriate repository
+            UBUNTU_VERSION=$(lsb_release -cs)
+            echo "Detected Ubuntu version: $UBUNTU_VERSION"
+            
             wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
-            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/noble/ llvm-toolchain-noble main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            
+            # Use the appropriate repository based on Ubuntu version
+            if [[ "$UBUNTU_VERSION" == "noble" ]]; then
+              echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            else
+              # Fallback for other versions
+              echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            fi
+            
             sudo apt update
-            sudo apt install -y clang-18
-            export CC=clang-18
-            export CXX=clang++-18
+            sudo apt install -y clang-18 || {
+              echo "Failed to install clang-18, trying alternative method..."
+              # Fallback: try installing from default repositories
+              sudo apt install -y clang
+              export CC=clang
+              export CXX=clang++
+            }
+            
+            # Set compiler if clang-18 was successfully installed
+            if command -v clang-18 &> /dev/null; then
+              export CC=clang-18
+              export CXX=clang++-18
+            fi
           fi
 
       - name: Cache build dependencies
