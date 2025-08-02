@@ -100,7 +100,7 @@ jobs:
           sudo apt install -y build-essential cmake git \
             libgsl-dev libopenblas-dev liblapack-dev liblapacke-dev libblas-dev \
             libfftw3-dev libbz2-dev libsuitesparse-dev libsparsehash-dev \
-            libboost-all-dev
+            libboost-all-dev libzip-dev zlib1g-dev
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -141,6 +141,14 @@ jobs:
             -DCLAPACK_INCLUDE_DIR=/usr/include \
             -DCLAPACK_NAME=lapacke \
             -DBOOST_ROOT=/usr
+          
+          # Build external dependencies first (like ZipArchive)
+          echo "Building external dependencies..."
+          if [ -d "contrib/ZipArchive" ]; then
+            make -j1 prj_zipa 2>&1 || {
+              echo "Warning: ZipArchive external project build failed, continuing anyway"
+            }
+          fi
           
           # Build with single thread to avoid header dependency issues
           # Focus on core components for security analysis
