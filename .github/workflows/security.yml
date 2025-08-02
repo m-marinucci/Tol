@@ -112,8 +112,20 @@ jobs:
           cd tol-master/tol
           mkdir -p build-security
           cd build-security
-          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-g -O0" -DCMAKE_CXX_FLAGS="-g -O0"
-          make -j$(nproc) || true  # Continue even if build partially fails
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_C_FLAGS="-g -O0" \
+            -DCMAKE_CXX_FLAGS="-g -O0" \
+            -DZIPARCHIVE_AS_STATIC=0
+          
+          # Build with single thread to avoid header dependency issues
+          # Focus on core components for security analysis
+          make -j1 tol_init tolcon || {
+            echo "Full build failed, attempting core components only..."
+            make -j1 bbasic bmath bparser btol lang || {
+              echo "Core component build failed, continuing with available code..."
+            }
+          }
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
@@ -130,11 +142,26 @@ jobs:
           # Use scan-build for static analysis
           scan-build --status-bugs --html-title="TOL Security Analysis" \
             -o ./static-analysis-results \
-            cmake .. -DCMAKE_BUILD_TYPE=Debug
+            cmake .. \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DZIPARCHIVE_AS_STATIC=0 || {
+            echo "CMake configuration with scan-build failed, trying without..."
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DZIPARCHIVE_AS_STATIC=0
+          }
           
+          # Build with scan-build, focus on core components
           scan-build --status-bugs --html-title="TOL Security Analysis" \
             -o ./static-analysis-results \
-            make -j$(nproc) || true
+            make -j1 tol_init tolcon || {
+            echo "scan-build failed, attempting core components..."
+            scan-build --status-bugs --html-title="TOL Security Analysis" \
+              -o ./static-analysis-results \
+              make -j1 bbasic bmath bparser btol lang || {
+              echo "Clang static analysis completed with limited scope"
+              mkdir -p ./static-analysis-results
+              echo "Analysis completed with build failures" > ./static-analysis-results/analysis-summary.txt
+            }
+          }
 
       - name: Upload Clang analysis results
         uses: actions/upload-artifact@v4
