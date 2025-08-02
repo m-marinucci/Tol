@@ -123,9 +123,19 @@ jobs:
         if [ ! -f /var/cache/apt/tol-deps-installed ]; then
           echo "Installing fresh dependencies..."
           sudo apt-get update
+          
+          # Special handling for clang-18 (needs LLVM repository)
+          if [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
+            # Add LLVM repository for clang-18 (Ubuntu 24.04 Noble)
+            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
+            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/noble/ llvm-toolchain-noble main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            sudo apt-get update
+            sudo apt-get install -y clang-18
+          else
+            sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
+          fi
+          
           sudo apt-get install -y \
-            ${{ matrix.cc }} \
-            ${{ matrix.cxx }} \
             cmake \
             ccache \
             libgsl-dev \

@@ -71,7 +71,11 @@ jobs:
             export CC=gcc-11
             export CXX=g++-11
           elif [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
-            sudo apt install -y clang-18 clang++-18
+            # Add LLVM repository for clang-18 (Ubuntu 24.04 Noble)
+            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
+            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/noble/ llvm-toolchain-noble main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            sudo apt update
+            sudo apt install -y clang-18
             export CC=clang-18
             export CXX=clang++-18
           fi
