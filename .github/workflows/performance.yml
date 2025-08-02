@@ -131,17 +131,27 @@ jobs:
           # Configure with performance optimizations
           cmake .. \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            -DCMAKE_C_FLAGS="-O3 -march=native -DNDEBUG" \
-            -DCMAKE_CXX_FLAGS="-O3 -march=native -DNDEBUG" \
+            -DCMAKE_C_FLAGS="-O2 -DNDEBUG" \
+            -DCMAKE_CXX_FLAGS="-O2 -DNDEBUG" \
             -DENABLE_TESTING=ON \
             -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
             -DZIPARCHIVE_AS_STATIC=0
           
           # Build with single thread to avoid header dependency issues
-          make -j1 tol_init tolcon || {
-            echo "Build failed, attempting to continue with partial build..."
-            echo "Listing available executables:"
-            find . -name "tolcon" -o -name "tol" -type f -executable || true
+          echo "Starting build process..."
+          make -j1 tol_init tolcon 2>&1 | tee build.log || {
+            echo "Build failed with exit code $?"
+            echo "Last 50 lines of build log:"
+            tail -50 build.log || true
+            echo "Checking for partial build artifacts:"
+            find . -name "tolcon" -o -name "tol" -type f || true
+            # Check if tolcon executable exists even if build reported failure
+            if [ -f "./tolcon" ] || [ -f "./bin/tolcon" ]; then
+              echo "Found tolcon executable, continuing..."
+            else
+              echo "No tolcon executable found, build failed critically"
+              exit 1
+            fi
           }
 
       - name: Create performance test suite
