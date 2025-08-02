@@ -63,8 +63,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential cmake git time \
-            libgsl-dev libopenblas-dev libfftw3-dev \
-            libbz2-dev libsuitesparse-dev libsparsehash-dev \
+            libgsl-dev libopenblas-dev liblapack-dev liblapacke-dev \
+            libfftw3-dev libbz2-dev libsuitesparse-dev libsparsehash-dev \
             valgrind
           
           # Install specific compiler versions
@@ -109,6 +109,8 @@ jobs:
           fi
           
           # Configure with performance optimizations
+          # Help CMake find LAPACKE (C interface to LAPACK)
+          export CLAPACK_DIR=/usr
           cmake .. \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -DCMAKE_C_FLAGS="-O2 -DNDEBUG -fPIC" \
@@ -116,7 +118,9 @@ jobs:
             -DENABLE_TESTING=ON \
             -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
             -DTOL_LEGACY_REGISTER=OFF \
-            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+            -DCLAPACK_LIBRARY=/usr/lib/x86_64-linux-gnu/liblapacke.so \
+            -DCLAPACK_INCLUDE_DIR=/usr/include
           
           # Build with single thread to avoid header dependency issues
           echo "Starting build process..."

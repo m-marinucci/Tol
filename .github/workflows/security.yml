@@ -98,8 +98,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential cmake git \
-            libgsl-dev libopenblas-dev libfftw3-dev \
-            libbz2-dev libsuitesparse-dev libsparsehash-dev
+            libgsl-dev libopenblas-dev liblapack-dev liblapacke-dev \
+            libfftw3-dev libbz2-dev libsuitesparse-dev libsparsehash-dev
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -112,12 +112,16 @@ jobs:
           cd tol-master/tol
           mkdir -p build-security
           cd build-security
+          # Help CMake find LAPACKE (C interface to LAPACK)
+          export CLAPACK_DIR=/usr
           cmake .. \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_C_FLAGS="-g -O0 -fPIC" \
             -DCMAKE_CXX_FLAGS="-g -O0 -fPIC" \
             -DTOL_LEGACY_REGISTER=OFF \
-            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+            -DCLAPACK_LIBRARY=/usr/lib/x86_64-linux-gnu/liblapacke.so \
+            -DCLAPACK_INCLUDE_DIR=/usr/include
           
           # Build with single thread to avoid header dependency issues
           # Focus on core components for security analysis
