@@ -63,9 +63,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential cmake git time \
-            libgsl-dev libopenblas-dev liblapack-dev liblapacke-dev \
+            libgsl-dev libopenblas-dev liblapack-dev liblapacke-dev libblas-dev \
             libfftw3-dev libbz2-dev libsuitesparse-dev libsparsehash-dev \
-            valgrind
+            libboost-all-dev valgrind
+          
+          # Debug: Check where LAPACKE is installed
+          echo "Checking for LAPACKE libraries:"
+          find /usr -name "*lapacke*" -type f 2>/dev/null | grep -E "\.(so|a)$" || true
+          echo "Checking Boost:"
+          pkg-config --libs boost || true
+          ls -la /usr/include/boost/ | head -5 || true
           
           # Install specific compiler versions
           if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
@@ -111,6 +118,22 @@ jobs:
           # Configure with performance optimizations
           # Help CMake find LAPACKE (C interface to LAPACK)
           export CLAPACK_DIR=/usr
+          
+          # Find LAPACKE library dynamically
+          LAPACKE_LIB=$(find /usr/lib -name "liblapacke.so*" -type f 2>/dev/null | head -1)
+          if [ -z "$LAPACKE_LIB" ]; then
+            echo "Warning: liblapacke.so not found, trying alternative names"
+            LAPACKE_LIB=$(find /usr/lib -name "libclapack.so*" -type f 2>/dev/null | head -1)
+          fi
+          
+          if [ -n "$LAPACKE_LIB" ]; then
+            echo "Found LAPACKE at: $LAPACKE_LIB"
+            CLAPACK_LIB_FLAG="-DCLAPACK_LIBRARY=$LAPACKE_LIB"
+          else
+            echo "Warning: Could not find LAPACKE library, letting CMake search"
+            CLAPACK_LIB_FLAG=""
+          fi
+          
           cmake .. \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -DCMAKE_C_FLAGS="-O2 -DNDEBUG -fPIC" \
@@ -119,8 +142,10 @@ jobs:
             -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
             -DTOL_LEGACY_REGISTER=OFF \
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-            -DCLAPACK_LIBRARY=/usr/lib/x86_64-linux-gnu/liblapacke.so \
-            -DCLAPACK_INCLUDE_DIR=/usr/include
+            $CLAPACK_LIB_FLAG \
+            -DCLAPACK_INCLUDE_DIR=/usr/include \
+            -DCLAPACK_NAME=lapacke \
+            -DBOOST_ROOT=/usr
           
           # Build with single thread to avoid header dependency issues
           echo "Starting build process..."
