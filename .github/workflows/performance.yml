@@ -195,7 +195,13 @@ jobs:
           Real iterations = ${{ env.BENCHMARK_ITERATIONS }};
           Real warmup = ${{ env.WARMUP_ITERATIONS }};
           
-          NameBlock BenchmarkResults = [[]];
+          NameBlock BenchmarkResults = [[
+            Real arithmetic_avg = 0;
+            Real matrix_avg = 0;
+            Real series_avg = 0;
+            Real memory_avg = 0;
+            Real parsing_avg = 0
+          ]];
           
           // Core arithmetic benchmarks
           Real BenchmarkArithmetic(Real size) {
