@@ -17,6 +17,12 @@ endif()
 # Option to control use of deprecated register keyword
 option(TOL_LEGACY_REGISTER "Use deprecated register keyword for old compilers" OFF)
 
+# Option for CI builds to control error handling
+option(CI_BUILD "Building in CI environment" OFF)
+
+# Option to use precompiled headers
+option(TOL_USE_PCH "Use precompiled headers" ON)
+
 #-----------------------------------------------------------------------------
 #
 # To fix compilation problem: relocation R_X86_64_32 against `a local symbol' can not be
@@ -500,6 +506,12 @@ if( UNIX )
 endif( UNIX )
 add_executable( tolcon tol.cpp )
 target_link_libraries( tolcon tol )
+
+# Configure precompiled headers if enabled
+if(TOL_USE_PCH AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
+  target_precompile_headers(tol PRIVATE tol/pch.hpp)
+  target_precompile_headers(tolcon REUSE_FROM tol)
+endif()
 
 #message( STATUS "ALL_HEADERS_LIST ${ALL_HEADERS_LIST}" )
 add_custom_target( COPY_HEADERS ALL DEPENDS ${COPY_HEADERS_DEPENDS} )

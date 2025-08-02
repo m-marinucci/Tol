@@ -45,11 +45,13 @@ BBool input_int_param(BSyntaxObject * arg, int & i)
 
 /*
 * Find the first occurrence of find in s.
+* Only provide this implementation on platforms that don't have it in libc.
 */
-char *strcasestr(register char *s, const register char *find)
+#if !defined(_GNU_SOURCE) && !defined(_BSD_SOURCE) && !defined(__APPLE__) && defined(_MSC_VER)
+char *strcasestr(char *s, const char *find)
 {
-  register char c, sc;
-  register size_t len;
+  char c, sc;
+  size_t len;
 
   if ((c = *find++) != 0) {
     len = strlen(find);
@@ -63,6 +65,7 @@ char *strcasestr(register char *s, const register char *find)
   }
   return ((char *) s);
 }
+#endif
 
 BBool input_text_param(BSyntaxObject * arg, char & ch, char * options)
 {
@@ -107,8 +110,8 @@ BBool input_parameters(BTmpObject<BGraContens<BSet> > * f, bool h,
     // a - Absolute value of Pearson correlation coeficient
     // u - Uncentered Pearson correlation
     // x - Absolute uncentered Pearson correlation
-    // s - Spearman´s rank correlation
-    // k - Kendall´s 
+    // s - Spearmanï¿½s rank correlation
+    // k - Kendallï¿½s 
     // h - Shape 
   int rows, cols;
   BMat* mat_dat;
@@ -129,7 +132,7 @@ BBool input_parameters(BTmpObject<BGraContens<BSet> > * f, bool h,
     return false;
   }
   if (kclusters>rows_data) {
-    Error("Argument k can´t be greater than number of data matrix´s rows");
+    Error("Argument k canï¿½t be greater than number of data matrixï¿½s rows");
     return false;
   }
   if (!h) {        //  not hierarchical
@@ -313,13 +316,13 @@ DefExtOpr(1, BSetCluster, "Cluster", 3, 6,
   "(Matrix data, Real k, Real n [, Text method=\"a\", Text dist, Matrix weigth])",
   "Divides the rows of matrix 'data' into 'k' clusters such that the sum of distances over the rows to their cluster centers (centriods) is minimal."
   " Unknown values (?) are accepted.\n"
-  "It´s based on the aplication of the EM algorithm 'n' times in order to find the optimal solution.\n"
+  "Itï¿½s based on the aplication of the EM algorithm 'n' times in order to find the optimal solution.\n"
   "Optional parameters are:\n"
   "  method - specifies the method used to calculate the centroid\n"
   "    \"a\" the arithmetic mean, \"m\" the median, \"d\" the medoids\n"
   "  dist - available functions to measure similarity or distance between data\n"
   "    \"e\" Euclidean, \"b\" City-block, \"c\" Pearson correlation coeficient, \"a\" Absolute value of Pearson correlation coeficient,\n"
-  "    \"u\" Uncentered Pearson correlation, \"x\" Absolute uncentered Pearson correlation, \"s\" Spearman´s rank correlation, \"k\" Kendall´s, \"h\" Shape\n"
+  "    \"u\" Uncentered Pearson correlation, \"x\" Absolute uncentered Pearson correlation, \"s\" Spearmanï¿½s rank correlation, \"k\" Kendallï¿½s, \"h\" Shape\n"
   "  weight - the weights that are used to calculate the distance\n\n"
   
   "Returns a set whose elements are:\n"
@@ -463,12 +466,12 @@ DefExtOpr(1, BSetHierarchicalCluster, "HierarchicalCluster", 2, 5,
   "    \"m\" maximum (the longest), \"a\" average, \"c\" centriod\n"
   "  dist - available functions to measure similarity or distance between data\n"
   "    \"e\" Euclidean, \"b\" City-block, \"c\" Pearson correlation coeficient, \"a\" Absolute value of Pearson correlation coeficient,\n"
-  "    \"u\" Uncentered Pearson correlation, \"x\" Absolute uncentered Pearson correlation, \"s\" Spearman´s rank correlation, \"k\" Kendall´s, \"h\" Shape\n"
+  "    \"u\" Uncentered Pearson correlation, \"x\" Absolute uncentered Pearson correlation, \"s\" Spearmanï¿½s rank correlation, \"k\" Kendallï¿½s, \"h\" Shape\n"
   "  weight - the weights that are used to calculate the distance\n\n"
   
   "Returns a set whose elements are:\n"
   "  Real AverageDistortion - The average of distances of the items to their centroid\n"
-  "  Real TimesSolutionFound - It´s here just for compatibility with cluster()´s output, it will always be 1\n"
+  "  Real TimesSolutionFound - Itï¿½s here just for compatibility with cluster()ï¿½s output, it will always be 1\n"
   "  Matrix Assignments - This array stores the cluster number to which each item was assigned\n"
   "  Matrix Centroids - It stores the centroids of the clusters\n"
   "  Set SetOfClusters - Each subset of this set represents one cluster with its named elements",
@@ -490,7 +493,7 @@ void BSetHierarchicalCluster::CalcContens()
   int ** mat_c_mask;
   double * vect_c_weight;
   const int transpose = 0;
-  int npass;  // just for compatibility with cluster() on input´s check 
+  int npass;  // just for compatibility with cluster() on inputï¿½s check 
 
   double ** dist_matrix = NULL;
   Node * tree;

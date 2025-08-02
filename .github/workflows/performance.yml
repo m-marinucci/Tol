@@ -157,7 +157,8 @@ jobs:
             -DCLAPACK_INCLUDE_DIR=/usr/include \
             -DCLAPACK_NAME=lapacke \
             -DBOOST_ROOT=/usr \
-            -DBoost_NO_BOOST_CMAKE=ON
+            -DBoost_NO_BOOST_CMAKE=ON \
+            -DCI_BUILD=ON
           
           # Build external dependencies first (like ZipArchive)
           echo "Building external dependencies..."

@@ -222,6 +222,8 @@ jobs:
           "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
           # Force CMake to use legacy Boost detection (fixes Ubuntu packages)
           "-DBoost_NO_BOOST_CMAKE=ON"
+          # CI build flag
+          "-DCI_BUILD=ON"
         )
         
         # Add compiler-specific optimizations
