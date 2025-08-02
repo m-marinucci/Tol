@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Release]
-        compiler: [gcc-11, clang-18]
+        compiler: [gcc-11, clang-15, gcc-12]
         # Temporarily disable RelWithDebInfo until build issues are resolved
         # TODO: Re-enable after fixing build configuration for debug symbols
     
@@ -72,30 +72,14 @@ jobs:
             sudo apt install -y gcc-11 g++-11
             export CC=gcc-11
             export CXX=g++-11
-          elif [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
-            # Add LLVM repository for clang-18
-            # Determine Ubuntu version and use appropriate repository
-            UBUNTU_VERSION=$(lsb_release -cs)
-            echo "Detected Ubuntu version: $UBUNTU_VERSION"
-            
-            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
-            
-            # GitHub Actions uses Ubuntu 22.04 (Jammy)
-            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
-            
-            sudo apt update
-            sudo apt install -y clang-18 || {
-              echo "Warning: clang-18 not available, using clang-15 instead"
-              sudo apt install -y clang-15
-              export CC=clang-15
-              export CXX=clang++-15
-            }
-            
-            # Set compiler if clang-18 was successfully installed
-            if command -v clang-18 &> /dev/null; then
-              export CC=clang-18
-              export CXX=clang++-18
-            fi
+          elif [[ "${{ matrix.compiler }}" == "clang-15" ]]; then
+            sudo apt install -y clang-15
+            export CC=clang-15
+            export CXX=clang++-15
+          elif [[ "${{ matrix.compiler }}" == "gcc-12" ]]; then
+            sudo apt install -y gcc-12 g++-12
+            export CC=gcc-12
+            export CXX=g++-12
           fi
 
       - name: Cache build dependencies

@@ -1,6 +1,22 @@
 cmake_minimum_required( VERSION 3.5 )
 project( TOL )
 
+# Security hardening options
+option(TOL_ENABLE_HARDENING "Enable security hardening flags" ON)
+
+if(TOL_ENABLE_HARDENING)
+  # Compiler warning flags (without -Werror initially to see what needs fixing)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE")
+  
+  # Linker flags for full RELRO and PIE
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie -Wl,-z,relro,-z,now")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,relro,-z,now")
+endif()
+
+# Option to control use of deprecated register keyword
+option(TOL_LEGACY_REGISTER "Use deprecated register keyword for old compilers" OFF)
+
 #-----------------------------------------------------------------------------
 #
 # To fix compilation problem: relocation R_X86_64_32 against `a local symbol' can not be
