@@ -19,9 +19,18 @@
    USA.
  */
 
+// Enable GNU extensions to get strcasestr on Linux
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
 #if defined(_MSC_VER)
 #include <win_tolinc.h>
 #endif
+
+#include <string.h>
+#include <strings.h>
+#include <ctype.h>
 
 #include <tol/tol_bsetgra.h>
 #include <tol/tol_bmatgra.h>
@@ -45,9 +54,9 @@ BBool input_int_param(BSyntaxObject * arg, int & i)
 
 /*
 * Find the first occurrence of find in s.
-* Only provide this implementation on platforms that don't have it in libc.
+* Only provide this implementation on Windows where it's not available.
 */
-#if !defined(_GNU_SOURCE) && !defined(_BSD_SOURCE) && !defined(__APPLE__) && defined(_MSC_VER)
+#if defined(_MSC_VER)
 char *strcasestr(char *s, const char *find)
 {
   char c, sc;
