@@ -114,9 +114,12 @@ jobs:
           if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
             export CC=gcc-11
             export CXX=g++-11
-          elif [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
-            export CC=clang-18
-            export CXX=clang++-18
+          elif [[ "${{ matrix.compiler }}" == "clang-15" ]]; then
+            export CC=clang-15
+            export CXX=clang++-15
+          elif [[ "${{ matrix.compiler }}" == "gcc-12" ]]; then
+            export CC=gcc-12
+            export CXX=g++-12
           fi
           
           # Configure with performance optimizations
@@ -153,7 +156,8 @@ jobs:
             $CLAPACK_LIB_FLAG \
             -DCLAPACK_INCLUDE_DIR=/usr/include \
             -DCLAPACK_NAME=lapacke \
-            -DBOOST_ROOT=/usr
+            -DBOOST_ROOT=/usr \
+            -DBoost_NO_BOOST_CMAKE=ON
           
           # Build external dependencies first (like ZipArchive)
           echo "Building external dependencies..."

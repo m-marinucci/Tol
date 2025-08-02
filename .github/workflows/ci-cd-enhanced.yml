@@ -143,6 +143,7 @@ jobs:
           sudo apt-get install -y \
             cmake \
             ccache \
+            pkg-config \
             libgsl-dev \
             libopenblas-dev \
             libfftw3-dev \
@@ -219,6 +220,8 @@ jobs:
           "-DCMAKE_CXX_FLAGS=-O3 -march=native -pipe"
           # Enable Link Time Optimization for release builds
           "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
+          # Force CMake to use legacy Boost detection (fixes Ubuntu packages)
+          "-DBoost_NO_BOOST_CMAKE=ON"
         )
         
         # Add compiler-specific optimizations
@@ -504,7 +507,8 @@ jobs:
         cmake .. -G "Visual Studio 17 2022" -A x64 `
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
           -DENABLE_TESTING=ON `
-          -DCMAKE_INSTALL_PREFIX="C:\TOL"
+          -DCMAKE_INSTALL_PREFIX="C:\TOL" `
+          -DBoost_NO_BOOST_CMAKE=ON
 
     - name: Build Windows with Caching
       working-directory: tol-master/tol/build
