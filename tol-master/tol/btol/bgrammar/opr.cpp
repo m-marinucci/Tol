@@ -41,6 +41,8 @@ BList* BOperClassify::instances_ = NIL;
 BArray<BAtom*> BOperClassify::sortedTheme_;
 BOperClassify* BOperClassify::Various_;
 BList* BOperator::pendingOperators_ = NIL;
+std::once_flag BOperator::pendingOperatorsInitFlag_;
+std::mutex BOperator::pendingOperatorsMutex_;
 BOperClassify* BOperClassify::General_;
 BOperClassify* BOperClassify::System_;
 BOperClassify* BOperClassify::Conversion_;
@@ -531,11 +533,20 @@ void BOperator::AddSystemOperator()
     // If symbol table or grammar is not ready, add to pending list
     // This can happen with delayed initialization when operators are created
     // before their grammar is fully initialized
-    if (!pendingOperators_) {
-      pendingOperators_ = new BList();
+    
+    // Thread-safe initialization and access to pendingOperators_
+    std::call_once(pendingOperatorsInitFlag_, []() {
+      // Initialize pendingOperators_ if not already initialized
+      if (!pendingOperators_) {
+        pendingOperators_ = new BList();
+      }
+    });
+    
+    {
+      std::lock_guard<std::mutex> lock(pendingOperatorsMutex_);
+      pendingOperators_ = Cons(this, pendingOperators_);
+      IncNRefs(); // Keep operator alive in pending list
     }
-    pendingOperators_ = Cons(this, pendingOperators_);
-    IncNRefs(); // Keep operator alive in pending list
     
     // Always print debug info to track the issue
     if (!gra) {
@@ -553,23 +564,30 @@ void BOperator::RegisterPendingOperators()
   #ifdef DEBUG_OPERATOR_REGISTRATION
   Std("RegisterPendingOperators called");
   #endif
-  if (!pendingOperators_) {
-    #ifdef DEBUG_OPERATOR_REGISTRATION
-    Std("  No pending operators to register");
-    #endif
-    return;
-  }
   
-  // Count pending operators first
+  BList* pending = nullptr;
   int pendingCount = 0;
-  BList* p = pendingOperators_;
-  while (p) { pendingCount++; p = Cdr(p); }
-  #ifdef DEBUG_OPERATOR_REGISTRATION
-  Std(BText("  Found ") + pendingCount + " pending operators");
-  #endif
   
-  BList* pending = pendingOperators_;
-  pendingOperators_ = NIL; // Clear the list to avoid infinite loops
+  // Thread-safe access to pending operators list
+  {
+    std::lock_guard<std::mutex> lock(pendingOperatorsMutex_);
+    if (!pendingOperators_) {
+      #ifdef DEBUG_OPERATOR_REGISTRATION
+      Std("  No pending operators to register");
+      #endif
+      return;
+    }
+    
+    // Count pending operators first
+    BList* p = pendingOperators_;
+    while (p) { pendingCount++; p = Cdr(p); }
+    #ifdef DEBUG_OPERATOR_REGISTRATION
+    Std(BText("  Found ") + pendingCount + " pending operators");
+    #endif
+    
+    pending = pendingOperators_;
+    pendingOperators_ = NIL; // Clear the list to avoid infinite loops
+  }
   
   int count = 0;
   int fixedGrammars = 0;
@@ -614,10 +632,17 @@ void BOperator::RegisterPendingOperators()
         }
       } else {
         // Still can't register, add back to pending list
-        if (!pendingOperators_) {
-          pendingOperators_ = new BList();
+        // Thread-safe re-addition to pending list
+        std::call_once(pendingOperatorsInitFlag_, []() {
+          if (!pendingOperators_) {
+            pendingOperators_ = new BList();
+          }
+        });
+        
+        {
+          std::lock_guard<std::mutex> lock(pendingOperatorsMutex_);
+          pendingOperators_ = Cons(opr, pendingOperators_);
         }
-        pendingOperators_ = Cons(opr, pendingOperators_);
       }
       // Don't DecNRefs here - will be done when removed from pending list
     } else {
@@ -635,11 +660,16 @@ void BOperator::RegisterPendingOperators()
     Std(BText("RegisterPendingOperators: Fixed ") + fixedGrammars + " missing grammar references");
   }
   #endif
-  if (pendingOperators_) {
-    int remaining = 0;
-    BList* p = pendingOperators_;
-    while (p) { remaining++; p = Cdr(p); }
-    Warning(BText("RegisterPendingOperators: Still have ") + remaining + " operators pending");
+  
+  // Thread-safe check for remaining pending operators
+  {
+    std::lock_guard<std::mutex> lock(pendingOperatorsMutex_);
+    if (pendingOperators_) {
+      int remaining = 0;
+      BList* p = pendingOperators_;
+      while (p) { remaining++; p = Cdr(p); }
+      Warning(BText("RegisterPendingOperators: Still have ") + remaining + " operators pending");
+    }
   }
 }
 

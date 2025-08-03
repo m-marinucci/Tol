@@ -117,12 +117,12 @@ public:
   //! Executes a shell command
   static BBool	System	   (const BText& command);
   
-#ifndef	  UNIX
-  static BBool	WinExecuteFile(const BText& fileName);
   static BBool	WinSystem     (const BText& command,
                                BInt  showMode, bool  wait=BFALSE);
   static BBool	WinSystemQuiet(const BText& command,
                                BText& output, BText& error);
+#ifndef	  UNIX
+  static BBool	WinExecuteFile(const BText& fileName);
 #endif
   static BBool	PExecQuiet    (const BText& command, 
                                BText& output, BText& error);

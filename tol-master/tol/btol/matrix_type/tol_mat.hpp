@@ -25,10 +25,8 @@
 # include <values.h>
 #endif
 
-#if GCC_VERSION >= 40300
 #include <limits>
 #include <climits>
-#endif
 
 //--------------------------------------------------------------------
 template <class Any>
@@ -174,9 +172,9 @@ template <class Any>
 void BMatrix<Any>::SetAllValuesTo(const Any& x0)
 //--------------------------------------------------------------------
 {
-  register int  s = data_.Size();
-  register Any* x = data_.GetBuffer();
-  register Any* y = x + s;
+  int  s = data_.Size();
+  Any* x = data_.GetBuffer();
+  Any* y = x + s;
   for(; x<y; x++)
   {
     (*x) = x0;
@@ -192,15 +190,15 @@ BMatrix<Any>& BMatrix<Any>::Copy(const BMatrix<Any>* m)
  */
 //--------------------------------------------------------------------
 {
-  register int i;
-  register int j;
-  register int r = m->Rows();
-  register int c = m->Columns();
+  int i;
+  int j;
+  int r = m->Rows();
+  int c = m->Columns();
   Alloc(r, c);
   if((m->StoreType()!=BMST_dense_))
   {
-    register Any* y;
-    register Any* x = data_.GetBuffer();
+    Any* y;
+    Any* x = data_.GetBuffer();
     for(i=0; i<r; i++)
     {
 	    for(j=0; j<c; j++)
@@ -214,8 +212,8 @@ BMatrix<Any>& BMatrix<Any>::Copy(const BMatrix<Any>* m)
   else
   {
     int s = m->Data().Size();
-    register       Any* x = data_.GetBuffer();
-    register const Any* y = m->Data().Buffer();
+          Any* x = data_.GetBuffer();
+    const Any* y = m->Data().Buffer();
     memcpy(x,y,s*sizeof(Any));
   }
   return(*this);
@@ -335,10 +333,10 @@ BMatrix<Any>::operator += (const BMatrix<Any>& m)
  */
 //--------------------------------------------------------------------
 {
-  register int i;
-  register int j;
-  register int r = Rows();
-  register int c = Columns();
+  int i;
+  int j;
+  int r = Rows();
+  int c = Columns();
   if((r==m.Rows())&&(c==m.Columns()))
   {
     if((StoreType()!=BMST_dense_)||(m.StoreType()!=BMST_dense_))
@@ -353,10 +351,10 @@ BMatrix<Any>::operator += (const BMatrix<Any>& m)
     }
     else
     {
-      register       int  s = m.Data().Size();
-      register       Any* x = data_.GetBuffer();
-      register const Any* y = m.Data().Buffer();
-      register       Any* z = data_.GetBuffer() + s;
+            int  s = m.Data().Size();
+            Any* x = data_.GetBuffer();
+      const Any* y = m.Data().Buffer();
+            Any* z = data_.GetBuffer() + s;
       for(; x<z; x++, y++)
       {
         (*x) += (*y);
@@ -400,10 +398,10 @@ BMatrix<Any>::operator -= (const BMatrix<Any>& m)
  */
 //--------------------------------------------------------------------
 {
-  register int i;
-  register int j;
-  register int r = Rows();
-  register int c = Columns();
+  int i;
+  int j;
+  int r = Rows();
+  int c = Columns();
   if((r==m.Rows())&&(c==m.Columns()))
   {
     if((StoreType()!=BMST_dense_)||(m.StoreType()!=BMST_dense_))
@@ -418,10 +416,10 @@ BMatrix<Any>::operator -= (const BMatrix<Any>& m)
     }
     else
     {
-      register       int  s = m.Data().Size();
-      register       Any* x = data_.GetBuffer();
-      register const Any* y = m.Data().Buffer();
-      register       Any* z = data_.GetBuffer() + s;
+            int  s = m.Data().Size();
+            Any* x = data_.GetBuffer();
+      const Any* y = m.Data().Buffer();
+            Any* z = data_.GetBuffer() + s;
       for(; x<z; x++, y++)
       {
         (*x) -= (*y);
@@ -604,7 +602,7 @@ MatMult(const BMatrix<Any>& A, const BMatrix<Any>& B, BMatrix<Any>& C)
  */
 //--------------------------------------------------------------------
 {
-    register Any aux;
+    Any aux;
     if(!A.Columns() || !B.Columns() || !A.Rows() || !B.Rows())
     {
       C.Alloc(0,0);
@@ -614,12 +612,12 @@ MatMult(const BMatrix<Any>& A, const BMatrix<Any>& B, BMatrix<Any>& C)
     {
 	return;
     }
-    register int M  = A.Rows();
-    register int K  = B.Rows();
-    register int N  = B.Columns();
+    int M  = A.Rows();
+    int K  = B.Rows();
+    int N  = B.Columns();
     C.Alloc(M,N);
     
-    register int m, n, k;
+    int m, n, k;
     if(M>=N)
     {
 	for(n=0; n<N; n++)

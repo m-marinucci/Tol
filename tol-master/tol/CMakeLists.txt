@@ -1,6 +1,32 @@
 cmake_minimum_required( VERSION 3.5 )
 project( TOL )
 
+# Security hardening options
+option(TOL_ENABLE_HARDENING "Enable security hardening flags" ON)
+
+if(TOL_ENABLE_HARDENING)
+  # Compiler warning flags (without -Werror initially to see what needs fixing)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE")
+  
+  # Linker flags for full RELRO and PIE
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie -Wl,-z,relro,-z,now")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,relro,-z,now")
+endif()
+
+# Option to control use of deprecated register keyword
+option(TOL_LEGACY_REGISTER "Use deprecated register keyword for old compilers" OFF)
+
+# Option for CI builds to control error handling
+option(CI_BUILD "Building in CI environment" OFF)
+
+# Option to use precompiled headers (disabled in CI by default)
+if(CI_BUILD)
+  option(TOL_USE_PCH "Use precompiled headers" OFF)
+else()
+  option(TOL_USE_PCH "Use precompiled headers" ON)
+endif()
+
 #-----------------------------------------------------------------------------
 #
 # To fix compilation problem: relocation R_X86_64_32 against `a local symbol' can not be
@@ -233,11 +259,18 @@ check_function_exists( round HAVE_ROUND )
 string( TIMESTAMP build_date "%Y-%m-%d" UTC )
 string( TIMESTAMP build_time "%H:%M:%S" UTC )
 
+# C++ Compatibility options
+option(TOL_LEGACY_REGISTER "Enable deprecated 'register' keyword for legacy compilers" OFF)
+
 add_definitions( -DHAVE_CONFIG_H -DUSE_DELAY_INIT -D__USE_ZIP_ARCHIVE__
   -D__USE_DYNSCOPE__
   -D__POOL_NONE__=0 -D__POOL_BFSMEM__=1 -D__USE_POOL__=__POOL_BFSMEM__
   -D__HASH_MAP_MSVC__=1 -D__HASH_MAP_GOOGLE__=2 -D__HASH_MAP_GCC__=3 
   -D__HASH_MAP_ICC__=4 -D__USE_HASH_MAP__=__HASH_MAP_GOOGLE__ )
+
+if(TOL_LEGACY_REGISTER)
+  add_definitions(-DTOL_LEGACY_REGISTER)
+endif()
 
 if( CMAKE_SYSTEM_NAME STREQUAL "Linux" )
   add_definitions( -DUNIX )
@@ -277,7 +310,29 @@ if( TRACE_COMPONENTS_FOUND )
 endif( TRACE_COMPONENTS_FOUND )
 
 # CLAPACK configuration
-find_package( CLAPACK REQUIRED )
+find_package( CLAPACK )
+
+# If CLAPACK not found, try to use LAPACK as fallback
+if(NOT CLAPACK_FOUND)
+  message(STATUS "CLAPACK not found, using LAPACK as fallback")
+  if(LAPACK_FOUND)
+    # Set CLAPACK variables to LAPACK values
+    set(CLAPACK_FOUND TRUE)
+    set(CLAPACK_LIBRARIES ${LAPACK_LIBRARIES})
+    set(CLAPACK_LIBRARY ${LAPACK_LIBRARIES})
+    # Try to find lapacke header
+    find_path(CLAPACK_INCLUDE_DIR
+      NAMES lapacke.h
+      PATHS /usr/include /usr/include/lapacke
+    )
+    if(NOT CLAPACK_INCLUDE_DIR)
+      set(CLAPACK_INCLUDE_DIR "")
+    endif()
+    message(STATUS "Using LAPACK libraries: ${LAPACK_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "Neither CLAPACK nor LAPACK found. Please install liblapack-dev and liblapacke-dev")
+  endif()
+endif()
 
 if( CLAPACK_FOUND AND TRACE_COMPONENTS_FOUND )
   message("CLAPACK_INCLUDE_DIR = ${CLAPACK_INCLUDE_DIR}")
@@ -455,6 +510,17 @@ if( UNIX )
 endif( UNIX )
 add_executable( tolcon tol.cpp )
 target_link_libraries( tolcon tol )
+
+# Configure precompiled headers if enabled
+if(TOL_USE_PCH AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tol/pch.hpp")
+    target_precompile_headers(tol PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/tol/pch.hpp")
+    target_precompile_headers(tolcon REUSE_FROM tol)
+  else()
+    message(WARNING "Precompiled header tol/pch.hpp not found, disabling PCH")
+    set(TOL_USE_PCH OFF)
+  endif()
+endif()
 
 #message( STATUS "ALL_HEADERS_LIST ${ALL_HEADERS_LIST}" )
 add_custom_target( COPY_HEADERS ALL DEPENDS ${COPY_HEADERS_DEPENDS} )

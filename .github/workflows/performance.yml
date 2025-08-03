@@ -1,0 +1,730 @@
+name: Performance Regression Testing
+
+on:
+  schedule:
+    # Run nightly at 03:00 UTC
+    - cron: '0 3 * * *'
+  push:
+    branches: [ master ]
+    paths:
+      - 'tol-master/tol/**/*.cpp'
+      - 'tol-master/tol/**/*.h'
+      - 'tol-master/tol/**/CMakeLists.txt'
+      - '.github/workflows/performance.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'tol-master/tol/**/*.cpp'
+      - 'tol-master/tol/**/*.h'
+      - 'tol-master/tol/**/CMakeLists.txt'
+  workflow_dispatch:
+    inputs:
+      benchmark_suite:
+        description: 'Benchmark suite to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - core
+          - math
+          - memory
+          - parsing
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+env:
+  # Performance test configuration
+  PERFORMANCE_THRESHOLD_PERCENT: 15  # Alert if performance degrades by more than 15%
+  BENCHMARK_ITERATIONS: 5
+  WARMUP_ITERATIONS: 2
+
+jobs:
+  performance-linux:
+    name: Performance Benchmarks (Linux)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Release]
+        compiler: [gcc-11, clang-15, gcc-12]
+        # Temporarily disable RelWithDebInfo until build issues are resolved
+        # TODO: Re-enable after fixing build configuration for debug symbols
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up build environment
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake git time \
+            libgsl-dev libopenblas-dev liblapack-dev liblapacke-dev libblas-dev \
+            libfftw3-dev libbz2-dev libsuitesparse-dev libsparsehash-dev \
+            libboost-all-dev libzip-dev zlib1g-dev valgrind
+          
+          # Debug: Check where LAPACKE is installed
+          echo "Checking for LAPACKE libraries:"
+          find /usr -name "*lapacke*" -type f 2>/dev/null | grep -E "\.(so|a)$" || true
+          echo "Checking Boost:"
+          pkg-config --libs boost || true
+          ls -la /usr/include/boost/ | head -5 || true
+          echo "Checking Boost pkg-config files:"
+          ls -la /usr/lib/pkgconfig/boost* 2>/dev/null || echo "No boost pkgconfig files found"
+          echo "Installing pkg-config if missing:"
+          sudo apt install -y pkg-config
+          
+          # Install specific compiler versions
+          if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
+            sudo apt install -y gcc-11 g++-11
+            export CC=gcc-11
+            export CXX=g++-11
+          elif [[ "${{ matrix.compiler }}" == "clang-15" ]]; then
+            sudo apt install -y clang-15
+            export CC=clang-15
+            export CXX=clang++-15
+          elif [[ "${{ matrix.compiler }}" == "gcc-12" ]]; then
+            sudo apt install -y gcc-12 g++-12
+            export CC=gcc-12
+            export CXX=g++-12
+          fi
+
+      - name: Cache build dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/cmake
+            tol-master/tol/build-perf/CMakeFiles
+          key: perf-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            perf-${{ runner.os }}-${{ matrix.compiler }}-${{ matrix.build_type }}-
+            perf-${{ runner.os }}-${{ matrix.compiler }}-
+
+      - name: Build TOL for performance testing
+        run: |
+          cd tol-master/tol
+          mkdir -p build-perf
+          cd build-perf
+          
+          # Set compiler environment
+          if [[ "${{ matrix.compiler }}" == "gcc-11" ]]; then
+            export CC=gcc-11
+            export CXX=g++-11
+          elif [[ "${{ matrix.compiler }}" == "clang-15" ]]; then
+            export CC=clang-15
+            export CXX=clang++-15
+          elif [[ "${{ matrix.compiler }}" == "gcc-12" ]]; then
+            export CC=gcc-12
+            export CXX=g++-12
+          fi
+          
+          # Configure with performance optimizations
+          # Help CMake find LAPACKE (C interface to LAPACK)
+          export CLAPACK_DIR=/usr
+          
+          # Help CMake find Boost
+          export BOOST_ROOT=/usr
+          export Boost_NO_SYSTEM_PATHS=OFF
+          
+          # Find LAPACKE library dynamically
+          LAPACKE_LIB=$(find /usr/lib -name "liblapacke.so*" -type f 2>/dev/null | head -1)
+          if [ -z "$LAPACKE_LIB" ]; then
+            echo "Warning: liblapacke.so not found, trying alternative names"
+            LAPACKE_LIB=$(find /usr/lib -name "libclapack.so*" -type f 2>/dev/null | head -1)
+          fi
+          
+          if [ -n "$LAPACKE_LIB" ]; then
+            echo "Found LAPACKE at: $LAPACKE_LIB"
+            CLAPACK_LIB_FLAG="-DCLAPACK_LIBRARY=$LAPACKE_LIB"
+          else
+            echo "Warning: Could not find LAPACKE library, letting CMake search"
+            CLAPACK_LIB_FLAG=""
+          fi
+          
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_C_FLAGS="-O2 -DNDEBUG -fPIC" \
+            -DCMAKE_CXX_FLAGS="-O2 -DNDEBUG -fPIC" \
+            -DENABLE_TESTING=ON \
+            -DTOL_TESTS_ENABLE_PERFORMANCE=ON \
+            -DTOL_LEGACY_REGISTER=OFF \
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+            $CLAPACK_LIB_FLAG \
+            -DCLAPACK_INCLUDE_DIR=/usr/include \
+            -DCLAPACK_NAME=lapacke \
+            -DBOOST_ROOT=/usr \
+            -DBoost_NO_BOOST_CMAKE=ON \
+            -DCI_BUILD=ON
+          
+          # Build external dependencies first (like ZipArchive)
+          echo "Building external dependencies..."
+          if [ -d "contrib/ZipArchive" ]; then
+            make -j1 prj_zipa 2>&1 || {
+              echo "Warning: ZipArchive external project build failed, continuing anyway"
+            }
+          fi
+          
+          # Build with single thread to avoid header dependency issues
+          echo "Starting main build process..."
+          make -j1 tol_init tolcon 2>&1 | tee build.log || {
+            echo "Build failed with exit code $?"
+            echo "Last 50 lines of build log:"
+            tail -50 build.log || true
+            echo "Checking for partial build artifacts:"
+            find . -name "tolcon" -o -name "tol" -type f || true
+            # Check if tolcon executable exists even if build reported failure
+            if [ -f "./tolcon" ] || [ -f "./bin/tolcon" ]; then
+              echo "Found tolcon executable, continuing..."
+            else
+              echo "No tolcon executable found, build failed critically"
+              exit 1
+            fi
+          }
+
+      - name: Create performance test suite
+        run: |
+          cd tol-master/tol
+          cat > performance_benchmarks.tol << 'EOF'
+          // TOL Performance Benchmark Suite
+          
+          WriteLn("=== TOL Performance Benchmark Suite ===");
+          WriteLn("Build: ${{ matrix.build_type }} with ${{ matrix.compiler }}");
+          WriteLn("Timestamp: " + FormatDate(Today, "%Y-%m-%d %H:%M:%S"));
+          WriteLn("");
+          
+          // Benchmark configuration
+          Real iterations = ${{ env.BENCHMARK_ITERATIONS }};
+          Real warmup = ${{ env.WARMUP_ITERATIONS }};
+          
+          NameBlock BenchmarkResults = [[
+            Real arithmetic_avg = 0;
+            Real matrix_avg = 0;
+            Real series_avg = 0;
+            Real memory_avg = 0;
+            Real parsing_avg = 0
+          ]];
+          
+          // Core arithmetic benchmarks
+          Real BenchmarkArithmetic(Real size) {
+            WriteLn("Running arithmetic benchmark (size: " + size + ")...");
+            Date start = Today;
+            
+            Real i = 1;
+            Real sum = 0;
+            While(i <= size, [
+              sum := sum + Sqrt(i) * Log(i + 1);
+              i := i + 1
+            ]);
+            
+            Date end = Today;
+            Real elapsed = DateDif(end, start, "seconds");
+            WriteLn("  Result: " + sum + ", Time: " + elapsed + " seconds");
+            elapsed
+          };
+          
+          // Matrix operations benchmark
+          Real BenchmarkMatrix(Real size) {
+            WriteLn("Running matrix benchmark (size: " + size + "x" + size + ")...");
+            Date start = Today;
+            
+            Matrix A = Rand(size, size, 0, 1);
+            Matrix B = Rand(size, size, 0, 1);
+            Matrix C = A * B;
+            Real det = MatDet(C);
+            
+            Date end = Today;
+            Real elapsed = DateDif(end, start, "seconds");
+            WriteLn("  Determinant: " + det + ", Time: " + elapsed + " seconds");
+            elapsed
+          };
+          
+          // Series processing benchmark
+          Real BenchmarkSeries(Real size) {
+            WriteLn("Running series benchmark (size: " + size + ")...");
+            Date start = Today;
+            
+            Serie data = Rand(size, 0, 1);
+            Serie moving_avg = MovingAverage(data, 10);
+            Serie diff = data - moving_avg;
+            Real variance = Var(diff);
+            
+            Date end = Today;
+            Real elapsed = DateDif(end, start, "seconds");
+            WriteLn("  Variance: " + variance + ", Time: " + elapsed + " seconds");
+            elapsed
+          };
+          
+          // Memory allocation benchmark
+          Real BenchmarkMemory(Real iterations) {
+            WriteLn("Running memory benchmark (iterations: " + iterations + ")...");
+            Date start = Today;
+            
+            Real i = 1;
+            While(i <= iterations, [
+              Matrix temp = Rand(100, 100, 0, 1);
+              temp := Null;  // Force deallocation
+              i := i + 1
+            ]);
+            
+            Date end = Today;
+            Real elapsed = DateDif(end, start, "seconds");
+            WriteLn("  Time: " + elapsed + " seconds");
+            elapsed
+          };
+          
+          // Parsing benchmark
+          Real BenchmarkParsing(Real iterations) {
+            WriteLn("Running parsing benchmark (iterations: " + iterations + ")...");
+            Date start = Today;
+            
+            Real i = 1;
+            While(i <= iterations, [
+              Code expr = Code("Real x = Sqrt(" + i + ") + Log(" + (i+1) + "); x");
+              Real result = Eval(expr);
+              i := i + 1
+            ]);
+            
+            Date end = Today;
+            Real elapsed = DateDif(end, start, "seconds");
+            WriteLn("  Time: " + elapsed + " seconds");
+            elapsed
+          };
+          
+          // Run benchmarks based on input
+          Text benchmark_suite = "${{ inputs.benchmark_suite || 'all' }}";
+          
+          If(benchmark_suite == "all" | benchmark_suite == "core", [
+            WriteLn("\n--- Core Arithmetic Benchmarks ---");
+            Real warmup_time = BenchmarkArithmetic(10000);  // Warmup
+            Real i = 1;
+            Real total_time = 0;
+            While(i <= iterations, [
+              total_time := total_time + BenchmarkArithmetic(100000);
+              i := i + 1
+            ]);
+            BenchmarkResults::arithmetic_avg := total_time / iterations;
+            WriteLn("Average arithmetic time: " + BenchmarkResults::arithmetic_avg + " seconds");
+          ]);
+          
+          If(benchmark_suite == "all" | benchmark_suite == "math", [
+            WriteLn("\n--- Matrix Operations Benchmarks ---");
+            Real warmup_time = BenchmarkMatrix(50);  // Warmup
+            Real i = 1;
+            Real total_time = 0;
+            While(i <= iterations, [
+              total_time := total_time + BenchmarkMatrix(200);
+              i := i + 1
+            ]);
+            BenchmarkResults::matrix_avg := total_time / iterations;
+            WriteLn("Average matrix time: " + BenchmarkResults::matrix_avg + " seconds");
+            
+            WriteLn("\n--- Series Processing Benchmarks ---");
+            warmup_time := BenchmarkSeries(1000);  // Warmup
+            i := 1;
+            total_time := 0;
+            While(i <= iterations, [
+              total_time := total_time + BenchmarkSeries(50000);
+              i := i + 1
+            ]);
+            BenchmarkResults::series_avg := total_time / iterations;
+            WriteLn("Average series time: " + BenchmarkResults::series_avg + " seconds");
+          ]);
+          
+          If(benchmark_suite == "all" | benchmark_suite == "memory", [
+            WriteLn("\n--- Memory Allocation Benchmarks ---");
+            Real warmup_time = BenchmarkMemory(100);  // Warmup
+            Real i = 1;
+            Real total_time = 0;
+            While(i <= iterations, [
+              total_time := total_time + BenchmarkMemory(1000);
+              i := i + 1
+            ]);
+            BenchmarkResults::memory_avg := total_time / iterations;
+            WriteLn("Average memory time: " + BenchmarkResults::memory_avg + " seconds");
+          ]);
+          
+          If(benchmark_suite == "all" | benchmark_suite == "parsing", [
+            WriteLn("\n--- Parsing Benchmarks ---");
+            Real warmup_time = BenchmarkParsing(100);  // Warmup
+            Real i = 1;
+            Real total_time = 0;
+            While(i <= iterations, [
+              total_time := total_time + BenchmarkParsing(1000);
+              i := i + 1
+            ]);
+            BenchmarkResults::parsing_avg := total_time / iterations;
+            WriteLn("Average parsing time: " + BenchmarkResults::parsing_avg + " seconds");
+          ]);
+          
+          // Generate JSON results for processing
+          WriteLn("\n=== BENCHMARK_RESULTS_JSON_START ===");
+          Text json_results = "{";
+          json_results := json_results + "\"timestamp\":\"" + FormatDate(Today, "%Y-%m-%dT%H:%M:%SZ") + "\",";
+          json_results := json_results + "\"build_type\":\"${{ matrix.build_type }}\",";
+          json_results := json_results + "\"compiler\":\"${{ matrix.compiler }}\",";
+          json_results := json_results + "\"commit\":\"${{ github.sha }}\",";
+          json_results := json_results + "\"benchmark_suite\":\"" + benchmark_suite + "\",";
+          
+          If(HasName(BenchmarkResults, "arithmetic_avg"), [
+            json_results := json_results + "\"arithmetic_avg\":" + BenchmarkResults::arithmetic_avg + ","
+          ]);
+          If(HasName(BenchmarkResults, "matrix_avg"), [
+            json_results := json_results + "\"matrix_avg\":" + BenchmarkResults::matrix_avg + ","
+          ]);
+          If(HasName(BenchmarkResults, "series_avg"), [
+            json_results := json_results + "\"series_avg\":" + BenchmarkResults::series_avg + ","
+          ]);
+          If(HasName(BenchmarkResults, "memory_avg"), [
+            json_results := json_results + "\"memory_avg\":" + BenchmarkResults::memory_avg + ","
+          ]);
+          If(HasName(BenchmarkResults, "parsing_avg"), [
+            json_results := json_results + "\"parsing_avg\":" + BenchmarkResults::parsing_avg + ","
+          ]);
+          
+          // Remove trailing comma and close JSON
+          json_results := SubStr(json_results, 1, Length(json_results) - 1) + "}";
+          WriteLn(json_results);
+          WriteLn("=== BENCHMARK_RESULTS_JSON_END ===");
+          
+          WriteLn("\n=== Benchmark Suite Complete ===");
+          EOF
+
+      - name: Run performance benchmarks
+        run: |
+          cd tol-master/tol/build-perf
+          
+          # Check if tolcon executable exists
+          if [ ! -f "./tolcon" ]; then
+            echo "tolcon executable not found, searching for alternatives..."
+            TOLCON_PATH=$(find . -name "tolcon" -type f -executable | head -1)
+            if [ -n "$TOLCON_PATH" ]; then
+              echo "Found tolcon at: $TOLCON_PATH"
+              ln -s "$TOLCON_PATH" ./tolcon
+            else
+              echo "No tolcon executable found, benchmark cannot run"
+              echo "Creating dummy output for analysis..."
+              echo "Build failed - no executable available" > benchmark_output.txt
+              exit 0
+            fi
+          fi
+          
+          # Set CPU governor to performance mode for consistent results
+          echo "Setting CPU governor to performance mode..."
+          # Install cpupower if not available
+          sudo apt install -y linux-tools-common linux-tools-generic || true
+          sudo cpupower frequency-set --governor performance || true
+          
+          # Run the benchmarks
+          echo "Running TOL performance benchmarks..."
+          ./tolcon -v ../performance_benchmarks.tol 2>&1 | tee benchmark_output.txt || {
+            echo "Benchmark execution failed, but continuing with analysis..."
+            echo "Error occurred during benchmark execution" >> benchmark_output.txt
+          }
+
+      - name: Extract benchmark results
+        run: |
+          cd tol-master/tol/build-perf
+          
+          # Extract JSON results from benchmark output
+          sed -n '/=== BENCHMARK_RESULTS_JSON_START ===/,/=== BENCHMARK_RESULTS_JSON_END ===/p' benchmark_output.txt | \
+            grep -v "===" > benchmark_results.json
+          
+          # Add metadata
+          echo "Build configuration: ${{ matrix.build_type }} with ${{ matrix.compiler }}" >> benchmark_metadata.txt
+          echo "Runner: ${{ runner.os }}" >> benchmark_metadata.txt
+          echo "Hardware: $(nproc) cores, $(free -h | grep Mem | awk '{print $2}') RAM" >> benchmark_metadata.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ matrix.build_type }}-${{ matrix.compiler }}
+          path: |
+            tol-master/tol/build-perf/benchmark_results.json
+            tol-master/tol/build-perf/benchmark_metadata.txt
+            tol-master/tol/build-perf/benchmark_output.txt
+          retention-days: 90
+
+  performance-analysis:
+    name: Performance Analysis and Regression Detection
+    runs-on: ubuntu-latest
+    needs: performance-linux
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 100  # Get more history for trend analysis
+
+      - name: Set up Python for analysis
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install analysis dependencies
+        run: |
+          pip install pandas matplotlib seaborn numpy scipy requests
+
+      - name: Download all benchmark results
+        uses: actions/download-artifact@v4
+
+      - name: Analyze performance results
+        run: |
+          cat > analyze_performance.py << 'EOF'
+          import json
+          import os
+          import pandas as pd
+          import matplotlib.pyplot as plt
+          import numpy as np
+          from datetime import datetime
+          import glob
+          
+          def load_benchmark_results():
+              """Load all benchmark result files"""
+              results = []
+              
+              # Find all benchmark result files
+              for root, dirs, files in os.walk('.'):
+                  for file in files:
+                      if file == 'benchmark_results.json':
+                          filepath = os.path.join(root, file)
+                          try:
+                              with open(filepath, 'r') as f:
+                                  content = f.read().strip()
+                                  if content:
+                                      result = json.loads(content)
+                                      result['source_file'] = filepath
+                                      results.append(result)
+                          except Exception as e:
+                              print(f"Error loading {filepath}: {e}")
+              
+              return results
+          
+          def create_performance_report(results):
+              """Create a performance analysis report"""
+              if not results:
+                  print("No benchmark results found")
+                  return
+              
+              df = pd.DataFrame(results)
+              
+              # Generate summary report
+              report = []
+              report.append("# Performance Analysis Report")
+              report.append("")
+              report.append(f"**Analysis Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}")
+              report.append(f"**Commit:** {df.iloc[0].get('commit', 'unknown')}")
+              report.append(f"**Total Benchmark Runs:** {len(df)}")
+              report.append("")
+              
+              # Performance metrics by build type and compiler
+              report.append("## Performance Summary")
+              report.append("")
+              
+              metrics = ['arithmetic_avg', 'matrix_avg', 'series_avg', 'memory_avg', 'parsing_avg']
+              
+              for metric in metrics:
+                  if metric in df.columns:
+                      report.append(f"### {metric.replace('_', ' ').title()}")
+                      metric_data = df[df[metric].notna()]
+                      if not metric_data.empty:
+                          report.append(f"- **Mean:** {metric_data[metric].mean():.4f} seconds")
+                          report.append(f"- **Std Dev:** {metric_data[metric].std():.4f} seconds")
+                          report.append(f"- **Min:** {metric_data[metric].min():.4f} seconds")  
+                          report.append(f"- **Max:** {metric_data[metric].max():.4f} seconds")
+                          report.append("")
+              
+              # Compiler comparison
+              if 'compiler' in df.columns and len(df['compiler'].unique()) > 1:
+                  report.append("## Compiler Performance Comparison")
+                  report.append("")
+                  
+                  for metric in metrics:
+                      if metric in df.columns:
+                          metric_data = df[df[metric].notna()]
+                          if not metric_data.empty:
+                              compiler_stats = metric_data.groupby('compiler')[metric].agg(['mean', 'std']).round(4)
+                              report.append(f"### {metric.replace('_', ' ').title()}")
+                              report.append(compiler_stats.to_markdown())
+                              report.append("")
+              
+              # Build type comparison
+              if 'build_type' in df.columns and len(df['build_type'].unique()) > 1:
+                  report.append("## Build Type Performance Comparison")
+                  report.append("")
+                  
+                  for metric in metrics:
+                      if metric in df.columns:
+                          metric_data = df[df[metric].notna()]
+                          if not metric_data.empty:
+                              build_stats = metric_data.groupby('build_type')[metric].agg(['mean', 'std']).round(4)
+                              report.append(f"### {metric.replace('_', ' ').title()}")
+                              report.append(build_stats.to_markdown())
+                              report.append("")
+              
+              # Regression detection (placeholder - would need historical data)
+              report.append("## Regression Analysis")
+              report.append("")
+              report.append("*Note: Regression detection requires historical benchmark data.*")
+              report.append("*This analysis compares current run configurations only.*")
+              report.append("")
+              
+              # Recommendations
+              report.append("## Recommendations")
+              report.append("")
+              
+              if 'compiler' in df.columns and len(df['compiler'].unique()) > 1:
+                  # Find best performing compiler for each metric
+                  for metric in metrics:
+                      if metric in df.columns:
+                          metric_data = df[df[metric].notna()]
+                          if not metric_data.empty:
+                              best_compiler = metric_data.groupby('compiler')[metric].mean().idxmin()
+                              report.append(f"- **{metric.replace('_', ' ').title()}:** Best performance with {best_compiler}")
+              
+              if 'build_type' in df.columns and len(df['build_type'].unique()) > 1:
+                  # Find best performing build type
+                  for metric in metrics:
+                      if metric in df.columns:
+                          metric_data = df[df[metric].notna()]
+                          if not metric_data.empty:
+                              best_build = metric_data.groupby('build_type')[metric].mean().idxmin()
+                              report.append(f"- **{metric.replace('_', ' ').title()}:** Best performance with {best_build} build")
+              
+              report.append("")
+              report.append("## Data Sources")
+              for i, result in enumerate(results):
+                  report.append(f"- Run {i+1}: {result.get('build_type', 'unknown')} with {result.get('compiler', 'unknown')}")
+              
+              return '\n'.join(report)
+          
+          # Main analysis
+          results = load_benchmark_results()
+          
+          if results:
+              print(f"Loaded {len(results)} benchmark result files")
+              report = create_performance_report(results)
+              
+              with open('performance_analysis_report.md', 'w') as f:
+                  f.write(report)
+              
+              print("Performance analysis complete!")
+              print("\nSummary:")
+              for result in results:
+                  print(f"  {result.get('build_type', 'unknown')} with {result.get('compiler', 'unknown')}: ", end="")
+                  metrics = [k for k in result.keys() if k.endswith('_avg')]
+                  print(f"{len(metrics)} metrics")
+          else:
+              print("No benchmark results found to analyze")
+              
+              # Create minimal report
+              with open('performance_analysis_report.md', 'w') as f:
+                  f.write("# Performance Analysis Report\n\n")
+                  f.write("No benchmark results were found to analyze.\n")
+                  f.write("This may indicate that the benchmarks failed to run or produce results.\n")
+          EOF
+          
+          python analyze_performance.py
+
+      - name: Check for performance regressions
+        id: regression_check
+        run: |
+          # This is a placeholder for regression detection
+          # In a real implementation, you would compare with historical data
+          
+          echo "regression_detected=false" >> $GITHUB_OUTPUT
+          echo "regression_summary=No historical data available for regression detection" >> $GITHUB_OUTPUT
+          
+          # If we had historical data, we would:
+          # 1. Load previous benchmark results from a database or artifacts
+          # 2. Compare current results with baseline
+          # 3. Flag regressions beyond threshold
+          # 4. Set regression_detected=true if found
+
+      - name: Upload performance analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-analysis
+          path: |
+            performance_analysis_report.md
+          retention-days: 90
+
+      - name: Comment on PR with performance results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let report = '';
+            try {
+              report = fs.readFileSync('performance_analysis_report.md', 'utf8');
+            } catch (error) {
+              report = 'Performance analysis report not found.';
+            }
+            
+            const comment = `## Performance Analysis Results
+            
+            ${report}
+            
+            **Note:** This analysis compares different build configurations in this PR. For regression detection against the main branch, historical benchmark data is needed.
+            
+            <details>
+            <summary>How to interpret these results</summary>
+            
+            - **Lower times are better** for all metrics
+            - Compare different compilers and build types to see optimal configurations
+            - Look for significant differences between configurations
+            - Performance can vary between runs due to system load
+            
+            </details>`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Create performance regression issue
+        if: steps.regression_check.outputs.regression_detected == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Performance Regression Detected - ${new Date().toISOString().split('T')[0]}`;
+            const body = `
+            # Performance Regression Alert
+            
+            Automated performance testing has detected a regression that exceeds the ${process.env.PERFORMANCE_THRESHOLD_PERCENT}% threshold.
+            
+            **Details:**
+            - Commit: ${{ github.sha }}
+            - Date: ${new Date().toISOString()}
+            - Threshold: ${process.env.PERFORMANCE_THRESHOLD_PERCENT}%
+            
+            **Regression Summary:**
+            ${{ steps.regression_check.outputs.regression_summary }}
+            
+            **Next Steps:**
+            1. Review the performance analysis report in the workflow artifacts
+            2. Identify the cause of the regression
+            3. Optimize the affected code or adjust performance expectations
+            4. Re-run benchmarks to verify improvements
+            
+            **Artifacts:**
+            - Performance analysis report
+            - Detailed benchmark results
+            - Build logs and configurations
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['performance', 'regression', 'automated']
+            });

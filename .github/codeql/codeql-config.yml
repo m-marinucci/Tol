@@ -1,0 +1,33 @@
+name: "TOL Security Analysis"
+
+# Query suite selection
+queries:
+  - uses: security-and-quality
+  - uses: security-extended
+
+# Specify paths to analyze
+paths:
+  - "tol-master/tol/bbasic"
+  - "tol-master/tol/bmath"
+  - "tol-master/tol/bparser"
+  - "tol-master/tol/btol"
+  - "tol-master/tol/lang"
+  - "tol-master/tol/OIS"
+  - "tol-master/tol/PackArchive"
+  - "tol-master/tol/LoadDynLib"
+  - "tol-master/tol/contrib"
+  - "tol-master/tol/dbdrivers"
+
+# Paths to ignore for security scanning
+paths-ignore:
+  - "tol-master/tol/win-VC*"
+  - "tol-master/tol/build*"
+  - "tol-master/tol/cmake"
+  - "**/test*"
+  - "**/Test*"
+  - "**/example*"
+  - "**/doc*"
+
+# Additional query packs
+packs:
+  - "codeql/cpp-queries"

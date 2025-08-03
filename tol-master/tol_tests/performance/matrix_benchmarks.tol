@@ -1,0 +1,94 @@
+//////////////////////////////////////////////////////////////////////////////
+// FILE   : matrix_benchmarks.tol
+// PURPOSE: Comprehensive matrix performance benchmarks for CI/CD
+//////////////////////////////////////////////////////////////////////////////
+
+Text summary_ = "Matrix Performance Benchmarks";
+Real PutRandomSeed(12345);
+
+// Helper function to create random matrix
+Matrix RandomMatrix(Real rows, Real cols) {
+  Rand(rows, cols, -10, 10)
+}
+
+// Benchmark results storage
+Set results = [[Text("Operation"), Text("Size"), Text("Time (s)"), Text("GFLOPS")]];
+
+// Small matrix benchmark (cache-friendly)
+Real size_small = 128;
+WriteLn("Benchmarking small matrices (", size_small, "x", size_small, ")...");
+
+Matrix small = RandomMatrix(size_small, size_small);
+Real t0 = Copy(Time);
+Matrix result_small = Inv(small);
+Real t_inv_small = Copy(Time) - t0;
+Real gflops_small = (2.0 * size_small^3) / (t_inv_small * 1e9);
+results = results :: [["Matrix Inverse", size_small, t_inv_small, gflops_small]];
+
+// Matrix multiplication benchmark (small)
+t0 = Copy(Time);
+Matrix prod_small = small * small;
+Real t_mult_small = Copy(Time) - t0;
+Real gflops_mult_small = (2.0 * size_small^3) / (t_mult_small * 1e9);
+results = results :: [["Matrix Multiply", size_small, t_mult_small, gflops_mult_small]];
+
+// Large matrix benchmark (cache-miss sensitive)
+Real size_large = 1024;
+WriteLn("Benchmarking large matrices (", size_large, "x", size_large, ")...");
+
+Matrix large = RandomMatrix(size_large, size_large);
+t0 = Copy(Time);
+Matrix result_large = Inv(large);
+Real t_inv_large = Copy(Time) - t0;
+Real gflops_large = (2.0 * size_large^3) / (t_inv_large * 1e9);
+results = results :: [["Matrix Inverse", size_large, t_inv_large, gflops_large]];
+
+// Matrix multiplication benchmark (large)
+t0 = Copy(Time);
+Matrix prod_large = large * large;
+Real t_mult_large = Copy(Time) - t0;
+Real gflops_mult_large = (2.0 * size_large^3) / (t_mult_large * 1e9);
+results = results :: [["Matrix Multiply", size_large, t_mult_large, gflops_mult_large]];
+
+// Choleski decomposition benchmark
+Matrix sym_small = Tra(small) * small;
+t0 = Copy(Time);
+Matrix chol_small = Choleski(sym_small);
+Real t_chol_small = Copy(Time) - t0;
+results = results :: [["Choleski", size_small, t_chol_small, 0]];
+
+// Output results
+WriteLn("\nPerformance Benchmark Results:");
+WriteLn("================================");
+Set View(results, "Performance Results");
+
+// Write JSON output for CI parsing
+Text json = "{\n  \"benchmarks\": [\n";
+Real n_results = Card(results);
+Set For(2, n_results, Real(Real i) {
+  Set row = results[i];
+  json = json + "    {\"operation\": \"" + row[1] + "\", " +
+         "\"size\": " + IntText(row[2]) + ", " +
+         "\"time\": " + RealText(row[3], "%.6f") + ", " +
+         "\"gflops\": " + RealText(row[4], "%.2f") + "}";
+  If(i < n_results, json = json + ",");
+  json = json + "\n";
+  i
+});
+json = json + "  ]\n}";
+
+// Save to file for artifact collection
+Text WriteFile("performance_results.json", json);
+WriteLn("\nResults saved to performance_results.json");
+
+// Performance regression check
+Real threshold = 0.15; // 15% regression threshold
+If(t_inv_small > 0.1, {
+  WriteLn("WARNING: Small matrix inverse took longer than expected");
+});
+
+If(t_inv_large > 10.0, {
+  WriteLn("WARNING: Large matrix inverse took longer than expected");
+});
+
+WriteLn("\nBenchmark completed successfully!");

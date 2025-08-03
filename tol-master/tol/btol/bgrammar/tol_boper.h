@@ -46,6 +46,7 @@
 
 // From C++ STL
 #include <vector>
+#include <mutex>
 
 //--------------------------------------------------------------------
 // types
@@ -135,6 +136,8 @@ class TOL_API BOperator: public BSyntaxObject
 private:
   BUserFunCode* uCode_;
   static BList* pendingOperators_; // Operators waiting for grammar initialization
+  static std::once_flag pendingOperatorsInitFlag_; // Thread-safe initialization flag
+  static std::mutex pendingOperatorsMutex_; // Mutex for thread-safe access
 protected:
   //! Grammar of the result of evaluation
   BGrammar*	grammar_;   

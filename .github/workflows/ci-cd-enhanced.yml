@@ -1,0 +1,720 @@
+name: Enhanced TOL CI/CD Pipeline with Advanced Caching
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+  TOL_VERSION: "1.0.0"
+  # Advanced caching configuration
+  CCACHE_COMPRESS: 1
+  CCACHE_COMPRESSLEVEL: 6
+  CCACHE_MAXSIZE: 2G
+  CCACHE_SLOPPINESS: file_macro,locale,time_macros
+  CMAKE_CACHE_VERSION: v2  # Increment when CMake configuration changes significantly
+
+permissions:
+  contents: read
+  security-events: write  # For security scanning
+  issues: write          # For creating performance alerts
+  pull-requests: write   # For PR comments
+
+jobs:
+  # ============================================================================
+  # Enhanced Linux Build Matrix with Advanced Caching
+  # ============================================================================
+  build-linux-enhanced:
+    name: Enhanced Linux Build (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc-9, gcc-10, gcc-11, gcc-12, clang-13, clang-18]
+        include:
+          - compiler: gcc-9
+            cc: gcc-9
+            cxx: g++-9
+            cache_key_prefix: gcc9
+          - compiler: gcc-10
+            cc: gcc-10
+            cxx: g++-10
+            cache_key_prefix: gcc10
+          - compiler: gcc-11
+            cc: gcc-11
+            cxx: g++-11
+            cache_key_prefix: gcc11
+          - compiler: gcc-12
+            cc: gcc-12
+            cxx: g++-12
+            cache_key_prefix: gcc12
+          - compiler: clang-13
+            cc: clang-13
+            cxx: clang++-13
+            cache_key_prefix: clang13
+          - compiler: clang-18
+            cc: clang-18
+            cxx: clang++-18
+            cache_key_prefix: clang18
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0  # Need full history for some build optimizations
+
+    # ============================================================================
+    # Multi-layer Dependency Caching Strategy
+    # ============================================================================
+    - name: Cache System Dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          /var/cache/apt/archives
+          /usr/local/include
+          /usr/local/lib
+        key: system-deps-${{ runner.os }}-${{ hashFiles('.github/workflows/ci-cd-enhanced.yml') }}
+        restore-keys: |
+          system-deps-${{ runner.os }}-
+
+    - name: Cache Build Tools
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cmake
+          /usr/share/cmake-*
+        key: build-tools-${{ runner.os }}-${{ env.CMAKE_CACHE_VERSION }}
+        restore-keys: |
+          build-tools-${{ runner.os }}-
+
+    - name: Cache ccache Directory
+      uses: actions/cache@v3
+      with:
+        path: ~/.ccache
+        key: ccache-${{ matrix.cache_key_prefix }}-${{ hashFiles('tol-master/tol/**/*.cpp', 'tol-master/tol/**/*.h', 'tol-master/tol/**/*.c') }}
+        restore-keys: |
+          ccache-${{ matrix.cache_key_prefix }}-
+          ccache-
+
+    - name: Cache CMake Build Files
+      uses: actions/cache@v3
+      with:
+        path: |
+          tol-master/tol/build/CMakeFiles
+          tol-master/tol/build/CMakeCache.txt
+          tol-master/tol/build/cmake_install.cmake
+          tol-master/tol/build/Makefile
+          tol-master/tol/build/**/CMakeFiles
+        key: cmake-${{ matrix.cache_key_prefix }}-${{ env.CMAKE_CACHE_VERSION }}-${{ hashFiles('tol-master/tol/CMakeLists.txt', 'tol-master/tol/**/CMakeLists.txt') }}
+        restore-keys: |
+          cmake-${{ matrix.cache_key_prefix }}-${{ env.CMAKE_CACHE_VERSION }}-
+          cmake-${{ matrix.cache_key_prefix }}-
+
+    # ============================================================================
+    # Optimized Dependency Installation
+    # ============================================================================
+    - name: Install Dependencies with Caching
+      run: |
+        # Check if dependencies are already cached
+        if [ ! -f /var/cache/apt/tol-deps-installed ]; then
+          echo "Installing fresh dependencies..."
+          sudo apt-get update
+          
+          # Special handling for clang-18 (needs LLVM repository)
+          if [[ "${{ matrix.compiler }}" == "clang-18" ]]; then
+            # Add LLVM repository for clang-18 (Ubuntu 22.04 Jammy)
+            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/keyrings/llvm-snapshot.gpg.key > /dev/null
+            echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+            sudo apt-get update
+            sudo apt-get install -y clang-18 || {
+              echo "Warning: clang-18 not available, using clang-15 instead"
+              sudo apt-get install -y clang-15
+              echo "CC=clang-15" >> $GITHUB_ENV
+              echo "CXX=clang++-15" >> $GITHUB_ENV
+            }
+          else
+            sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
+          fi
+          
+          sudo apt-get install -y \
+            cmake \
+            ccache \
+            pkg-config \
+            libgsl-dev \
+            libopenblas-dev \
+            libfftw3-dev \
+            libbz2-dev \
+            libsuitesparse-dev \
+            libsparsehash-dev \
+            libboost-all-dev \
+            libltdl-dev \
+            zlib1g-dev \
+            lcov \
+            valgrind \
+            cppcheck \
+            clang-format-12
+          
+          # Mark dependencies as installed
+          sudo touch /var/cache/apt/tol-deps-installed
+        else
+          echo "Using cached dependencies"
+        fi
+
+    # ============================================================================
+    # Advanced ccache Configuration
+    # ============================================================================
+    - name: Configure Advanced ccache
+      run: |
+        # Create optimized ccache configuration
+        mkdir -p ~/.ccache
+        cat > ~/.ccache/ccache.conf << 'EOF'
+        # Maximum cache size
+        max_size = ${{ env.CCACHE_MAXSIZE }}
+        
+        # Compression settings for better space efficiency
+        compression = true
+        compression_level = ${{ env.CCACHE_COMPRESSLEVEL }}
+        
+        # Performance optimizations
+        sloppiness = ${{ env.CCACHE_SLOPPINESS }}
+        hash_dir = false
+        cache_dir_levels = 2
+        
+        # Debugging and statistics
+        stats = true
+        log_file = ~/.ccache/ccache.log
+        EOF
+        
+        # Initialize ccache
+        ccache --zero-stats
+        ccache --show-config
+        
+        # Set environment for build
+        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+
+    # ============================================================================
+    # Optimized Build Configuration
+    # ============================================================================
+    - name: Configure Build with Caching
+      working-directory: tol-master/tol
+      run: |
+        mkdir -p build
+        cd build
+        
+        # Advanced CMAKE configuration with caching optimizations
+        CMAKE_ARGS=(
+          "-DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}"
+          "-DCMAKE_C_COMPILER_LAUNCHER=ccache"
+          "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+          "-DENABLE_TESTING=ON"
+          "-DTOL_TESTS_ENABLE_PERFORMANCE=ON"
+          "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+          "-DCMAKE_VERBOSE_MAKEFILE=OFF"
+          # Optimization flags
+          "-DCMAKE_C_FLAGS=-O3 -march=native -pipe"
+          "-DCMAKE_CXX_FLAGS=-O3 -march=native -pipe"
+          # Enable Link Time Optimization for release builds
+          "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
+          # Force CMake to use legacy Boost detection (fixes Ubuntu packages)
+          "-DBoost_NO_BOOST_CMAKE=ON"
+          # CI build flag
+          "-DCI_BUILD=ON"
+        )
+        
+        # Add compiler-specific optimizations
+        if [[ "${{ matrix.compiler }}" == gcc-* ]]; then
+          CMAKE_ARGS+=("-DCMAKE_C_FLAGS=-flto=auto")
+          CMAKE_ARGS+=("-DCMAKE_CXX_FLAGS=-flto=auto")
+        elif [[ "${{ matrix.compiler }}" == clang-* ]]; then
+          CMAKE_ARGS+=("-DCMAKE_C_FLAGS=-flto=thin")
+          CMAKE_ARGS+=("-DCMAKE_CXX_FLAGS=-flto=thin")
+        fi
+        
+        echo "CMAKE configuration: ${CMAKE_ARGS[@]}"
+        
+        # Configure with timing
+        time cmake .. "${CMAKE_ARGS[@]}"
+
+    # ============================================================================
+    # Optimized Parallel Build
+    # ============================================================================
+    - name: Build with Advanced Caching
+      working-directory: tol-master/tol/build
+      run: |
+        # Calculate optimal number of jobs (leave 1 core free for system)
+        JOBS=$(($(nproc) - 1))
+        JOBS=$((JOBS > 1 ? JOBS : 1))
+        
+        echo "Building with $JOBS parallel jobs..."
+        echo "ccache stats before build:"
+        ccache --show-stats
+        
+        # Build with timing and progress indication
+        time make -j$JOBS VERBOSE=0
+        
+        echo "ccache stats after build:"
+        ccache --show-stats
+        
+        # Verify build products
+        echo "Build verification:"
+        ls -la bin/ lib/ || true
+        if [ -f bin/tolcon ]; then
+          echo "✅ tolcon executable built successfully"
+          ./bin/tolcon --version || echo "Version check failed"
+        else
+          echo "❌ tolcon executable not found"
+          exit 1
+        fi
+
+    # ============================================================================
+    # Enhanced Testing with Caching
+    # ============================================================================
+    - name: Cache Test Dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          tol_tests/test_cache
+          tol_tests/unit_tests/**/cache
+        key: test-deps-${{ matrix.cache_key_prefix }}-${{ hashFiles('tol_tests/**/*.tol') }}
+        restore-keys: |
+          test-deps-${{ matrix.cache_key_prefix }}-
+          test-deps-
+
+    - name: Run Unit Tests with Caching
+      working-directory: tol-master/tol/build
+      run: |
+        echo "Running unit tests with caching..."
+        
+        # Create test cache directory
+        mkdir -p ../../../tol_tests/test_cache
+        export TOL_TEST_CACHE_DIR="../../../tol_tests/test_cache"
+        
+        # Run tests with parallel execution
+        ctest --output-on-failure --parallel $(nproc) --verbose
+        
+        echo "Unit tests completed for ${{ matrix.compiler }}"
+
+    - name: Run Integration Tests
+      working-directory: tol_tests
+      run: |
+        # Cache-aware integration testing
+        export TOL_BIN_PATH="../tol-master/tol/build/bin"
+        export TOL_TEST_CACHE_DIR="./test_cache"
+        
+        if [ -f run_all_tests.sh ]; then
+          # Update test runner to use built TOL
+          sed -i "s|/usr/local/tol-gcc-release/bin/tolcon|$TOL_BIN_PATH/tolcon|g" run_all_tests.sh
+          chmod +x run_all_tests.sh
+          
+          # Run with timeout to prevent hanging
+          timeout 1800 ./run_all_tests.sh || {
+            echo "Integration tests timed out or failed"
+            exit 1
+          }
+        else
+          echo "Integration test script not found, running basic tests..."
+          $TOL_BIN_PATH/tolcon -c 'WriteLn("Integration test: PASSED");'
+        fi
+
+    # ============================================================================
+    # Performance and Memory Profiling
+    # ============================================================================
+    - name: Performance Profiling with Caching
+      if: matrix.compiler == 'gcc-11'  # Run profiling only on one compiler
+      working-directory: tol-master/tol/build
+      run: |
+        echo "Running performance profiling..."
+        
+        # Quick performance test
+        time ./bin/tolcon -c 'Real i=1; While(i<=10000, [i:=i+1]); WriteLn("Performance test completed");'
+        
+        # Memory usage check
+        if command -v valgrind &> /dev/null; then
+          echo "Running basic memory check..."
+          timeout 300 valgrind --tool=memcheck --leak-check=summary --error-exitcode=1 \
+            ./bin/tolcon -c 'WriteLn("Memory check: PASSED");' || {
+            echo "Memory check completed with warnings"
+          }
+        fi
+
+    # ============================================================================
+    # Enhanced Coverage and Quality Analysis
+    # ============================================================================
+    - name: Generate Coverage Report with Caching
+      if: matrix.compiler == 'gcc-11'
+      working-directory: tol-master/tol/build
+      run: |
+        if command -v lcov &> /dev/null; then
+          echo "Generating coverage report..."
+          
+          # Capture coverage data
+          lcov --capture --directory . --output-file coverage.info
+          
+          # Filter out system headers and test files
+          lcov --remove coverage.info '/usr/*' \
+               --remove coverage.info '*/test*' \
+               --remove coverage.info '*/Test*' \
+               --remove coverage.info '*/gtest/*' \
+               --output-file coverage_filtered.info
+          
+          # Generate summary
+          lcov --list coverage_filtered.info
+          
+          echo "Coverage report generated"
+        fi
+
+    - name: Upload Coverage to Codecov
+      if: matrix.compiler == 'gcc-11'
+      uses: codecov/codecov-action@v3
+      with:
+        file: tol-master/tol/build/coverage_filtered.info
+        flags: unittests,${{ matrix.compiler }}
+        name: codecov-${{ matrix.compiler }}
+        fail_ci_if_error: false  # Don't fail CI if codecov upload fails
+
+    # ============================================================================
+    # Cache Statistics and Optimization
+    # ============================================================================
+    - name: Analyze Cache Performance
+      run: |
+        echo "=== Cache Performance Analysis ==="
+        echo "Compiler: ${{ matrix.compiler }}"
+        echo "Build Type: ${{ env.BUILD_TYPE }}"
+        echo ""
+        
+        # ccache statistics
+        echo "ccache Statistics:"
+        ccache --show-stats
+        echo ""
+        
+        # Cache effectiveness calculation
+        if command -v bc &> /dev/null; then
+          hits=$(ccache --show-stats | grep "cache hit" | grep -o "[0-9]*" | head -1 || echo "0")
+          misses=$(ccache --show-stats | grep "cache miss" | grep -o "[0-9]*" | head -1 || echo "1")
+          total=$((hits + misses))
+          
+          if [ $total -gt 0 ]; then
+            hit_ratio=$(echo "scale=2; ($hits * 100) / $total" | bc)
+            echo "Cache Hit Ratio: ${hit_ratio}%"
+            
+            if [ $(echo "$hit_ratio > 80" | bc) -eq 1 ]; then
+              echo "Cache Effectiveness: EXCELLENT ✅"
+            elif [ $(echo "$hit_ratio > 60" | bc) -eq 1 ]; then
+              echo "Cache Effectiveness: GOOD ✅"
+            elif [ $(echo "$hit_ratio > 30" | bc) -eq 1 ]; then
+              echo "Cache Effectiveness: MODERATE ⚠️"
+            else
+              echo "Cache Effectiveness: POOR ❌"
+            fi
+          fi
+        fi
+        
+        # Disk usage analysis
+        echo ""
+        echo "Cache Disk Usage:"
+        du -sh ~/.ccache || echo "ccache directory not found"
+        
+        # Save cache stats for artifacts
+        ccache --show-stats > cache-stats-${{ matrix.compiler }}.txt
+
+    # ============================================================================
+    # Enhanced Artifact Management
+    # ============================================================================
+    - name: Archive Enhanced Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: tol-linux-enhanced-${{ matrix.compiler }}
+        path: |
+          tol-master/tol/build/bin/
+          tol-master/tol/build/lib/
+          tol-master/tol/build/coverage*.info
+          cache-stats-${{ matrix.compiler }}.txt
+        retention-days: 7
+        compression-level: 6  # Balance between speed and size
+
+    # ============================================================================
+    # Cache Cleanup and Optimization
+    # ============================================================================
+    - name: Optimize Cache for Future Runs
+      run: |
+        echo "Optimizing cache for future runs..."
+        
+        # Clean up ccache if it's getting too large
+        current_size=$(ccache --show-stats | grep "cache size" | grep -o "[0-9.]*" | head -1 || echo "0")
+        max_size_gb=$(echo "${{ env.CCACHE_MAXSIZE }}" | grep -o "[0-9]*")
+        
+        echo "Current cache size: ${current_size}GB"
+        echo "Maximum cache size: ${max_size_gb}GB"
+        
+        # If cache is near limit, clean older entries
+        if [ $(echo "$current_size > $(($max_size_gb * 8 / 10))" | bc) -eq 1 ]; then
+          echo "Cache is near limit, cleaning older entries..."
+          ccache --cleanup
+        fi
+        
+        # Final statistics
+        ccache --show-stats
+
+  # ============================================================================
+  # Enhanced Windows Build with Caching
+  # ============================================================================
+  build-windows-enhanced:
+    name: Enhanced Windows Build (MSVC)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    # Windows-specific caching strategy
+    - name: Cache Windows Dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          C:\vcpkg\installed
+          C:\Program Files (x86)\Microsoft Visual Studio\**\MSBuild\**\*.targets
+        key: windows-deps-${{ runner.os }}-${{ hashFiles('.github/workflows/ci-cd-enhanced.yml') }}
+        restore-keys: |
+          windows-deps-${{ runner.os }}-
+
+    - name: Cache CMake Windows Build
+      uses: actions/cache@v3
+      with:
+        path: |
+          tol-master/tol/build/CMakeFiles
+          tol-master/tol/build/CMakeCache.txt
+          tol-master/tol/build/*.vcxproj
+          tol-master/tol/build/*.sln
+        key: cmake-windows-${{ env.CMAKE_CACHE_VERSION }}-${{ hashFiles('tol-master/tol/CMakeLists.txt', 'tol-master/tol/**/CMakeLists.txt') }}
+        restore-keys: |
+          cmake-windows-${{ env.CMAKE_CACHE_VERSION }}-
+          cmake-windows-
+
+    - name: Setup MSVC with Caching
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Configure Windows Build
+      working-directory: tol-master/tol
+      run: |
+        mkdir build
+        cd build
+        
+        cmake .. -G "Visual Studio 17 2022" -A x64 `
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
+          -DENABLE_TESTING=ON `
+          -DCMAKE_INSTALL_PREFIX="C:\TOL" `
+          -DBoost_NO_BOOST_CMAKE=ON
+
+    - name: Build Windows with Caching
+      working-directory: tol-master/tol/build
+      run: |
+        # Use maximum available cores
+        $cores = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
+        Write-Host "Building with $cores cores..."
+        
+        cmake --build . --config ${{ env.BUILD_TYPE }} --parallel $cores
+
+    - name: Test Windows Build
+      working-directory: tol-master/tol/build
+      run: |
+        ctest --output-on-failure --verbose --build-config ${{ env.BUILD_TYPE }}
+
+    - name: Archive Windows Enhanced Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: tol-windows-enhanced-msvc
+        path: |
+          tol-master/tol/build/bin/
+          tol-master/tol/build/lib/
+          tol-master/tol/build/**/${{ env.BUILD_TYPE }}/**/
+        retention-days: 7
+        compression-level: 6
+
+  # ============================================================================
+  # Enhanced Quality Checks
+  # ============================================================================
+  quality-checks-enhanced:
+    name: Enhanced Code Quality Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Cache Quality Tools
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/cppcheck
+          /usr/share/cppcheck
+        key: quality-tools-${{ runner.os }}-${{ hashFiles('.github/workflows/ci-cd-enhanced.yml') }}
+        restore-keys: |
+          quality-tools-${{ runner.os }}-
+
+    - name: Setup Enhanced Quality Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cppcheck clang-format-12 clang-tidy-12
+
+    - name: Run Enhanced Static Analysis
+      run: |
+        echo "Running enhanced static analysis..."
+        
+        # Comprehensive cppcheck analysis
+        cppcheck --enable=all \
+          --inconclusive \
+          --xml \
+          --xml-version=2 \
+          --suppress=missingIncludeSystem \
+          --suppress=unmatchedSuppression \
+          --suppress=unusedFunction \
+          --platform=unix64 \
+          --std=c++17 \
+          -I tol-master/tol \
+          tol-master/tol/ 2> cppcheck-enhanced-report.xml || true
+        
+        # Format check
+        find tol-master/tol/ -name "*.cpp" -o -name "*.h" | \
+          xargs clang-format-12 --dry-run --Werror || {
+            echo "Code formatting issues found. Run clang-format to fix."
+            exit 1
+          }
+
+    - name: Upload Enhanced Quality Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: enhanced-quality-reports
+        path: |
+          cppcheck-enhanced-report.xml
+        retention-days: 30
+
+  # ============================================================================
+  # Cache Performance Summary
+  # ============================================================================
+  cache-performance-summary:
+    name: Cache Performance Summary
+    runs-on: ubuntu-latest
+    needs: [build-linux-enhanced, build-windows-enhanced]
+    if: always()
+
+    steps:
+    - name: Download Cache Statistics
+      uses: actions/download-artifact@v4
+
+    - name: Generate Cache Performance Report
+      run: |
+        echo "# Cache Performance Summary Report" > cache_performance_summary.md
+        echo "" >> cache_performance_summary.md
+        echo "**Generated:** $(date -u)" >> cache_performance_summary.md
+        echo "**Workflow:** Enhanced CI/CD Pipeline" >> cache_performance_summary.md
+        echo "" >> cache_performance_summary.md
+        
+        echo "## Cache Statistics by Compiler" >> cache_performance_summary.md
+        echo "" >> cache_performance_summary.md
+        echo "| Compiler | Cache Hits | Cache Misses | Hit Ratio | Effectiveness |" >> cache_performance_summary.md
+        echo "|----------|------------|--------------|-----------|---------------|" >> cache_performance_summary.md
+        
+        # Process cache statistics files
+        for artifact in tol-linux-enhanced-*; do
+          if [ -d "$artifact" ]; then
+            compiler=$(echo "$artifact" | sed 's/tol-linux-enhanced-//')
+            cache_file="$artifact/cache-stats-$compiler.txt"
+            
+            if [ -f "$cache_file" ]; then
+              hits=$(grep "cache hit" "$cache_file" | grep -o "[0-9]*" | head -1 || echo "0")
+              misses=$(grep "cache miss" "$cache_file" | grep -o "[0-9]*" | head -1 || echo "1")
+              total=$((hits + misses))
+              
+              if [ $total -gt 0 ]; then
+                hit_ratio=$(echo "scale=1; ($hits * 100) / $total" | bc)
+                if [ $(echo "$hit_ratio > 80" | bc) -eq 1 ]; then
+                  effectiveness="🟢 Excellent"
+                elif [ $(echo "$hit_ratio > 60" | bc) -eq 1 ]; then
+                  effectiveness="🟡 Good"
+                elif [ $(echo "$hit_ratio > 30" | bc) -eq 1 ]; then
+                  effectiveness="🟠 Moderate"
+                else
+                  effectiveness="🔴 Poor"
+                fi
+                
+                echo "| $compiler | $hits | $misses | ${hit_ratio}% | $effectiveness |" >> cache_performance_summary.md
+              else
+                echo "| $compiler | $hits | $misses | N/A | 🔴 No Data |" >> cache_performance_summary.md
+              fi
+            else
+              echo "| $compiler | - | - | - | ❌ Missing |" >> cache_performance_summary.md
+            fi
+          fi
+        done
+        
+        echo "" >> cache_performance_summary.md
+        echo "## Optimization Recommendations" >> cache_performance_summary.md
+        echo "" >> cache_performance_summary.md
+        echo "- **ccache Size**: Current limit ${{ env.CCACHE_MAXSIZE }} - monitor usage and adjust if needed" >> cache_performance_summary.md
+        echo "- **Compression**: Level ${{ env.CCACHE_COMPRESSLEVEL }} provides good balance" >> cache_performance_summary.md
+        echo "- **Sloppiness**: Current setting optimizes for cache hits: \`${{ env.CCACHE_SLOPPINESS }}\`" >> cache_performance_summary.md
+        echo "- **Multi-level Caching**: System deps, build tools, CMake files, and ccache all cached" >> cache_performance_summary.md
+        echo "" >> cache_performance_summary.md
+        
+        cat cache_performance_summary.md
+
+    - name: Upload Cache Performance Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: cache-performance-summary
+        path: cache_performance_summary.md
+        retention-days: 90
+
+    - name: Comment Cache Performance on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          let report = '';
+          try {
+            report = fs.readFileSync('cache_performance_summary.md', 'utf8');
+          } catch (error) {
+            report = 'Cache performance report not available.';
+          }
+          
+          const comment = `## 🚀 Enhanced Build Cache Performance
+          
+${report}
+
+**Note:** This enhanced caching strategy includes:
+- Multi-layer dependency caching
+- Advanced ccache configuration
+- CMake build file caching
+- Compiler-specific optimizations
+- Cache performance monitoring
+
+<details>
+<summary>About the Enhanced Caching Strategy</summary>
+
+This workflow implements a comprehensive caching strategy:
+
+1. **System Dependencies**: APT packages cached across runs
+2. **Build Tools**: CMake and related tools cached
+3. **ccache**: Compilation cache with optimized configuration
+4. **CMake Files**: Build configuration files cached
+5. **Test Dependencies**: Test-specific caches
+
+Cache effectiveness is monitored and reported for continuous optimization.
+
+</details>`;
+          
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

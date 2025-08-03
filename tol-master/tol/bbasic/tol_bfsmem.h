@@ -86,7 +86,11 @@ public:	\
   } \
   static void operator delete(void* ptr) \
   { \
+#ifdef TOL_LEGACY_REGISTER \
     register ANY_* obj = (ANY_*)ptr; \
+#else \
+    ANY_* obj = (ANY_*)ptr; \
+#endif \
     BFSMSingleton<sizeof(ANY_)>::Handler()->Delete(obj,obj->_bfsm_PageNum__); \
   }
 #else
