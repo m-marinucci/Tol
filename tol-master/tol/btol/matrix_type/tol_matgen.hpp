@@ -121,7 +121,6 @@ void BMatrixGen<Any>::Alloc(BInt r, BInt c)
  */
 //--------------------------------------------------------------------
 {
-  static int max_size = INT_MAX;
   int i,j;
  
   if (rows_ == r && columns_ == c)
